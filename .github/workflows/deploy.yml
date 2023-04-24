@@ -55,8 +55,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             docker pull ghcr.io/upikoth/starter-go:main
-            docker run
-              --env APP_PORT=${{ secrets.APP_PORT }}
+            docker run \
+              --env APP_PORT=${{ secrets.APP_PORT }} \
               ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
             docker container prune -f
             docker image prune -f

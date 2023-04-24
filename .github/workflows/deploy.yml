@@ -54,4 +54,9 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            whoami
+            docker pull ghcr.io/upikoth/starter-go:main
+            docker run
+              --env APP_PORT=${{ secrets.APP_PORT }}
+              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+            docker container prune -f
+            docker image prune -f

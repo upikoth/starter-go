@@ -57,6 +57,6 @@ jobs:
             docker pull ghcr.io/upikoth/starter-go:main
             docker run \
               --env APP_PORT=${{ secrets.APP_PORT }} \
-              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+              ghcr.io/upikoth/starter-go:main
             docker container prune -f
             docker image prune -f

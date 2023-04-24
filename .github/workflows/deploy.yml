@@ -56,7 +56,9 @@ jobs:
           script: |
             docker pull ghcr.io/upikoth/starter-go:main
             docker stop $(docker ps -a -q)
-            docker run -d \
+            docker run \
+              -d \
+              -p 127.0.0.1:8080:${{ secrets.APP_PORT }} \
               --env APP_PORT=${{ secrets.APP_PORT }} \
               ghcr.io/upikoth/starter-go:main
             docker system prune -f

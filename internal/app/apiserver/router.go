@@ -14,6 +14,7 @@ func (s *ApiServer) initRoutes() {
 	s.router.Use(formatResponse())
 
 	s.router.GET("/api/v1/health", s.handler.V1.CheckHealth)
+	s.router.GET("/api/v1/users", s.handler.V1.GetUsers)
 
 	s.router.NoRoute(func(c *gin.Context) {
 		c.Set("responseCode", http.StatusNotFound)

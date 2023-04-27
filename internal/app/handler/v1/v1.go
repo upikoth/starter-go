@@ -1,7 +1,14 @@
 package v1
 
-type HandlerV1 struct{}
+import "github.com/upikoth/starter-go/internal/app/store"
 
-func New() *HandlerV1 {
-	return &HandlerV1{}
+type HandlerV1 struct {
+	store *store.Store
+}
+
+func New(store *store.Store) *HandlerV1 {
+	return &HandlerV1{
+
+		store: store,
+	}
 }

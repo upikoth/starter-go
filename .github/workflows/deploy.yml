@@ -62,5 +62,9 @@ jobs:
               -d \
               -p 127.0.0.1:8080:${{ vars.APP_PORT }} \
               --env APP_PORT=${{ vars.APP_PORT }} \
+              --env DATABASE_NAME=${{ vars.DATABASE_NAME }} \
+              --env DATABASE_ADDR=${{ vars.DATABASE_ADDR }} \
+              --env DATABASE_USER=${{ vars.DATABASE_USER }} \
+              --env DATABASE_PASSWORD=${{ vars.DATABASE_PASSWORD }} \
               ghcr.io/upikoth/starter-go:main
             docker system prune -f

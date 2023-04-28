@@ -15,7 +15,7 @@ type ApiServer struct {
 
 func New(config *Config) *ApiServer {
 	store := store.New()
-	handler := handler.New(store)
+	handler := handler.New(store, config.JwtSecret)
 
 	return &ApiServer{
 		config:  config,

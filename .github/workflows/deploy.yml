@@ -8,6 +8,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
 jobs:
   build-and-push-image:

@@ -11,17 +11,25 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type createSessionRequestBodyV1 struct {
+type createSessionRequestBody struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
-type createSessionResponseDataV1 struct {
+type createSessionResponseData struct {
 	User model.User `json:"user"`
 }
 
+// CreateSession godoc
+// @Summary      Создание сессии пользователя
+// @Accept       json
+// @Produce      json
+// @Param        body body  createSessionRequestBody true "Параметры запроса"
+// @Success      200  {object}  model.ResponseSuccess{data=createSessionResponseData}
+// @Failure      2001 {object}  model.ResponseError "Коды ошибок: [1700, 1701, 1702, 1703, 1704]"
+// @Router       /api/v1/session [post]
 func (h *HandlerV1) CreateSession(c *gin.Context) {
-	requestBody := createSessionRequestBodyV1{}
+	requestBody := createSessionRequestBody{}
 	err := c.BindJSON(&requestBody)
 
 	if err != nil {
@@ -66,13 +74,23 @@ func (h *HandlerV1) CreateSession(c *gin.Context) {
 		return
 	}
 
-	responseData := createSessionResponseDataV1{User: user}
+	responseData := createSessionResponseData{User: user}
 	c.Set("responseData", responseData)
 	c.SetCookie("Authorization", jwtToken, int(constants.Month/time.Second), "", "", true, true)
 }
 
+// DeleteSession godoc
+// @Summary      Удаление сессии
+// @Success      200  {object}  model.ResponseSuccess
+// @Failure      403  {object}  model.ResponseError "Коды ошибок: [1100]"
+// @Router       /api/v1/session [delete]
 func (h *HandlerV1) DeleteSession(c *gin.Context) {
 	c.SetCookie("Authorization", "", 0, "", "", true, true)
 }
 
+// GetSession godoc
+// @Summary      Получение сессии
+// @Success      200  {object}  model.ResponseSuccess
+// @Failure      403  {object}  model.ResponseError "Коды ошибок: [1100]"
+// @Router       /api/v1/session [get]
 func (h *HandlerV1) GetSession(c *gin.Context) {}

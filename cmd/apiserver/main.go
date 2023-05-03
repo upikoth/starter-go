@@ -7,6 +7,8 @@ import (
 	"github.com/upikoth/starter-go/internal/app/apiserver"
 )
 
+// @title   Starter API
+// @host    localhost:8080
 func main() {
 	godotenv.Load()
 

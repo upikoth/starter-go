@@ -1,0 +1,293 @@
+definitions:
+  model.ResponseError:
+    properties:
+      error:
+        $ref: '#/definitions/model.ResponseErrorField'
+      success:
+        default: false
+        type: boolean
+    type: object
+  model.ResponseErrorField:
+    properties:
+      code:
+        type: string
+      description:
+        type: string
+    type: object
+  model.ResponseSuccess:
+    properties:
+      data: {}
+      success:
+        default: true
+        type: boolean
+    type: object
+  model.User:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+    type: object
+  v1.createSessionRequestBody:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  v1.createSessionResponseData:
+    properties:
+      user:
+        $ref: '#/definitions/model.User'
+    type: object
+  v1.createUserRequestBody:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  v1.createUserResponseData:
+    properties:
+      user:
+        $ref: '#/definitions/model.User'
+    type: object
+  v1.getUserResponseData:
+    properties:
+      user:
+        $ref: '#/definitions/model.User'
+    type: object
+  v1.getUsersResponseData:
+    properties:
+      users:
+        items:
+          $ref: '#/definitions/model.User'
+        type: array
+    type: object
+  v1.patchUserRequestBody:
+    properties:
+      email:
+        type: string
+    type: object
+  v1.patchUserResponseData:
+    properties:
+      user:
+        $ref: '#/definitions/model.User'
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  title: Starter API
+paths:
+  /api/v1/health:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ResponseSuccess'
+      summary: Проверка работоспособности сервера
+  /api/v1/session:
+    delete:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ResponseSuccess'
+        "403":
+          description: 'Коды ошибок: [1100]'
+          schema:
+            $ref: '#/definitions/model.ResponseError'
+      summary: Удаление сессии
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ResponseSuccess'
+        "403":
+          description: 'Коды ошибок: [1100]'
+          schema:
+            $ref: '#/definitions/model.ResponseError'
+      summary: Получение сессии
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Параметры запроса
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/v1.createSessionRequestBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.ResponseSuccess'
+            - properties:
+                data:
+                  $ref: '#/definitions/v1.createSessionResponseData'
+              type: object
+        "2001":
+          description: 'Коды ошибок: [1700, 1701, 1702, 1703, 1704]'
+          schema:
+            $ref: '#/definitions/model.ResponseError'
+      summary: Создание сессии пользователя
+  /api/v1/user:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Параметры запроса
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/v1.createUserRequestBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.ResponseSuccess'
+            - properties:
+                data:
+                  $ref: '#/definitions/v1.createUserResponseData'
+              type: object
+        "403":
+          description: 'Коды ошибок: [1100]'
+          schema:
+            $ref: '#/definitions/model.ResponseError'
+        "2001":
+          description: 'Коды ошибок: [1400, 1401, 1402, 1403, 1404, 1405]'
+          schema:
+            $ref: '#/definitions/model.ResponseError'
+      summary: Создание пользователя
+  /api/v1/user/:id:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Id пользователя
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ResponseSuccess'
+        "403":
+          description: 'Коды ошибок: [1100]'
+          schema:
+            $ref: '#/definitions/model.ResponseError'
+        "2001":
+          description: 'Коды ошибок: [1500, 1501, 1502, 1503]'
+          schema:
+            $ref: '#/definitions/model.ResponseError'
+      summary: Удаление информации о пользователе
+    get:
+      parameters:
+      - description: Id пользователя
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.ResponseSuccess'
+            - properties:
+                data:
+                  $ref: '#/definitions/v1.getUserResponseData'
+              type: object
+        "403":
+          description: 'Коды ошибок: [1100]'
+          schema:
+            $ref: '#/definitions/model.ResponseError'
+        "2001":
+          description: 'Коды ошибок: [1300, 1301, 1302, 1303, 1304, 1305]'
+          schema:
+            $ref: '#/definitions/model.ResponseError'
+      summary: Возвращает информацию о пользователе
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Id пользователя
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Параметры запроса
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/v1.patchUserRequestBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.ResponseSuccess'
+            - properties:
+                data:
+                  $ref: '#/definitions/v1.patchUserResponseData'
+              type: object
+        "403":
+          description: 'Коды ошибок: [1100]'
+          schema:
+            $ref: '#/definitions/model.ResponseError'
+        "2001":
+          description: 'Коды ошибок: [1600, 1601, 1602, 1603, 1604, 1605]'
+          schema:
+            $ref: '#/definitions/model.ResponseError'
+      summary: Обновление информации о пользователе
+  /api/v1/users:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/model.ResponseSuccess'
+            - properties:
+                data:
+                  $ref: '#/definitions/v1.getUsersResponseData'
+              type: object
+        "403":
+          description: 'Коды ошибок: [1100]'
+          schema:
+            $ref: '#/definitions/model.ResponseError'
+        "2001":
+          description: 'Коды ошибок: [1200]'
+          schema:
+            $ref: '#/definitions/model.ResponseError'
+      summary: Возвращает список пользователей
+swagger: "2.0"

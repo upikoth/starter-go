@@ -6,10 +6,17 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/upikoth/starter-go/docs"
 	"github.com/upikoth/starter-go/internal/app/constants"
+	"github.com/upikoth/starter-go/internal/app/model"
 )
 
 func (s *ApiServer) initRoutes() {
+	docs.SwaggerInfo.Schemes = []string{}
+	s.router.GET("/api/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	s.router.SetTrustedProxies(nil)
 
 	s.router.Use(formatResponse())
@@ -36,21 +43,9 @@ func (s *ApiServer) initRoutes() {
 }
 
 func formatResponse() gin.HandlerFunc {
-	type ResponseError struct {
-		Code        string `json:"code"`
-		Description string `json:"description"`
-	}
-
-	type Response struct {
-		Success bool           `json:"success"`
-		Data    interface{}    `json:"data"`
-		Error   *ResponseError `json:"error,omitempty"`
-	}
 
 	return func(c *gin.Context) {
 		c.Next()
-
-		response := Response{}
 
 		code, isCodeExist := c.Get("responseCode")
 		data, isDataExist := c.Get("responseData")
@@ -65,18 +60,19 @@ func formatResponse() gin.HandlerFunc {
 		}
 
 		if isErorrCodeExist {
+			response := model.ResponseError{}
 			response.Success = false
-			response.Error = &ResponseError{
+			response.Error = &model.ResponseErrorField{
 				Code:        fmt.Sprintf("%v", errorCode),
 				Description: constants.ErrDescriptionByCode[errorCode.(error)],
 			}
+			c.JSON(code.(int), response)
 		} else {
+			response := model.ResponseSuccess{}
 			response.Success = true
+			response.Data = data
+			c.JSON(code.(int), response)
 		}
-
-		response.Data = data
-
-		c.JSON(code.(int), response)
 	}
 }
 

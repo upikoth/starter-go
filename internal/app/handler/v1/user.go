@@ -10,10 +10,19 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type getUsersResponseDataV1 struct {
+type getUsersResponseData struct {
 	Users []model.User `json:"users"`
 }
 
+// GetUsers godoc
+// @Summary      Возвращает список пользователей
+// @Accept       json
+// @Produce      json
+// @Param        Authorization  header  string  true  "Authentication header"
+// @Success      200  {object}  model.ResponseSuccess{data=getUsersResponseData}
+// @Failure      403  {object}  model.ResponseError "Коды ошибок: [1100]"
+// @Failure      2001 {object}  model.ResponseError "Коды ошибок: [1200]"
+// @Router       /api/v1/users [get]
 func (h *HandlerV1) GetUsers(c *gin.Context) {
 	users, err := h.store.GetUsers()
 
@@ -22,14 +31,22 @@ func (h *HandlerV1) GetUsers(c *gin.Context) {
 		return
 	}
 
-	responseData := getUsersResponseDataV1{users}
+	responseData := getUsersResponseData{users}
 	c.Set("responseData", responseData)
 }
 
-type getUserResponseDataV1 struct {
+type getUserResponseData struct {
 	User model.User `json:"user"`
 }
 
+// GetUser godoc
+// @Summary      Возвращает информацию о пользователе
+// @Produce      json
+// @Param        id  path  string  true  "Id пользователя"
+// @Success      200  {object}  model.ResponseSuccess{data=getUserResponseData}
+// @Failure      403  {object}  model.ResponseError "Коды ошибок: [1100]"
+// @Failure      2001 {object}  model.ResponseError "Коды ошибок: [1300, 1301, 1302, 1303, 1304, 1305]"
+// @Router       /api/v1/user/:id [get]
 func (h *HandlerV1) GetUser(c *gin.Context) {
 	userId, isIdExist := c.Params.Get("id")
 
@@ -54,21 +71,30 @@ func (h *HandlerV1) GetUser(c *gin.Context) {
 		return
 	}
 
-	responseData := getUserResponseDataV1{user}
+	responseData := getUserResponseData{user}
 	c.Set("responseData", responseData)
 }
 
-type createUserRequestBodyV1 struct {
+type createUserRequestBody struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
-type createUserResponseDataV1 struct {
+type createUserResponseData struct {
 	User model.User `json:"user"`
 }
 
+// CreateUser godoc
+// @Summary      Создание пользователя
+// @Accept       json
+// @Produce      json
+// @Param        body body  createUserRequestBody true "Параметры запроса"
+// @Success      200  {object}  model.ResponseSuccess{data=createUserResponseData}
+// @Failure      403  {object}  model.ResponseError "Коды ошибок: [1100]"
+// @Failure      2001 {object}  model.ResponseError "Коды ошибок: [1400, 1401, 1402, 1403, 1404, 1405]"
+// @Router       /api/v1/user [post]
 func (h *HandlerV1) CreateUser(c *gin.Context) {
-	requestBody := createUserRequestBodyV1{}
+	requestBody := createUserRequestBody{}
 	err := c.BindJSON(&requestBody)
 
 	if err != nil {
@@ -108,18 +134,28 @@ func (h *HandlerV1) CreateUser(c *gin.Context) {
 		return
 	}
 
-	responseData := createUserResponseDataV1{User: createdUser}
+	responseData := createUserResponseData{User: createdUser}
 	c.Set("responseData", responseData)
 }
 
-type patchUserRequestBodyV1 struct {
+type patchUserRequestBody struct {
 	Email string `json:"email"`
 }
 
-type patchUserResponseDataV1 struct {
+type patchUserResponseData struct {
 	User model.User `json:"user"`
 }
 
+// PatchUser godoc
+// @Summary      Обновление информации о пользователе
+// @Accept       json
+// @Produce      json
+// @Param        id  path  string  true  "Id пользователя"
+// @Param        body body  patchUserRequestBody true "Параметры запроса"
+// @Success      200  {object}  model.ResponseSuccess{data=patchUserResponseData}
+// @Failure      403  {object}  model.ResponseError "Коды ошибок: [1100]"
+// @Failure      2001 {object}  model.ResponseError "Коды ошибок: [1600, 1601, 1602, 1603, 1604, 1605]"
+// @Router       /api/v1/user/:id [patch]
 func (h *HandlerV1) PatchUser(c *gin.Context) {
 	userId, isIdExist := c.Params.Get("id")
 
@@ -137,7 +173,7 @@ func (h *HandlerV1) PatchUser(c *gin.Context) {
 		return
 	}
 
-	requestBody := patchUserRequestBodyV1{}
+	requestBody := patchUserRequestBody{}
 	err = c.BindJSON(&requestBody)
 
 	if err != nil {
@@ -160,10 +196,19 @@ func (h *HandlerV1) PatchUser(c *gin.Context) {
 		return
 	}
 
-	responseData := patchUserResponseDataV1{User: updatedUser}
+	responseData := patchUserResponseData{User: updatedUser}
 	c.Set("responseData", responseData)
 }
 
+// DeleteUser godoc
+// @Summary      Удаление информации о пользователе
+// @Accept       json
+// @Produce      json
+// @Param        id  path  string  true  "Id пользователя"
+// @Success      200  {object}  model.ResponseSuccess
+// @Failure      403  {object}  model.ResponseError "Коды ошибок: [1100]"
+// @Failure      2001 {object}  model.ResponseError "Коды ошибок: [1500, 1501, 1502, 1503]"
+// @Router       /api/v1/user/:id [delete]
 func (h *HandlerV1) DeleteUser(c *gin.Context) {
 	userId, isIdExist := c.Params.Get("id")
 

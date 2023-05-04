@@ -8,7 +8,6 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
 jobs:
   lint:
@@ -80,5 +79,6 @@ jobs:
               --env DATABASE_ADDR=${{ secrets.DATABASE_ADDR }} \
               --env DATABASE_USER=${{ secrets.DATABASE_USER }} \
               --env DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
+              --env JWT_SECRET=${{ secrets.JWT_SECRET }} \
               ghcr.io/upikoth/starter-go:main
             docker system prune -f

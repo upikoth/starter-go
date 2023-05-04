@@ -12,7 +12,11 @@ import (
 func main() {
 	godotenv.Load()
 
-	config := apiserver.NewConfig()
+	config, err := apiserver.NewConfig()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	server := apiserver.New(config)
 
 	if err := server.Start(); err != nil {

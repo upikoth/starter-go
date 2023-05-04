@@ -1,6 +1,8 @@
 package apiserver
 
 import (
+	"log"
+
 	"github.com/gin-gonic/gin"
 	"github.com/upikoth/starter-go/internal/app/handler"
 	"github.com/upikoth/starter-go/internal/app/store"
@@ -28,7 +30,14 @@ func New(config *Config) *ApiServer {
 func (s *ApiServer) Start() error {
 	s.initRoutes()
 	err := s.store.Connect()
-	defer s.store.Disconnect()
+
+	defer func() {
+		disconnectErr := s.store.Disconnect()
+
+		if disconnectErr != nil {
+			log.Println(disconnectErr)
+		}
+	}()
 
 	if err != nil {
 		return err

@@ -43,6 +43,7 @@ var (
 	ErrSessionPostCreateJwtToken = errors.New("1704")
 )
 
+//nolint:gochecknoglobals // Пока добавил в игнор.
 var ErrDescriptionByCode = map[error]string{
 	ErrRouteNotFound:     "Метод не найден",
 	ErrUserNotAuthorized: "Пользователь не авторизован",

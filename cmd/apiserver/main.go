@@ -8,18 +8,22 @@ import (
 )
 
 // @title   Starter API
-// @host    localhost:8080
+// @host    localhost:8080.
 func main() {
-	godotenv.Load()
+	envErr := godotenv.Load()
 
-	config, err := apiserver.NewConfig()
-	if err != nil {
-		log.Fatal(err)
+	if envErr != nil {
+		log.Println("No .env file")
+	}
+
+	config, configErr := apiserver.NewConfig()
+	if configErr != nil {
+		log.Fatal(configErr)
 	}
 
 	server := apiserver.New(config)
 
-	if err := server.Start(); err != nil {
-		log.Fatal(err)
+	if serverErr := server.Start(); serverErr != nil {
+		log.Fatal(serverErr)
 	}
 }

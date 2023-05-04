@@ -7,5 +7,5 @@ import (
 // CheckHealth godoc
 // @Summary      Проверка работоспособности сервера
 // @Success      200  {object}  model.ResponseSuccess
-// @Router       /api/v1/health [get]
-func (h *HandlerV1) CheckHealth(c *gin.Context) {}
+// @Router       /api/v1/health [get].
+func (h *HandlerV1) CheckHealth(_ *gin.Context) {}

@@ -22,7 +22,7 @@ type getUsersResponseData struct {
 // @Success      200  {object}  model.ResponseSuccess{data=getUsersResponseData}
 // @Failure      403  {object}  model.ResponseError "Коды ошибок: [1100]"
 // @Failure      2001 {object}  model.ResponseError "Коды ошибок: [1200]"
-// @Router       /api/v1/users [get]
+// @Router       /api/v1/users [get].
 func (h *HandlerV1) GetUsers(c *gin.Context) {
 	users, err := h.store.GetUsers()
 
@@ -46,7 +46,7 @@ type getUserResponseData struct {
 // @Success      200  {object}  model.ResponseSuccess{data=getUserResponseData}
 // @Failure      403  {object}  model.ResponseError "Коды ошибок: [1100]"
 // @Failure      2001 {object}  model.ResponseError "Коды ошибок: [1300, 1301, 1302, 1303, 1304, 1305]"
-// @Router       /api/v1/user/:id [get]
+// @Router       /api/v1/user/:id [get].
 func (h *HandlerV1) GetUser(c *gin.Context) {
 	userId, isIdExist := c.Params.Get("id")
 
@@ -92,7 +92,7 @@ type createUserResponseData struct {
 // @Success      200  {object}  model.ResponseSuccess{data=createUserResponseData}
 // @Failure      403  {object}  model.ResponseError "Коды ошибок: [1100]"
 // @Failure      2001 {object}  model.ResponseError "Коды ошибок: [1400, 1401, 1402, 1403, 1404, 1405]"
-// @Router       /api/v1/user [post]
+// @Router       /api/v1/user [post].
 func (h *HandlerV1) CreateUser(c *gin.Context) {
 	requestBody := createUserRequestBody{}
 	err := c.BindJSON(&requestBody)
@@ -124,7 +124,7 @@ func (h *HandlerV1) CreateUser(c *gin.Context) {
 
 	user := model.User{
 		Email:        requestBody.Email,
-		PasswordHash: string(hashedBytes[:]),
+		PasswordHash: string(hashedBytes),
 	}
 
 	createdUser, err := h.store.CreateUser(user)
@@ -155,7 +155,7 @@ type patchUserResponseData struct {
 // @Success      200  {object}  model.ResponseSuccess{data=patchUserResponseData}
 // @Failure      403  {object}  model.ResponseError "Коды ошибок: [1100]"
 // @Failure      2001 {object}  model.ResponseError "Коды ошибок: [1600, 1601, 1602, 1603, 1604, 1605]"
-// @Router       /api/v1/user/:id [patch]
+// @Router       /api/v1/user/:id [patch].
 func (h *HandlerV1) PatchUser(c *gin.Context) {
 	userId, isIdExist := c.Params.Get("id")
 
@@ -208,7 +208,7 @@ func (h *HandlerV1) PatchUser(c *gin.Context) {
 // @Success      200  {object}  model.ResponseSuccess
 // @Failure      403  {object}  model.ResponseError "Коды ошибок: [1100]"
 // @Failure      2001 {object}  model.ResponseError "Коды ошибок: [1500, 1501, 1502, 1503]"
-// @Router       /api/v1/user/:id [delete]
+// @Router       /api/v1/user/:id [delete].
 func (h *HandlerV1) DeleteUser(c *gin.Context) {
 	userId, isIdExist := c.Params.Get("id")
 

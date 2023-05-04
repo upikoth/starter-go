@@ -8,7 +8,6 @@ type Config struct {
 }
 
 func NewConfig() (*Config, error) {
-
 	config := &Config{}
 
 	if err := envconfig.Process("", config); err != nil {

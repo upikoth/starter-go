@@ -2,6 +2,7 @@ package apiserver
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -17,7 +18,11 @@ func (s *ApiServer) initRoutes() {
 	docs.SwaggerInfo.Schemes = []string{}
 	s.router.GET("/api/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	s.router.SetTrustedProxies(nil)
+	proxiesErr := s.router.SetTrustedProxies(nil)
+
+	if proxiesErr != nil {
+		log.Println(proxiesErr)
+	}
 
 	s.router.Use(formatResponse())
 
@@ -43,7 +48,6 @@ func (s *ApiServer) initRoutes() {
 }
 
 func formatResponse() gin.HandlerFunc {
-
 	return func(c *gin.Context) {
 		c.Next()
 

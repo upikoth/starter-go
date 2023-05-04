@@ -29,7 +29,7 @@ func (s *Store) Connect() error {
 
 	err := db.Ping(context.Background())
 	if err != nil {
-		return nil
+		return err
 	}
 
 	s.db = db

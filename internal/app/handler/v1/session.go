@@ -27,7 +27,7 @@ type createSessionResponseData struct {
 // @Param        body body  createSessionRequestBody true "Параметры запроса"
 // @Success      200  {object}  model.ResponseSuccess{data=createSessionResponseData}
 // @Failure      2001 {object}  model.ResponseError "Коды ошибок: [1700, 1701, 1702, 1703, 1704]"
-// @Router       /api/v1/session [post]
+// @Router       /api/v1/session [post].
 func (h *HandlerV1) CreateSession(c *gin.Context) {
 	requestBody := createSessionRequestBody{}
 	err := c.BindJSON(&requestBody)
@@ -83,7 +83,7 @@ func (h *HandlerV1) CreateSession(c *gin.Context) {
 // @Summary      Удаление сессии
 // @Success      200  {object}  model.ResponseSuccess
 // @Failure      403  {object}  model.ResponseError "Коды ошибок: [1100]"
-// @Router       /api/v1/session [delete]
+// @Router       /api/v1/session [delete].
 func (h *HandlerV1) DeleteSession(c *gin.Context) {
 	c.SetCookie("Authorization", "", 0, "", "", true, true)
 }
@@ -92,5 +92,5 @@ func (h *HandlerV1) DeleteSession(c *gin.Context) {
 // @Summary      Получение сессии
 // @Success      200  {object}  model.ResponseSuccess
 // @Failure      403  {object}  model.ResponseError "Коды ошибок: [1100]"
-// @Router       /api/v1/session [get]
-func (h *HandlerV1) GetSession(c *gin.Context) {}
+// @Router       /api/v1/session [get].
+func (h *HandlerV1) GetSession(_ *gin.Context) {}

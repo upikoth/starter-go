@@ -19,3 +19,6 @@ migratedown:
 
 swagger:
 	swag init -g ./cmd/apiserver/main.go
+
+lint:
+	golangci-lint run

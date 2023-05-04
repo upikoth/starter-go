@@ -12,13 +12,13 @@ start:
 	sh scripts/start.sh
 
 migrateup:
-	migrate -path migrations -database "postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_ADDR}/${DATABASE_NAME}?sslmode=disable" -verbose up
+	sh scripts/migrateup.sh
 
 migratedown:
-	migrate -path migrations -database "postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_ADDR}/${DATABASE_NAME}?sslmode=disable" -verbose down -all
+	sh scripts/migratedown.sh
 
 swagger:
-	swag init -g ./cmd/apiserver/main.go
+	sh scripts/swagger.sh
 
 lint:
-	golangci-lint run
+	sh scripts/lint.sh

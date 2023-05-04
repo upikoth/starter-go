@@ -1,17 +1,19 @@
 package apiserver
 
-import (
-	"os"
-)
+import "github.com/kelseyhightower/envconfig"
 
 type Config struct {
-	Port      string
-	JwtSecret []byte
+	Port      string `envconfig:"APP_PORT" required:"true"`
+	JwtSecret []byte `envconfig:"JWT_SECRET" required:"true"`
 }
 
-func NewConfig() *Config {
-	return &Config{
-		Port:      os.Getenv("APP_PORT"),
-		JwtSecret: []byte(os.Getenv("JWT_SECRET")),
+func NewConfig() (*Config, error) {
+
+	config := &Config{}
+
+	if err := envconfig.Process("", config); err != nil {
+		return nil, err
 	}
+
+	return config, nil
 }

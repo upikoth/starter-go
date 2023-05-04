@@ -24,6 +24,7 @@ jobs:
           version: v1.52.2
 
   build-and-push-image:
+    needs: lint
     runs-on: ubuntu-latest
     permissions:
       contents: read

@@ -70,8 +70,9 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             docker pull ghcr.io/upikoth/starter-go:main
-            docker stop $(docker ps -a -q)
+            docker stop $(docker ps -f name=starter-go -a -q)
             docker run \
+              --name starter-go \
               -d \
               -p 127.0.0.1:8080:${{ vars.APP_PORT }} \
               --env APP_PORT=${{ vars.APP_PORT }} \

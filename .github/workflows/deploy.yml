@@ -71,6 +71,7 @@ jobs:
           script: |
             docker pull ghcr.io/upikoth/starter-go:main
             docker stop $(docker ps -f name=uniq-container-name-1 -a -q)
+            docker rm $(docker ps -f name=uniq-container-name-1 -a -q)
             docker run \
               --name uniq-container-name-1 \
               -d \

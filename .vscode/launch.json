@@ -10,7 +10,7 @@
 			"request": "launch",
 			"mode": "auto",
 			"envFile": "${workspaceFolder}/.env",
-			"program": "${workspaceFolder}/cmd/apiserver/"
+			"program": "${workspaceFolder}/cmd/app/"
 		}
 	]
 }

@@ -1,1 +1,1 @@
-swag init -g ./cmd/apiserver/main.go
+swag init -g ./cmd/app/main.go

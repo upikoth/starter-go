@@ -1,10 +1,9 @@
-package apiserver
+package http
 
 import "github.com/kelseyhightower/envconfig"
 
 type Config struct {
-	Port      string `envconfig:"APP_PORT" required:"true"`
-	JwtSecret []byte `envconfig:"JWT_SECRET" required:"true"`
+	Port string `envconfig:"APP_PORT" required:"true"`
 }
 
 func NewConfig() (*Config, error) {

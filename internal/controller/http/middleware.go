@@ -8,6 +8,21 @@ import (
 	"github.com/upikoth/starter-go/internal/constants"
 )
 
+func corsMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "*")
+
+		if c.Request.Method == http.MethodOptions {
+			c.AbortWithStatus(http.StatusNoContent)
+			return
+		}
+
+		c.Next()
+	}
+}
+
 type ResponseErrorField struct {
 	Code            string `json:"code"`
 	CodeDescription string `json:"codeDescription"`

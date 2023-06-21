@@ -28,6 +28,7 @@ func (h *HTTP) startRouting() {
 		log.Println(proxiesErr)
 	}
 
+	h.router.Use(corsMiddleware())
 	h.router.Use(formatResponse())
 
 	h.router.GET("/api/v1/health", h.v1.CheckHealth)

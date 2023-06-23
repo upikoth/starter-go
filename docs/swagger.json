@@ -1,18 +1,33 @@
 {
     "swagger": "2.0",
     "info": {
-        "title": "Starter API",
+        "title": "Starter API.",
         "contact": {}
     },
     "paths": {
         "/api/v1/health": {
             "get": {
+                "tags": [
+                    "health"
+                ],
                 "summary": "Проверка работоспособности сервера",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/http.ResponseSuccess"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/http.ResponseSuccess"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }

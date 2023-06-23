@@ -18,12 +18,27 @@ const docTemplate_swagger = `{
     "paths": {
         "/api/v1/health": {
             "get": {
+                "tags": [
+                    "health"
+                ],
                 "summary": "Проверка работоспособности сервера",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/http.ResponseSuccess"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/http.ResponseSuccess"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -50,7 +65,7 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "Starter API",
+	Title:            "Starter API.",
 	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate_swagger,

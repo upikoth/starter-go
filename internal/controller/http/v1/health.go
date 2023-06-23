@@ -6,6 +6,7 @@ import (
 
 // CheckHealth godoc
 // @Summary      Проверка работоспособности сервера
-// @Success      200  {object}  http.ResponseSuccess
+// @Tags         health
+// @Success      200  {object}  http.ResponseSuccess{data=interface{}}
 // @Router       /api/v1/health [get].
 func (h *HandlerV1) CheckHealth(_ *gin.Context) {}

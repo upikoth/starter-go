@@ -28,6 +28,8 @@ func (h *HTTP) startRouting() {
 		log.Println(proxiesErr)
 	}
 
+	h.router.Use(gin.Recovery())
+	h.router.Use(loggingMiddleware(h.logger))
 	h.router.Use(corsMiddleware())
 	h.router.Use(formatResponse())
 

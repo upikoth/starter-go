@@ -1,7 +1,13 @@
 package v1
 
-type HandlerV1 struct{}
+import "github.com/upikoth/starter-go/internal/pkg/logger"
 
-func New() *HandlerV1 {
-	return &HandlerV1{}
+type HandlerV1 struct {
+	logger logger.Logger
+}
+
+func New(logger logger.Logger) *HandlerV1 {
+	return &HandlerV1{
+		logger,
+	}
 }

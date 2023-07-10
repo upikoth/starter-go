@@ -1,26 +1,28 @@
 package main
 
 import (
-	"log"
-
 	"github.com/joho/godotenv"
 	"github.com/upikoth/starter-go/internal/app"
+	"github.com/upikoth/starter-go/internal/pkg/logger"
 )
 
 // @title   Starter API.
 func main() {
 	// Чтение .env файла нужно только при локальной разработке.
 	// В других случаях значения переменных окружения уже должны быть установлены.
+	// Поэтому ошибку загрузки файла обрабатывать не нужно.
 	_ = godotenv.Load()
+	logger := logger.New()
 
 	config, configErr := app.NewConfig()
 	if configErr != nil {
-		log.Fatal(configErr)
+		logger.Fatal(configErr)
 	}
 
-	server := app.New(config)
+	app := app.New(config, logger)
 
-	if serverErr := server.Start(); serverErr != nil {
-		log.Fatal(serverErr)
+	logger.Info("Запуск приложения")
+	if appErr := app.Start(); appErr != nil {
+		logger.Fatal(appErr)
 	}
 }

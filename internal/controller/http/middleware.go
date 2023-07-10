@@ -1,11 +1,14 @@
 package http
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/upikoth/starter-go/internal/constants"
+	"github.com/upikoth/starter-go/internal/pkg/logger"
 )
 
 func corsMiddleware() gin.HandlerFunc {
@@ -80,5 +83,41 @@ func formatResponse() gin.HandlerFunc {
 			}
 			c.JSON(code.(int), response)
 		}
+	}
+}
+
+type bodyLogWriter struct {
+	gin.ResponseWriter
+	body *bytes.Buffer
+}
+
+func (w bodyLogWriter) Write(b []byte) (int, error) {
+	w.body.Write(b)
+	return w.ResponseWriter.Write(b)
+}
+
+func loggingMiddleware(logger logger.Logger) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		blw := &bodyLogWriter{
+			ResponseWriter: c.Writer,
+			body:           bytes.NewBufferString(""),
+		}
+		c.Writer = blw
+
+		logger.Infow("Запрос",
+			"url", c.Request.RequestURI,
+			"requestBody", c.Request.Body,
+		)
+
+		c.Next()
+
+		responseBody := map[string]interface{}{}
+		_ = json.Unmarshal(blw.body.Bytes(), &responseBody)
+
+		logger.Infow("Ответ",
+			"url", c.Request.RequestURI,
+			"responseCode", c.Writer.Status(),
+			"responseBody", responseBody,
+		)
 	}
 }

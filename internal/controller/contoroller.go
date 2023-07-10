@@ -1,23 +1,24 @@
 package controller
 
 import (
-	"log"
-
 	"github.com/upikoth/starter-go/internal/controller/http"
+	"github.com/upikoth/starter-go/internal/pkg/logger"
 )
 
 type Controller struct {
-	http *http.HTTP
+	http   *http.HTTP
+	logger logger.Logger
 }
 
-func New() *Controller {
+func New(logger logger.Logger) *Controller {
 	config, configErr := http.NewConfig()
 	if configErr != nil {
-		log.Fatal(configErr)
+		logger.Fatal(configErr)
 	}
 
 	return &Controller{
-		http: http.New(config),
+		http:   http.New(config, logger),
+		logger: logger,
 	}
 }
 

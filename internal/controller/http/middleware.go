@@ -96,6 +96,17 @@ func (w bodyLogWriter) Write(b []byte) (int, error) {
 	return w.ResponseWriter.Write(b)
 }
 
+type httpRequestLoggingInfo struct {
+	URL         string      `json:"url"`
+	RequestBody interface{} `json:"requestBody"`
+}
+
+type httpResponseLoggingInfo struct {
+	URL          string      `json:"url"`
+	ResponseCode int         `json:"responseCode"`
+	ResponseBody interface{} `json:"responseBody"`
+}
+
 func loggingMiddleware(logger logger.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		blw := &bodyLogWriter{
@@ -104,20 +115,28 @@ func loggingMiddleware(logger logger.Logger) gin.HandlerFunc {
 		}
 		c.Writer = blw
 
-		logger.Infow("Запрос",
-			"url", c.Request.RequestURI,
-			"requestBody", c.Request.Body,
-		)
+		requestLogInfo := httpRequestLoggingInfo{
+			URL:         c.Request.RequestURI,
+			RequestBody: c.Request.Body,
+		}
+
+		requestLogInfoString, _ := json.Marshal(requestLogInfo)
+
+		logger.Info(fmt.Sprintf("Запрос %s", requestLogInfoString))
 
 		c.Next()
 
 		responseBody := map[string]interface{}{}
 		_ = json.Unmarshal(blw.body.Bytes(), &responseBody)
 
-		logger.Infow("Ответ",
-			"url", c.Request.RequestURI,
-			"responseCode", c.Writer.Status(),
-			"responseBody", responseBody,
-		)
+		responseLogInfo := httpResponseLoggingInfo{
+			URL:          c.Request.RequestURI,
+			ResponseCode: c.Writer.Status(),
+			ResponseBody: responseBody,
+		}
+
+		responseLogInfoString, _ := json.Marshal(responseLogInfo)
+
+		logger.Info(fmt.Sprintf("Ответ %s", responseLogInfoString))
 	}
 }

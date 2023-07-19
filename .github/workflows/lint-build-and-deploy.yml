@@ -70,6 +70,7 @@ jobs:
 
       - name: Setup docker context
         run: |
+          mkdir ~/.ssh
           echo ${{ secrets.SSH_PRIVATE_KEY }} > ~/.ssh/id_rsa
           docker context create remote --docker "host=ssh://${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_PORT }}"
           docker context use remote

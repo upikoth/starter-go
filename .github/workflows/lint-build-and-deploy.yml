@@ -69,6 +69,7 @@ jobs:
       APP_JWT_SECRET: ${{ secrets.JWT_SECRET }}
       DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
       DATABASE_USER: ${{ secrets.DATABASE_USER }}
+      DATABASE_ADDR: ${{ secrets.DATABASE_ADDR }}
       DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
       SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
 
@@ -93,7 +94,7 @@ jobs:
           docker context create remote --docker "host=ssh://${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_PORT }}"
           docker context use remote
 
-      - name: Setup docker context
+      - name: Deploy
         run: |
           docker compose stop backend
           docker compose pull backend

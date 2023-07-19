@@ -99,5 +99,5 @@ jobs:
           echo "" > .env
           docker compose stop backend
           docker compose pull backend
-          docker compose up -d backend
+          docker compose up --no-deps -d backend
           docker system prune -f

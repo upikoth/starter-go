@@ -65,5 +65,11 @@ jobs:
       name: prod
 
     steps:
-      - name: executing remote ssh commands\
-        run: docker -v
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup docker context
+        run: |
+          docker context create remote --docker "host=ssh://${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_PORT }}"
+          docker context use remote
+          docker ps

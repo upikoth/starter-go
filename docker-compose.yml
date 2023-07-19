@@ -20,12 +20,12 @@ services:
   backend:
     depends_on:
       - postgres
-    image: ghcr.io/upikoth/starter-go:main
+    image: ghcr.io/upikoth/starter-go
     env_file:
       - .env
     container_name: backend
     ports:
-      - 127.0.0.1:8888:${APP_PORT}
+      - 127.0.0.1:${APP_PORT}:${APP_PORT}
     networks:
       starter_network:
     environment:

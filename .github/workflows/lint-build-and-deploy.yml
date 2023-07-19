@@ -17,6 +17,7 @@ jobs:
       - uses: actions/setup-go@v4
         with:
           go-version: '1.20'
+          cache: false
       - uses: actions/checkout@v3
       - uses: golangci/golangci-lint-action@v3
         with:
@@ -64,26 +65,5 @@ jobs:
       name: prod
 
     steps:
-      - name: executing remote ssh commands
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          port: ${{ secrets.SSH_PORT }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-            docker stop $(docker ps -f name=${{ env.CONTAINER_NAME }} -a -q)
-            docker rm $(docker ps -f name=${{ env.CONTAINER_NAME }} -a -q)
-            docker run \
-              --name ${{ env.CONTAINER_NAME }} \
-              -d \
-              -p 127.0.0.1:8080:${{ vars.APP_PORT }} \
-              --env APP_PORT=${{ vars.APP_PORT }} \
-              --env DATABASE_NAME=${{ secrets.DATABASE_NAME }} \
-              --env DATABASE_ADDR=${{ secrets.DATABASE_ADDR }} \
-              --env DATABASE_USER=${{ secrets.DATABASE_USER }} \
-              --env DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
-              --env JWT_SECRET=${{ secrets.JWT_SECRET }} \
-              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-            docker system prune -f
+      - name: executing remote ssh commands\
+        run: docker -v

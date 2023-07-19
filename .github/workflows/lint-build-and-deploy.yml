@@ -1,4 +1,4 @@
-name: Deploy
+name: Lint, Build and Deploy
 
 on:
   push:
@@ -8,6 +8,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  CONTAINER_NAME: starter-go
 
 jobs:
   lint:
@@ -16,7 +17,6 @@ jobs:
       - uses: actions/setup-go@v4
         with:
           go-version: '1.20'
-          cache: false
       - uses: actions/checkout@v3
       - uses: golangci/golangci-lint-action@v3
         with:
@@ -45,6 +45,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: type=raw,value=latest
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
@@ -55,7 +56,9 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
   deploy:
-    needs: build-and-push-image
+    needs:
+      - lint
+      - build-and-push-image
     runs-on: ubuntu-latest
     environment:
       name: prod
@@ -69,11 +72,11 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker pull ghcr.io/upikoth/starter-go:main
-            docker stop $(docker ps -f name=uniq-container-name-1 -a -q)
-            docker rm $(docker ps -f name=uniq-container-name-1 -a -q)
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+            docker stop $(docker ps -f name=${{ env.CONTAINER_NAME }} -a -q)
+            docker rm $(docker ps -f name=${{ env.CONTAINER_NAME }} -a -q)
             docker run \
-              --name uniq-container-name-1 \
+              --name ${{ env.CONTAINER_NAME }} \
               -d \
               -p 127.0.0.1:8080:${{ vars.APP_PORT }} \
               --env APP_PORT=${{ vars.APP_PORT }} \
@@ -82,5 +85,5 @@ jobs:
               --env DATABASE_USER=${{ secrets.DATABASE_USER }} \
               --env DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
               --env JWT_SECRET=${{ secrets.JWT_SECRET }} \
-              ghcr.io/upikoth/starter-go:main
+              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
             docker system prune -f

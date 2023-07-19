@@ -1,0 +1,49 @@
+services:
+  postgres:
+    image: postgres:15
+    env_file:
+      - .env
+    container_name: postgres
+    ports:
+      - ${DATABASE_ADDR}:5432
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      starter_network:
+        aliases:
+          - postgres-network
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+
+  backend:
+    depends_on:
+      - postgres
+    image: ghcr.io/upikoth/starter-go:main
+    env_file:
+      - .env
+    container_name: backend
+    ports:
+      - 127.0.0.1:8888:${APP_PORT}
+    networks:
+      starter_network:
+    environment:
+      APP_PORT: ${APP_PORT}
+      APP_ENV: ${APP_ENV}
+      APP_JWT_SECRET: ${APP_JWT_SECRET}
+      DATABASE_NAME: ${DATABASE_NAME}
+      # При запуске приложения в контейнере, оно должно обращаться к контейнеру postgres.
+      DATABASE_ADDR: postgres-network:5432
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      SENTRY_DSN: ${SENTRY_DSN}
+
+volumes:
+  postgres:
+    name: 'starter_postgres'
+    driver: local
+
+networks:
+  starter_network:
+    name: 'starter_network'

@@ -68,6 +68,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Setup docker context
         run: |
           mkdir -p ~/.ssh
@@ -77,4 +84,10 @@ jobs:
           ssh-keyscan -t rsa  ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
           docker context create remote --docker "host=ssh://${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_PORT }}"
           docker context use remote
-          docker ps
+
+      - name: Setup docker context
+        run: |
+          docker compose down backend
+          docker compose pull backend
+          docker compose up -d backend
+          docker system prune -f

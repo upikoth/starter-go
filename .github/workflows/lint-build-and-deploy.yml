@@ -87,7 +87,7 @@ jobs:
 
       - name: Setup docker context
         run: |
-          docker compose down backend
+          docker compose stop backend
           docker compose pull backend
           docker compose up -d backend
           docker system prune -f

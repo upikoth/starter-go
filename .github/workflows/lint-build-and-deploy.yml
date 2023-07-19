@@ -63,6 +63,14 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: prod
+    env:
+      APP_PORT: ${{ vars.APP_PORT }}
+      APP_ENV: prod
+      APP_JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+      DATABASE_USER: ${{ secrets.DATABASE_USER }}
+      DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+      SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
 
     steps:
       - name: Checkout repository

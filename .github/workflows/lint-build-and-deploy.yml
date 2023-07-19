@@ -96,6 +96,7 @@ jobs:
 
       - name: Deploy
         run: |
+          echo "" > .env
           docker compose stop backend
           docker compose pull backend
           docker compose up -d backend

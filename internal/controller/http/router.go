@@ -34,7 +34,9 @@ func (h *HTTP) startRouting() {
 	h.router.Use(formatResponse())
 
 	h.router.GET("/api/v1/health", h.v1.CheckHealth)
+
 	h.router.GET("/api/v1/users", h.v1.GetUsers)
+	h.router.GET("/api/v1/users/:id", h.v1.GetUser)
 
 	h.router.NoRoute(func(c *gin.Context) {
 		c.Set(ResponseCode, http.StatusNotFound)

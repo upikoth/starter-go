@@ -1,6 +1,7 @@
 package users
 
 import (
+	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/model"
 	"github.com/upikoth/starter-go/internal/repository/pg"
 )
@@ -27,4 +28,25 @@ func (u *Users) GetAll() ([]model.User, error) {
 	}
 
 	return users, nil
+}
+
+func (u *Users) Get(id int) (model.User, error) {
+	user := model.User{
+		ID: id,
+	}
+
+	count, err := u.pg.Db.
+		Model(&user).
+		WherePK().
+		SelectAndCount()
+
+	if err != nil {
+		return user, err
+	}
+
+	if count == 0 {
+		return user, constants.ErrDbNotFound
+	}
+
+	return user, nil
 }

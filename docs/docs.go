@@ -62,7 +62,44 @@ const docTemplate_swagger = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/v1.getUsersResponseData"
+                                            "$ref": "#/definitions/v1.usersResponseData"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/users/:id": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Получение пользователя по id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Id пользователя",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/http.ResponseSuccess"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/v1.userResponseData"
                                         }
                                     }
                                 }
@@ -101,7 +138,15 @@ const docTemplate_swagger = `{
                 }
             }
         },
-        "v1.getUsersResponseData": {
+        "v1.userResponseData": {
+            "type": "object",
+            "properties": {
+                "user": {
+                    "$ref": "#/definitions/model.User"
+                }
+            }
+        },
+        "v1.usersResponseData": {
             "type": "object",
             "properties": {
                 "users": {

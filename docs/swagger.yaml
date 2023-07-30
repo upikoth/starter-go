@@ -17,7 +17,12 @@ definitions:
       status:
         type: string
     type: object
-  v1.getUsersResponseData:
+  v1.userResponseData:
+    properties:
+      user:
+        $ref: '#/definitions/model.User'
+    type: object
+  v1.usersResponseData:
     properties:
       users:
         items:
@@ -53,9 +58,30 @@ paths:
             - $ref: '#/definitions/http.ResponseSuccess'
             - properties:
                 data:
-                  $ref: '#/definitions/v1.getUsersResponseData'
+                  $ref: '#/definitions/v1.usersResponseData'
               type: object
       summary: Получение списка пользователей
+      tags:
+      - users
+  /api/v1/users/:id:
+    get:
+      parameters:
+      - description: Id пользователя
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.ResponseSuccess'
+            - properties:
+                data:
+                  $ref: '#/definitions/v1.userResponseData'
+              type: object
+      summary: Получение пользователя по id
       tags:
       - users
 swagger: "2.0"

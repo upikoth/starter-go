@@ -4,6 +4,7 @@ import (
 	"github.com/upikoth/starter-go/internal/controller"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 	"github.com/upikoth/starter-go/internal/repository"
+	"github.com/upikoth/starter-go/internal/service"
 )
 
 type App struct {
@@ -14,8 +15,9 @@ type App struct {
 }
 
 func New(config *Config, logger logger.Logger) *App {
-	controller := controller.New(logger)
 	repository := repository.New()
+	service := service.New(logger, repository)
+	controller := controller.New(logger, service)
 
 	return &App{
 		config:     config,

@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	v1 "github.com/upikoth/starter-go/internal/controller/http/v1"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
+	"github.com/upikoth/starter-go/internal/service"
 )
 
 type HTTP struct {
@@ -13,11 +14,11 @@ type HTTP struct {
 	logger logger.Logger
 }
 
-func New(c *Config, logger logger.Logger) *HTTP {
+func New(c *Config, logger logger.Logger, service *service.Service) *HTTP {
 	gin.SetMode(gin.ReleaseMode)
 
 	return &HTTP{
-		v1:     v1.New(logger),
+		v1:     v1.New(logger, service),
 		router: gin.New(),
 		config: c,
 		logger: logger,

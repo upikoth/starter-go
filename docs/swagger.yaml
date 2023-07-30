@@ -6,6 +6,24 @@ definitions:
         default: true
         type: boolean
     type: object
+  model.User:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      status:
+        type: string
+    type: object
+  v1.getUsersResponseData:
+    properties:
+      users:
+        items:
+          $ref: '#/definitions/model.User'
+        type: array
+    type: object
 info:
   contact: {}
   title: Starter API.
@@ -25,4 +43,19 @@ paths:
       summary: Проверка работоспособности сервера
       tags:
       - health
+  /api/v1/users:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.ResponseSuccess'
+            - properties:
+                data:
+                  $ref: '#/definitions/v1.getUsersResponseData'
+              type: object
+      summary: Получение списка пользователей
+      tags:
+      - users
 swagger: "2.0"

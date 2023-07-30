@@ -2,15 +2,20 @@ package repository
 
 import (
 	"github.com/upikoth/starter-go/internal/repository/pg"
+	"github.com/upikoth/starter-go/internal/repository/users"
 )
 
 type Repository struct {
-	pg *pg.Pg
+	Users *users.Users
+	pg    *pg.Pg
 }
 
 func New() *Repository {
+	pg := pg.New()
+
 	return &Repository{
-		pg: pg.New(),
+		Users: users.New(pg),
+		pg:    pg,
 	}
 }
 

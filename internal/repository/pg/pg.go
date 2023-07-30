@@ -8,7 +8,7 @@ import (
 )
 
 type Pg struct {
-	db     *pg.DB
+	Db     *pg.DB
 	config *Config
 }
 
@@ -37,11 +37,11 @@ func (p *Pg) Connect() error {
 		return err
 	}
 
-	p.db = db
+	p.Db = db
 
 	return nil
 }
 
 func (p *Pg) Disconnect() error {
-	return p.db.Close()
+	return p.Db.Close()
 }

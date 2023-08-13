@@ -1,4 +1,21 @@
 definitions:
+  http.ResponseError:
+    properties:
+      error:
+        $ref: '#/definitions/http.ResponseErrorField'
+      success:
+        default: false
+        type: boolean
+    type: object
+  http.ResponseErrorField:
+    properties:
+      code:
+        type: string
+      codeDescription:
+        type: string
+      details:
+        type: string
+    type: object
   http.ResponseSuccess:
     properties:
       data: {}
@@ -50,6 +67,8 @@ paths:
       - health
   /api/v1/users:
     get:
+      produces:
+      - application/json
       responses:
         "200":
           description: OK
@@ -60,17 +79,23 @@ paths:
                 data:
                   $ref: '#/definitions/v1.usersResponseData'
               type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.ResponseError'
       summary: Получение списка пользователей
       tags:
       - users
-  /api/v1/users/:id:
+  /api/v1/users/{id}:
     get:
       parameters:
       - description: Id пользователя
         in: path
         name: id
         required: true
-        type: string
+        type: integer
+      produces:
+      - application/json
       responses:
         "200":
           description: OK
@@ -81,6 +106,14 @@ paths:
                 data:
                   $ref: '#/definitions/v1.userResponseData'
               type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.ResponseError'
       summary: Получение пользователя по id
       tags:
       - users

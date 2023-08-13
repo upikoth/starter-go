@@ -46,6 +46,9 @@ const docTemplate_swagger = `{
         },
         "/api/v1/users": {
             "get": {
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "users"
                 ],
@@ -68,19 +71,28 @@ const docTemplate_swagger = `{
                                 }
                             ]
                         }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/http.ResponseError"
+                        }
                     }
                 }
             }
         },
-        "/api/v1/users/:id": {
+        "/api/v1/users/{id}": {
             "get": {
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "users"
                 ],
                 "summary": "Получение пользователя по id",
                 "parameters": [
                     {
-                        "type": "string",
+                        "type": "integer",
                         "description": "Id пользователя",
                         "name": "id",
                         "in": "path",
@@ -105,12 +117,50 @@ const docTemplate_swagger = `{
                                 }
                             ]
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http.ResponseError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/http.ResponseError"
+                        }
                     }
                 }
             }
         }
     },
     "definitions": {
+        "http.ResponseError": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "$ref": "#/definitions/http.ResponseErrorField"
+                },
+                "success": {
+                    "type": "boolean",
+                    "default": false
+                }
+            }
+        },
+        "http.ResponseErrorField": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "codeDescription": {
+                    "type": "string"
+                },
+                "details": {
+                    "type": "string"
+                }
+            }
+        },
         "http.ResponseSuccess": {
             "type": "object",
             "properties": {

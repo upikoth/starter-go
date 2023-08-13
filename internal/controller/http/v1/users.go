@@ -15,7 +15,9 @@ type usersResponseData struct {
 // GetUsers godoc
 // @Summary      Получение списка пользователей
 // @Tags         users
+// @Produce      json
 // @Success      200  {object}  http.ResponseSuccess{data=usersResponseData}
+// @Failure      500  {object}  http.ResponseError
 // @Router       /api/v1/users [get].
 func (h *HandlerV1) GetUsers(c *gin.Context) {
 	users, err := h.service.GetUsers()
@@ -43,9 +45,12 @@ type userResponseData struct {
 // GetUser godoc
 // @Summary      Получение пользователя по id
 // @Tags         users
-// @Param        id  path  string  true  "Id пользователя"
+// @Produce      json
+// @Param        id  path  int  true  "Id пользователя"
 // @Success      200  {object}  http.ResponseSuccess{data=userResponseData}
-// @Router       /api/v1/users/:id [get].
+// @Failure      400  {object}  http.ResponseError
+// @Failure      500  {object}  http.ResponseError
+// @Router       /api/v1/users/{id} [get].
 func (h *HandlerV1) GetUser(c *gin.Context) {
 	data := userRequestData{}
 	err := c.BindUri(&data)

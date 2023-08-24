@@ -43,7 +43,7 @@ func New() Logger {
 	return sugar
 }
 
-func getZapSentryOptions(config *Config) (zap.Option, error) {
+func getZapSentryOptions(config *config) (zap.Option, error) {
 	sentryErr := sentry.Init(sentry.ClientOptions{
 		TracesSampleRate: 1.0,
 		Dsn:              config.SentryDsn,
@@ -100,13 +100,13 @@ func getSentryLogLevelFromZapLogLevel(level zapcore.Level) sentry.Level {
 	}
 }
 
-type Config struct {
+type config struct {
 	AppEnv    string `envconfig:"APP_ENV" required:"true"`
 	SentryDsn string `envconfig:"SENTRY_DSN" required:"true"`
 }
 
-func newConfig() (*Config, error) {
-	config := &Config{}
+func newConfig() (*config, error) {
+	config := &config{}
 
 	if err := envconfig.Process("", config); err != nil {
 		return nil, err

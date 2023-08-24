@@ -9,7 +9,7 @@ import (
 
 type Pg struct {
 	Db     *pg.DB
-	config *Config
+	config *config
 }
 
 func New() *Pg {

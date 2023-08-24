@@ -30,7 +30,7 @@ func (u *Users) GetAll() ([]model.User, error) {
 	return users, nil
 }
 
-func (u *Users) Get(id int) (model.User, error) {
+func (u *Users) GetByID(id int) (model.User, error) {
 	user := model.User{
 		ID: id,
 	}
@@ -38,6 +38,27 @@ func (u *Users) Get(id int) (model.User, error) {
 	count, err := u.pg.Db.
 		Model(&user).
 		WherePK().
+		SelectAndCount()
+
+	if err != nil {
+		return user, err
+	}
+
+	if count == 0 {
+		return user, constants.ErrDbNotFound
+	}
+
+	return user, nil
+}
+
+func (u *Users) GetByEmail(email string) (model.User, error) {
+	user := model.User{
+		Email: email,
+	}
+
+	count, err := u.pg.Db.
+		Model(&user).
+		Where("email = ?", user.Email).
 		SelectAndCount()
 
 	if err != nil {

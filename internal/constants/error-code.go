@@ -11,6 +11,10 @@ var (
 	ErrDbNotFound = errors.New("1002")
 
 	ErrRequestValidation = errors.New("1003")
+
+	ErrUnkownError = errors.New("1004")
+
+	ErrRegistrationEmailAlreadyExist = errors.New("1005")
 )
 
 var ErrDescriptionByCode = map[error]string{
@@ -20,4 +24,8 @@ var ErrDescriptionByCode = map[error]string{
 	ErrDbNotFound: "Не найдено в БД",
 
 	ErrRequestValidation: "Переданы некорректные параметры запроса",
+
+	ErrUnkownError: "Неизвестная ошибка",
+
+	ErrRegistrationEmailAlreadyExist: "Пользователь с указанной почтой уже зарегистрирован",
 }

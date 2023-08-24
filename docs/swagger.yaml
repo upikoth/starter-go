@@ -34,6 +34,16 @@ definitions:
       status:
         type: string
     type: object
+  v1.registrationCreationRequestData:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
   v1.userResponseData:
     properties:
       user:
@@ -65,6 +75,33 @@ paths:
       summary: Проверка работоспособности сервера
       tags:
       - health
+  /api/v1/registrations:
+    post:
+      parameters:
+      - description: Параметры запроса
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/v1.registrationCreationRequestData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.ResponseSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.ResponseError'
+      summary: Создание заявки на регистрацию
+      tags:
+      - registrations
   /api/v1/users:
     get:
       produces:

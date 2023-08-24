@@ -20,7 +20,7 @@ type usersResponseData struct {
 // @Failure      500  {object}  http.ResponseError
 // @Router       /api/v1/users [get].
 func (h *HandlerV1) GetUsers(c *gin.Context) {
-	users, err := h.service.GetUsers()
+	users, err := h.service.Users.GetAll()
 
 	if err != nil {
 		c.Set("ResponseCode", http.StatusInternalServerError)
@@ -62,7 +62,7 @@ func (h *HandlerV1) GetUser(c *gin.Context) {
 		return
 	}
 
-	user, err := h.service.GetUser(data.ID)
+	user, err := h.service.Users.Get(data.ID)
 
 	if err != nil {
 		c.Set("ResponseCode", http.StatusInternalServerError)

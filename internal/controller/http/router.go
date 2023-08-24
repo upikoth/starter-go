@@ -35,6 +35,8 @@ func (h *HTTP) startRouting() {
 
 	h.router.GET("/api/v1/health", h.v1.CheckHealth)
 
+	h.router.POST("/api/v1/registrations", h.v1.CreateRegistration)
+
 	h.router.GET("/api/v1/users", h.v1.GetUsers)
 	h.router.GET("/api/v1/users/:id", h.v1.GetUser)
 

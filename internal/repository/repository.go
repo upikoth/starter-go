@@ -2,20 +2,23 @@ package repository
 
 import (
 	"github.com/upikoth/starter-go/internal/repository/pg"
-	"github.com/upikoth/starter-go/internal/repository/users"
+	registrationsRepository "github.com/upikoth/starter-go/internal/repository/registrations"
+	usersRepository "github.com/upikoth/starter-go/internal/repository/users"
 )
 
 type Repository struct {
-	Users *users.Users
-	pg    *pg.Pg
+	Users         *usersRepository.Users
+	Registrations *registrationsRepository.Registrations
+	pg            *pg.Pg
 }
 
 func New() *Repository {
 	pg := pg.New()
 
 	return &Repository{
-		Users: users.New(pg),
-		pg:    pg,
+		Users:         usersRepository.New(pg),
+		Registrations: registrationsRepository.New(pg),
+		pg:            pg,
 	}
 }
 

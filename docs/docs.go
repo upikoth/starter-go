@@ -44,6 +44,48 @@ const docTemplate_swagger = `{
                 }
             }
         },
+        "/api/v1/registrations": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "registrations"
+                ],
+                "summary": "Создание заявки на регистрацию",
+                "parameters": [
+                    {
+                        "description": "Параметры запроса",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.registrationCreationRequestData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/http.ResponseSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/http.ResponseError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/http.ResponseError"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/users": {
             "get": {
                 "produces": [
@@ -184,6 +226,21 @@ const docTemplate_swagger = `{
                     "type": "string"
                 },
                 "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.registrationCreationRequestData": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
                     "type": "string"
                 }
             }

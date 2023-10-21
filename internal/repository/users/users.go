@@ -71,3 +71,15 @@ func (u *Users) GetByEmail(email string) (model.User, error) {
 
 	return user, nil
 }
+
+func (u *Users) Create(user model.User) error {
+	_, err := u.pg.Db.
+		Model(&user).
+		Insert()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

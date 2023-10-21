@@ -25,3 +25,11 @@ func (u *Users) GetAll() ([]model.User, error) {
 func (u *Users) Get(id int) (model.User, error) {
 	return u.repository.Users.GetByID(id)
 }
+
+func (u *Users) GetByEmail(email string) (model.User, error) {
+	return u.repository.Users.GetByEmail(email)
+}
+
+func (u *Users) Create(user model.User) error {
+	return u.repository.Users.Create(user)
+}

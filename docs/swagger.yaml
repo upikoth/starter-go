@@ -34,14 +34,26 @@ definitions:
       status:
         type: string
     type: object
+  v1.registrationConfirmationRequestData:
+    properties:
+      token:
+        type: string
+    required:
+    - token
+    type: object
   v1.registrationCreationRequestData:
     properties:
       email:
         type: string
+      name:
+        type: string
       password:
+        maxLength: 72
+        minLength: 5
         type: string
     required:
     - email
+    - name
     - password
     type: object
   v1.userResponseData:
@@ -76,6 +88,32 @@ paths:
       tags:
       - health
   /api/v1/registrations:
+    patch:
+      parameters:
+      - description: Параметры запроса
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/v1.registrationConfirmationRequestData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/http.ResponseSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/http.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.ResponseError'
+      summary: Подтверждение заявки на регистрацию
+      tags:
+      - registrations
     post:
       parameters:
       - description: Параметры запроса

@@ -15,9 +15,12 @@ type Service struct {
 }
 
 func New(logger logger.Logger, repository *repository.Repository) *Service {
+	usersServiceInstance := usersService.New(logger, repository)
+	registrationsServiceInstance := registrationsService.New(logger, repository, usersServiceInstance)
+
 	return &Service{
-		Registrations: registrationsService.New(logger, repository),
-		Users:         usersService.New(logger, repository),
+		Registrations: registrationsServiceInstance,
+		Users:         usersServiceInstance,
 		logger:        logger,
 		repository:    repository,
 	}

@@ -3,12 +3,14 @@ package repository
 import (
 	"github.com/upikoth/starter-go/internal/repository/pg"
 	registrationsRepository "github.com/upikoth/starter-go/internal/repository/registrations"
+	sessionsRepository "github.com/upikoth/starter-go/internal/repository/sessions"
 	usersRepository "github.com/upikoth/starter-go/internal/repository/users"
 )
 
 type Repository struct {
 	Users         *usersRepository.Users
 	Registrations *registrationsRepository.Registrations
+	Sessions      *sessionsRepository.Sessions
 	pg            *pg.Pg
 }
 
@@ -18,6 +20,7 @@ func New() *Repository {
 	return &Repository{
 		Users:         usersRepository.New(pg),
 		Registrations: registrationsRepository.New(pg),
+		Sessions:      sessionsRepository.New(pg),
 		pg:            pg,
 	}
 }

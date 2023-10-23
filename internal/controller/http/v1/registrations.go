@@ -58,7 +58,7 @@ type registrationConfirmationRequestData struct {
 // @Router       /api/v1/registrations [patch].
 func (h *HandlerV1) ConfirmRegistration(c *gin.Context) {
 	data := registrationConfirmationRequestData{}
-	err := c.BindQuery(&data)
+	err := c.BindJSON(&data)
 
 	if err != nil {
 		c.Set("ResponseCode", http.StatusBadRequest)

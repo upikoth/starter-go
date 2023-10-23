@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -115,9 +116,13 @@ func loggingMiddleware(logger logger.Logger) gin.HandlerFunc {
 		}
 		c.Writer = blw
 
+		requestBodyBytes, _ := io.ReadAll(c.Request.Body)
+		c.Request.Body = io.NopCloser(bytes.NewBuffer(requestBodyBytes))
+		var requestBodyJSON interface{}
+		_ = json.Unmarshal(requestBodyBytes, &requestBodyJSON)
 		requestLogInfo := httpRequestLoggingInfo{
 			URL:         c.Request.RequestURI,
-			RequestBody: c.Request.Body,
+			RequestBody: requestBodyJSON,
 		}
 
 		requestLogInfoString, _ := json.Marshal(requestLogInfo)

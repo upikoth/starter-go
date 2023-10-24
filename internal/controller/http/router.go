@@ -42,6 +42,7 @@ func (h *HTTP) startRouting() {
 	h.router.GET("/api/v1/users/:id", h.v1.GetUser)
 
 	h.router.GET("/api/v1/sessions", h.v1.GetSessions)
+	h.router.POST("/api/v1/sessions", h.v1.CreateSession)
 
 	h.router.NoRoute(func(c *gin.Context) {
 		c.Set(ResponseCode, http.StatusNotFound)

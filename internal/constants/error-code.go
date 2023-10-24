@@ -15,6 +15,8 @@ var (
 	ErrUnkownError = errors.New("1004")
 
 	ErrRegistrationEmailAlreadyExist = errors.New("1005")
+
+	ErrSessionCreateUserOrPasswordInvalid = errors.New("1006")
 )
 
 var ErrDescriptionByCode = map[error]string{
@@ -28,4 +30,6 @@ var ErrDescriptionByCode = map[error]string{
 	ErrUnkownError: "Неизвестная ошибка",
 
 	ErrRegistrationEmailAlreadyExist: "Пользователь с указанной почтой уже зарегистрирован",
+
+	ErrSessionCreateUserOrPasswordInvalid: "Пользователь с указанными почтой и паролем не найдены",
 }

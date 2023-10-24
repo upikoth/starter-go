@@ -19,7 +19,7 @@ type Service struct {
 func New(logger logger.Logger, repository *repository.Repository) *Service {
 	usersServiceInstance := usersService.New(logger, repository)
 	registrationsServiceInstance := registrationsService.New(logger, repository, usersServiceInstance)
-	sessionsServiceInstance := sessionsService.New(logger, repository)
+	sessionsServiceInstance := sessionsService.New(logger, repository, usersServiceInstance)
 
 	return &Service{
 		Registrations: registrationsServiceInstance,

@@ -2,25 +2,25 @@ package http
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/upikoth/starter-go/internal/config"
 	v1 "github.com/upikoth/starter-go/internal/controller/http/v1"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
-	"github.com/upikoth/starter-go/internal/service"
 )
 
 type HTTP struct {
 	v1     *v1.HandlerV1
 	router *gin.Engine
-	config *Config
+	config *config.ControllerHTTP
 	logger logger.Logger
 }
 
-func New(c *Config, logger logger.Logger, service *service.Service) *HTTP {
+func New(config *config.ControllerHTTP, logger logger.Logger) *HTTP {
 	gin.SetMode(gin.ReleaseMode)
 
 	return &HTTP{
-		v1:     v1.New(logger, service),
+		v1:     v1.New(logger),
 		router: gin.New(),
-		config: c,
+		config: config,
 		logger: logger,
 	}
 }

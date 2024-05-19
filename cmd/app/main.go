@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/joho/godotenv"
 	"github.com/upikoth/starter-go/internal/app"
+	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 )
 
@@ -14,7 +15,7 @@ func main() {
 	_ = godotenv.Load()
 	logger := logger.New()
 
-	config, configErr := app.NewConfig()
+	config, configErr := config.New()
 	if configErr != nil {
 		logger.Fatal(configErr)
 	}

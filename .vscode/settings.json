@@ -4,4 +4,10 @@
 		"--fast"
 	],
 	"go.lintOnSave": "package",
+	"cSpell.words": [
+		"gonic",
+		"joho",
+		"kelseyhightower",
+		"loggerlog"
+	],
 }

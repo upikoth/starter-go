@@ -1,13 +1,20 @@
 package main
 
 import (
+	"context"
+	"errors"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+
 	"github.com/joho/godotenv"
 	"github.com/upikoth/starter-go/internal/app"
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 )
 
-// @title   Starter API.
 func main() {
 	// Чтение .env файла нужно только при локальной разработке.
 	// В других случаях значения переменных окружения уже должны быть установлены.
@@ -15,15 +22,40 @@ func main() {
 	_ = godotenv.Load()
 	logger := logger.New()
 
-	config, configErr := config.New()
-	if configErr != nil {
-		logger.Fatal(configErr)
+	config, err := config.New()
+	if err != nil {
+		logger.Fatal(err)
 	}
 
-	app := app.New(config, logger)
-
-	logger.Info("Запуск приложения")
-	if appErr := app.Start(); appErr != nil {
-		logger.Fatal(appErr)
+	app, err := app.New(config, logger)
+	if err != nil {
+		logger.Fatal(err)
 	}
+
+	go func() {
+		logger.Info("Запуск приложения")
+
+		if appErr := app.Start(); !errors.Is(appErr, http.ErrServerClosed) {
+			logger.Fatal(appErr)
+		}
+
+		logger.Info("Приложение перестало принимать новые запросы")
+	}()
+
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+	<-sigChan
+
+	timeToStopAppInSeconds := 10
+	shutdownCtx, shutdownRelease := context.WithTimeout(
+		context.Background(),
+		time.Duration(timeToStopAppInSeconds)*time.Second,
+	)
+	defer shutdownRelease()
+
+	if stopErr := app.Stop(shutdownCtx); stopErr != nil {
+		logger.Fatal("Не удалось корректно остановить сервер, ошибка: %v", stopErr)
+	}
+
+	logger.Info("Приложение остановлено")
 }

@@ -1,32 +1,46 @@
 package http
 
 import (
-	"github.com/gin-gonic/gin"
+	"context"
+	"net/http"
+	"time"
+
 	"github.com/upikoth/starter-go/internal/config"
-	v1 "github.com/upikoth/starter-go/internal/controller/http/v1"
+	"github.com/upikoth/starter-go/internal/controller/http/handler"
+	starter "github.com/upikoth/starter-go/internal/generated/starter"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 )
 
 type HTTP struct {
-	v1     *v1.HandlerV1
-	router *gin.Engine
-	config *config.ControllerHTTP
-	logger logger.Logger
+	logger        logger.Logger
+	starterServer *http.Server
 }
 
-func New(config *config.ControllerHTTP, logger logger.Logger) *HTTP {
-	gin.SetMode(gin.ReleaseMode)
+func New(config *config.ControllerHTTP, logger logger.Logger) (*HTTP, error) {
+	handler := handler.New(logger)
+
+	starterHandler, err := starter.NewServer(handler)
+
+	if err != nil {
+		return nil, err
+	}
+
+	starterServer := &http.Server{
+		Addr:              ":" + config.Port,
+		ReadHeaderTimeout: time.Minute,
+		Handler:           starterHandler,
+	}
 
 	return &HTTP{
-		v1:     v1.New(logger),
-		router: gin.New(),
-		config: config,
-		logger: logger,
-	}
+		logger:        logger,
+		starterServer: starterServer,
+	}, nil
 }
 
 func (h *HTTP) Start() error {
-	h.startRouting()
+	return h.starterServer.ListenAndServe()
+}
 
-	return h.router.Run(":" + h.config.Port)
+func (h *HTTP) Stop(ctx context.Context) error {
+	return h.starterServer.Shutdown(ctx)
 }

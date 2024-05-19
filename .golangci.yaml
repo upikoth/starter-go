@@ -300,6 +300,9 @@ issues:
   # Default: 3
   max-same-issues: 50
 
+  exclude-dirs:
+    - internal/generated
+
   exclude-rules:
     - source: "(noinspection|TODO)"
       linters: [ godot ]

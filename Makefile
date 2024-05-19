@@ -11,14 +11,8 @@ build:
 start:
 	sh scripts/start.sh
 
-migrateup:
-	sh scripts/migrateup.sh
-
-migratedown:
-	sh scripts/migratedown.sh
-
-swagger:
-	sh scripts/swagger.sh
+generate:
+	sh scripts/generate.sh
 
 lint:
 	sh scripts/lint.sh

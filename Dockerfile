@@ -1,6 +1,6 @@
 # Stage 1. Build.
 
-FROM golang:1.20-alpine as build
+FROM golang:1.22.2-alpine as build
 
 RUN apk add --no-cache make \
 	&& rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
@@ -20,6 +20,7 @@ RUN make build
 FROM alpine:3.18
 
 COPY --from=build /starter-go/app ./
+COPY --from=build /starter-go/docs ./docs
 
 EXPOSE 8888
 

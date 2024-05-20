@@ -1,6 +1,4 @@
 openapi: 3.0.2
-servers:
-  - url: /v3
 info:
   version: 1.0.0
   title: Starter schema

@@ -19,16 +19,26 @@ type HTTP struct {
 func New(config *config.ControllerHTTP, logger logger.Logger) (*HTTP, error) {
 	handler := handler.New(logger)
 
-	starterHandler, err := starter.NewServer(handler)
+	srv, err := starter.NewServer(handler)
 
 	if err != nil {
 		return nil, err
 	}
 
+	mux := http.NewServeMux()
+
+	mux.Handle("/api/", srv)
+
+	starter := http.FileServer(http.Dir("docs/starter"))
+	mux.Handle("/api/docs/starter/", http.StripPrefix("/api/docs/starter/", starter))
+
+	swaggerUI := http.FileServer(http.Dir("docs/swagger-ui"))
+	mux.Handle("/api/docs/swagger-ui/", http.StripPrefix("/api/docs/swagger-ui/", swaggerUI))
+
 	starterServer := &http.Server{
 		Addr:              ":" + config.Port,
 		ReadHeaderTimeout: time.Minute,
-		Handler:           starterHandler,
+		Handler:           mux,
 	}
 
 	return &HTTP{

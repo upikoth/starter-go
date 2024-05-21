@@ -36,5 +36,5 @@ jobs:
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
           container-name: starter
-          folder-id: bbauum20au7ffproop9c
+          folder-id: b1g2g98mce9fdmv7vrd2
           revision-image-url: $IMAGE

@@ -28,7 +28,7 @@ jobs:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
 
       - run: |
-          docker build -t $IMAGE .
+          docker build -t cr.yandex/${{ vars.YC_REGISTRY }}:${{ github.sha }} .
           docker push $IMAGE
 
       - uses: yc-actions/yc-sls-container-deploy@v2

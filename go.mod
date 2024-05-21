@@ -1,6 +1,6 @@
 module github.com/upikoth/starter-go
 
-go 1.22.2
+go 1.22.3
 
 require (
 	github.com/go-faster/errors v0.7.1

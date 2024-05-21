@@ -16,3 +16,24 @@ jobs:
       - uses: golangci/golangci-lint-action@v6
         with:
           version: v1.58
+
+  build-push-image-update-container:
+    needs: lint
+    runs-on: ubuntu-latest
+    env:
+      IMAGE: cr.yandex/${{ vars.YC_REGISTRY }}:${{ github.sha }}
+    steps:
+      - uses: yc-actions/yc-cr-login@v2
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+
+      - run: |
+          docker build -t $IMAGE .
+          docker push $IMAGE
+
+      - uses: yc-actions/yc-sls-container-deploy@v2
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+          container-name: starter
+          folder-id: bbauum20au7ffproop9c
+          revision-image-url: $IMAGE

@@ -23,12 +23,13 @@ jobs:
     env:
       IMAGE: cr.yandex/${{ vars.YC_REGISTRY }}:${{ github.sha }}
     steps:
+      - uses: actions/checkout@v4
       - uses: yc-actions/yc-cr-login@v2
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
 
       - run: |
-          docker build -t cr.yandex/${{ vars.YC_REGISTRY }}:${{ github.sha }} .
+          docker build -t $IMAGE .
           docker push $IMAGE
 
       - uses: yc-actions/yc-sls-container-deploy@v2

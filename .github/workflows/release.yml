@@ -37,4 +37,5 @@ jobs:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
           container-name: starter
           folder-id: b1g2g98mce9fdmv7vrd2
+          revision-service-account-id: ajeglge1pheaqtkl4vn8
           revision-image-url: ${{ env.IMAGE }}

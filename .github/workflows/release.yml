@@ -29,12 +29,12 @@ jobs:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
 
       - run: |
-          docker build -t $IMAGE .
-          docker push $IMAGE
+          docker build -t ${{ env.IMAGE }} .
+          docker push ${{ env.IMAGE }}
 
       - uses: yc-actions/yc-sls-container-deploy@v2
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
           container-name: starter
           folder-id: b1g2g98mce9fdmv7vrd2
-          revision-image-url: $IMAGE
+          revision-image-url: ${{ env.IMAGE }}

@@ -17,7 +17,7 @@ RUN make build
 
 # Stage 2.
 
-FROM alpine:3.19
+FROM alpine:3.20
 
 COPY --from=build /starter-go/app ./
 COPY --from=build /starter-go/docs ./docs

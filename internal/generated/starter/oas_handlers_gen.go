@@ -16,23 +16,24 @@ import (
 
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/middleware"
+	"github.com/ogen-go/ogen/ogenerrors"
 	"github.com/ogen-go/ogen/otelogen"
 )
 
-// handleV1GetHealthRequest handles v1GetHealth operation.
+// handleV1CheckHealthRequest handles V1CheckHealth operation.
 //
 // Получить информацию о работоспособности приложения.
 //
 // GET /api/v1/health
-func (s *Server) handleV1GetHealthRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleV1CheckHealthRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
-		otelogen.OperationID("v1GetHealth"),
+		otelogen.OperationID("V1CheckHealth"),
 		semconv.HTTPMethodKey.String("GET"),
 		semconv.HTTPRouteKey.String("/api/v1/health"),
 	}
 
 	// Start a span for this request.
-	ctx, span := s.cfg.Tracer.Start(r.Context(), "V1GetHealth",
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "V1CheckHealth",
 		trace.WithAttributes(otelAttrs...),
 		serverSpanKind,
 	)
@@ -64,13 +65,13 @@ func (s *Server) handleV1GetHealthRequest(args [0]string, argsEscaped bool, w ht
 		err error
 	)
 
-	var response *DefaultSuccessResponse
+	var response *SuccessResponse
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "V1GetHealth",
-			OperationSummary: "Получить информацию о работоспособности приложения",
-			OperationID:      "v1GetHealth",
+			OperationName:    "V1CheckHealth",
+			OperationSummary: "",
+			OperationID:      "V1CheckHealth",
 			Body:             nil,
 			Params:           middleware.Parameters{},
 			Raw:              r,
@@ -79,7 +80,7 @@ func (s *Server) handleV1GetHealthRequest(args [0]string, argsEscaped bool, w ht
 		type (
 			Request  = struct{}
 			Params   = struct{}
-			Response = *DefaultSuccessResponse
+			Response = *SuccessResponse
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -90,15 +91,15 @@ func (s *Server) handleV1GetHealthRequest(args [0]string, argsEscaped bool, w ht
 			mreq,
 			nil,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				response, err = s.h.V1GetHealth(ctx)
+				response, err = s.h.V1CheckHealth(ctx)
 				return response, err
 			},
 		)
 	} else {
-		response, err = s.h.V1GetHealth(ctx)
+		response, err = s.h.V1CheckHealth(ctx)
 	}
 	if err != nil {
-		if errRes, ok := errors.Into[*DefaultErrorResponseStatusCode](err); ok {
+		if errRes, ok := errors.Into[*ErrorResponseStatusCode](err); ok {
 			if err := encodeErrorResponse(errRes, w, span); err != nil {
 				defer recordError("Internal", err)
 			}
@@ -114,7 +115,130 @@ func (s *Server) handleV1GetHealthRequest(args [0]string, argsEscaped bool, w ht
 		return
 	}
 
-	if err := encodeV1GetHealthResponse(response, w, span); err != nil {
+	if err := encodeV1CheckHealthResponse(response, w, span); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
+// handleV1CreateRegistrationRequest handles V1CreateRegistration operation.
+//
+// Создать заявку на регистрацию пользователя.
+//
+// POST /api/v1/registrations
+func (s *Server) handleV1CreateRegistrationRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("V1CreateRegistration"),
+		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRouteKey.String("/api/v1/registrations"),
+	}
+
+	// Start a span for this request.
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "V1CreateRegistration",
+		trace.WithAttributes(otelAttrs...),
+		serverSpanKind,
+	)
+	defer span.End()
+
+	// Add Labeler to context.
+	labeler := &Labeler{attrs: otelAttrs}
+	ctx = contextWithLabeler(ctx, labeler)
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		elapsedDuration := time.Since(startTime)
+		attrOpt := metric.WithAttributeSet(labeler.AttributeSet())
+
+		// Increment request counter.
+		s.requests.Add(ctx, 1, attrOpt)
+
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		s.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), attrOpt)
+	}()
+
+	var (
+		recordError = func(stage string, err error) {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			s.errors.Add(ctx, 1, metric.WithAttributeSet(labeler.AttributeSet()))
+		}
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "V1CreateRegistration",
+			ID:   "V1CreateRegistration",
+		}
+	)
+	request, close, err := s.decodeV1CreateRegistrationRequest(r)
+	if err != nil {
+		err = &ogenerrors.DecodeRequestError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeRequest", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
+
+	var response *SuccessResponse
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    "V1CreateRegistration",
+			OperationSummary: "",
+			OperationID:      "V1CreateRegistration",
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
+		}
+
+		type (
+			Request  = *V1RegistrationsCreateRegistrationRequestBody
+			Params   = struct{}
+			Response = *SuccessResponse
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.V1CreateRegistration(ctx, request)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.V1CreateRegistration(ctx, request)
+	}
+	if err != nil {
+		if errRes, ok := errors.Into[*ErrorResponseStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				defer recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			defer recordError("Internal", err)
+		}
+		return
+	}
+
+	if err := encodeV1CreateRegistrationResponse(response, w, span); err != nil {
 		defer recordError("EncodeResponse", err)
 		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
 			s.cfg.ErrorHandler(ctx, w, r, err)

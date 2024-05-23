@@ -19,7 +19,10 @@ type HTTP struct {
 func New(config *config.ControllerHTTP, logger logger.Logger) (*HTTP, error) {
 	handler := handler.New(logger)
 
-	srv, err := starter.NewServer(handler)
+	srv, err := starter.NewServer(
+		handler,
+		starter.WithErrorHandler(getStarterErrorHandler(handler)),
+	)
 
 	if err != nil {
 		return nil, err
@@ -53,4 +56,16 @@ func (h *HTTP) Start() error {
 
 func (h *HTTP) Stop(ctx context.Context) error {
 	return h.starterServer.Shutdown(ctx)
+}
+
+func getStarterErrorHandler(handler *handler.Handler) starter.ErrorHandler {
+	return func(context context.Context, w http.ResponseWriter, _ *http.Request, err error) {
+		w.Header().Set("Content-Type", "application/json")
+
+		res := handler.NewError(context, err)
+		w.WriteHeader(res.StatusCode)
+
+		bytes, _ := res.Response.MarshalJSON()
+		_, _ = w.Write(bytes)
+	}
 }

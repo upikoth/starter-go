@@ -2,34 +2,40 @@ openapi: 3.0.2
 info:
   version: 1.0.0
   title: Starter schema
-tags:
-  - name: starter
-    description: Starter
 paths:
   /api/v1/health:
     get:
       tags:
-        - starter
-      summary: Получить информацию о работоспособности приложения
+        - health
       description: Получить информацию о работоспособности приложения
-      operationId: v1GetHealth
+      operationId: V1CheckHealth
       responses:
         200:
           description: Успешный ответ
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultSuccessResponse'
+          $ref: '#/components/responses/SuccessResponse'
         default:
           description: Ошибка
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/DefaultErrorResponse"
+          $ref: "#/components/responses/ErrorResponse"
+
+  /api/v1/registrations:
+    post:
+      tags:
+        - registration
+      description: Создать заявку на регистрацию пользователя
+      operationId: V1CreateRegistration
+      requestBody:
+        $ref: '#/components/requestBodies/V1RegistrationsCreateRegistrationRequestBody'
+      responses:
+        200:
+          description: Успешный ответ
+          $ref: '#/components/responses/SuccessResponse'
+        default:
+          description: Ошибка
+          $ref: "#/components/responses/ErrorResponse"
 
 components:
   schemas:
-    DefaultSuccessResponse:
+    SuccessResponse:
       type: object
       required:
         - success
@@ -42,7 +48,7 @@ components:
         data:
           type: object
 
-    DefaultErrorResponse:
+    ErrorResponse:
       type: object
       required:
         - success
@@ -65,3 +71,36 @@ components:
               type: string
             description:
               type: string
+
+    V1RegistrationsCreateRegistrationRequestBody:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+
+  requestBodies:
+    V1RegistrationsCreateRegistrationRequestBody:
+      description: Запрос для создания заявки на регистрацию
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/V1RegistrationsCreateRegistrationRequestBody'
+
+  responses:
+    SuccessResponse:
+      description: Ответ при успешно выполненном запросе
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessResponse'
+
+    ErrorResponse:
+      description: Ответ при ошибке во время выполнения запроса
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'

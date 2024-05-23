@@ -48,24 +48,60 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 		switch elem[0] {
-		case '/': // Prefix: "/api/v1/health"
+		case '/': // Prefix: "/api/v1/"
 			origElem := elem
-			if l := len("/api/v1/health"); len(elem) >= l && elem[0:l] == "/api/v1/health" {
+			if l := len("/api/v1/"); len(elem) >= l && elem[0:l] == "/api/v1/" {
 				elem = elem[l:]
 			} else {
 				break
 			}
 
 			if len(elem) == 0 {
-				// Leaf node.
-				switch r.Method {
-				case "GET":
-					s.handleV1GetHealthRequest([0]string{}, elemIsEscaped, w, r)
-				default:
-					s.notAllowed(w, r, "GET")
+				break
+			}
+			switch elem[0] {
+			case 'h': // Prefix: "health"
+				origElem := elem
+				if l := len("health"); len(elem) >= l && elem[0:l] == "health" {
+					elem = elem[l:]
+				} else {
+					break
 				}
 
-				return
+				if len(elem) == 0 {
+					// Leaf node.
+					switch r.Method {
+					case "GET":
+						s.handleV1CheckHealthRequest([0]string{}, elemIsEscaped, w, r)
+					default:
+						s.notAllowed(w, r, "GET")
+					}
+
+					return
+				}
+
+				elem = origElem
+			case 'r': // Prefix: "registrations"
+				origElem := elem
+				if l := len("registrations"); len(elem) >= l && elem[0:l] == "registrations" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					// Leaf node.
+					switch r.Method {
+					case "POST":
+						s.handleV1CreateRegistrationRequest([0]string{}, elemIsEscaped, w, r)
+					default:
+						s.notAllowed(w, r, "POST")
+					}
+
+					return
+				}
+
+				elem = origElem
 			}
 
 			elem = origElem
@@ -149,28 +185,68 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 			break
 		}
 		switch elem[0] {
-		case '/': // Prefix: "/api/v1/health"
+		case '/': // Prefix: "/api/v1/"
 			origElem := elem
-			if l := len("/api/v1/health"); len(elem) >= l && elem[0:l] == "/api/v1/health" {
+			if l := len("/api/v1/"); len(elem) >= l && elem[0:l] == "/api/v1/" {
 				elem = elem[l:]
 			} else {
 				break
 			}
 
 			if len(elem) == 0 {
-				switch method {
-				case "GET":
-					// Leaf: V1GetHealth
-					r.name = "V1GetHealth"
-					r.summary = "Получить информацию о работоспособности приложения"
-					r.operationID = "v1GetHealth"
-					r.pathPattern = "/api/v1/health"
-					r.args = args
-					r.count = 0
-					return r, true
-				default:
-					return
+				break
+			}
+			switch elem[0] {
+			case 'h': // Prefix: "health"
+				origElem := elem
+				if l := len("health"); len(elem) >= l && elem[0:l] == "health" {
+					elem = elem[l:]
+				} else {
+					break
 				}
+
+				if len(elem) == 0 {
+					switch method {
+					case "GET":
+						// Leaf: V1CheckHealth
+						r.name = "V1CheckHealth"
+						r.summary = ""
+						r.operationID = "V1CheckHealth"
+						r.pathPattern = "/api/v1/health"
+						r.args = args
+						r.count = 0
+						return r, true
+					default:
+						return
+					}
+				}
+
+				elem = origElem
+			case 'r': // Prefix: "registrations"
+				origElem := elem
+				if l := len("registrations"); len(elem) >= l && elem[0:l] == "registrations" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					switch method {
+					case "POST":
+						// Leaf: V1CreateRegistration
+						r.name = "V1CreateRegistration"
+						r.summary = ""
+						r.operationID = "V1CreateRegistration"
+						r.pathPattern = "/api/v1/registrations"
+						r.args = args
+						r.count = 0
+						return r, true
+					default:
+						return
+					}
+				}
+
+				elem = origElem
 			}
 
 			elem = origElem

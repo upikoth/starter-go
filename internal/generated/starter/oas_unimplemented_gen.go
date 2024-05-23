@@ -13,19 +13,28 @@ type UnimplementedHandler struct{}
 
 var _ Handler = UnimplementedHandler{}
 
-// V1GetHealth implements v1GetHealth operation.
+// V1CheckHealth implements V1CheckHealth operation.
 //
 // Получить информацию о работоспособности приложения.
 //
 // GET /api/v1/health
-func (UnimplementedHandler) V1GetHealth(ctx context.Context) (r *DefaultSuccessResponse, _ error) {
+func (UnimplementedHandler) V1CheckHealth(ctx context.Context) (r *SuccessResponse, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
-// NewError creates *DefaultErrorResponseStatusCode from error returned by handler.
+// V1CreateRegistration implements V1CreateRegistration operation.
+//
+// Создать заявку на регистрацию пользователя.
+//
+// POST /api/v1/registrations
+func (UnimplementedHandler) V1CreateRegistration(ctx context.Context, req *V1RegistrationsCreateRegistrationRequestBody) (r *SuccessResponse, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// NewError creates *ErrorResponseStatusCode from error returned by handler.
 //
 // Used for common default response.
-func (UnimplementedHandler) NewError(ctx context.Context, err error) (r *DefaultErrorResponseStatusCode) {
-	r = new(DefaultErrorResponseStatusCode)
+func (UnimplementedHandler) NewError(ctx context.Context, err error) (r *ErrorResponseStatusCode) {
+	r = new(ErrorResponseStatusCode)
 	return r
 }

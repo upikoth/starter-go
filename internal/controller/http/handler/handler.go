@@ -2,26 +2,43 @@ package handler
 
 import (
 	"context"
+	"errors"
+	"net/http"
 
-	v1 "github.com/upikoth/starter-go/internal/controller/http/handler/v1"
-	starterApi "github.com/upikoth/starter-go/internal/generated/starter"
+	starter "github.com/upikoth/starter-go/internal/generated/starter"
+	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 )
 
 type Handler struct {
-	v1 *v1.HandlerV1
+	logger logger.Logger
 }
 
 func New(logger logger.Logger) *Handler {
 	return &Handler{
-		v1: v1.New(logger),
+		logger: logger,
 	}
 }
 
-func (h *Handler) V1GetHealth(context context.Context) (*starterApi.DefaultSuccessResponse, error) {
-	return h.v1.CheckHealth(context)
-}
+func (h *Handler) NewError(_ context.Context, err error) *starter.ErrorResponseStatusCode {
+	modelErr := &models.Error{}
 
-func (h *Handler) NewError(_ context.Context, _ error) *starterApi.DefaultErrorResponseStatusCode {
-	return &starterApi.DefaultErrorResponseStatusCode{}
+	code := models.ErrorCodeValidationByOpenapi
+	statusCode := http.StatusBadRequest
+
+	if errors.As(err, &modelErr) {
+		code = modelErr.Code
+		statusCode = modelErr.GetStatusCode()
+	}
+
+	return &starter.ErrorResponseStatusCode{
+		StatusCode: statusCode,
+		Response: starter.ErrorResponse{
+			Success: starter.ErrorResponseSuccessFalse,
+			Error: starter.ErrorResponseError{
+				Code:        string(code),
+				Description: err.Error(),
+			},
+		},
+	}
 }

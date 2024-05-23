@@ -8,16 +8,22 @@ import (
 
 // Handler handles operations described by OpenAPI v3 specification.
 type Handler interface {
-	// V1GetHealth implements v1GetHealth operation.
+	// V1CheckHealth implements V1CheckHealth operation.
 	//
 	// Получить информацию о работоспособности приложения.
 	//
 	// GET /api/v1/health
-	V1GetHealth(ctx context.Context) (*DefaultSuccessResponse, error)
-	// NewError creates *DefaultErrorResponseStatusCode from error returned by handler.
+	V1CheckHealth(ctx context.Context) (*SuccessResponse, error)
+	// V1CreateRegistration implements V1CreateRegistration operation.
+	//
+	// Создать заявку на регистрацию пользователя.
+	//
+	// POST /api/v1/registrations
+	V1CreateRegistration(ctx context.Context, req *V1RegistrationsCreateRegistrationRequestBody) (*SuccessResponse, error)
+	// NewError creates *ErrorResponseStatusCode from error returned by handler.
 	//
 	// Used for common default response.
-	NewError(ctx context.Context, err error) *DefaultErrorResponseStatusCode
+	NewError(ctx context.Context, err error) *ErrorResponseStatusCode
 }
 
 // Server implements http server based on OpenAPI v3 specification and

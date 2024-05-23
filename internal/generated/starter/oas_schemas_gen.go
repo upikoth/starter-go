@@ -6,150 +6,165 @@ import (
 	"fmt"
 )
 
-func (s *DefaultErrorResponseStatusCode) Error() string {
+func (s *ErrorResponseStatusCode) Error() string {
 	return fmt.Sprintf("code %d: %+v", s.StatusCode, s.Response)
 }
 
-// Ref: #/components/schemas/DefaultErrorResponse
-type DefaultErrorResponse struct {
-	Success DefaultErrorResponseSuccess `json:"success"`
-	Data    DefaultErrorResponseData    `json:"data"`
-	Error   DefaultErrorResponseError   `json:"error"`
+// Ref: #/components/schemas/ErrorResponse
+type ErrorResponse struct {
+	Success ErrorResponseSuccess `json:"success"`
+	Data    ErrorResponseData    `json:"data"`
+	Error   ErrorResponseError   `json:"error"`
 }
 
 // GetSuccess returns the value of Success.
-func (s *DefaultErrorResponse) GetSuccess() DefaultErrorResponseSuccess {
+func (s *ErrorResponse) GetSuccess() ErrorResponseSuccess {
 	return s.Success
 }
 
 // GetData returns the value of Data.
-func (s *DefaultErrorResponse) GetData() DefaultErrorResponseData {
+func (s *ErrorResponse) GetData() ErrorResponseData {
 	return s.Data
 }
 
 // GetError returns the value of Error.
-func (s *DefaultErrorResponse) GetError() DefaultErrorResponseError {
+func (s *ErrorResponse) GetError() ErrorResponseError {
 	return s.Error
 }
 
 // SetSuccess sets the value of Success.
-func (s *DefaultErrorResponse) SetSuccess(val DefaultErrorResponseSuccess) {
+func (s *ErrorResponse) SetSuccess(val ErrorResponseSuccess) {
 	s.Success = val
 }
 
 // SetData sets the value of Data.
-func (s *DefaultErrorResponse) SetData(val DefaultErrorResponseData) {
+func (s *ErrorResponse) SetData(val ErrorResponseData) {
 	s.Data = val
 }
 
 // SetError sets the value of Error.
-func (s *DefaultErrorResponse) SetError(val DefaultErrorResponseError) {
+func (s *ErrorResponse) SetError(val ErrorResponseError) {
 	s.Error = val
 }
 
-type DefaultErrorResponseData struct{}
+type ErrorResponseData struct{}
 
-type DefaultErrorResponseError struct {
+type ErrorResponseError struct {
 	Code        string `json:"code"`
 	Description string `json:"description"`
 }
 
 // GetCode returns the value of Code.
-func (s *DefaultErrorResponseError) GetCode() string {
+func (s *ErrorResponseError) GetCode() string {
 	return s.Code
 }
 
 // GetDescription returns the value of Description.
-func (s *DefaultErrorResponseError) GetDescription() string {
+func (s *ErrorResponseError) GetDescription() string {
 	return s.Description
 }
 
 // SetCode sets the value of Code.
-func (s *DefaultErrorResponseError) SetCode(val string) {
+func (s *ErrorResponseError) SetCode(val string) {
 	s.Code = val
 }
 
 // SetDescription sets the value of Description.
-func (s *DefaultErrorResponseError) SetDescription(val string) {
+func (s *ErrorResponseError) SetDescription(val string) {
 	s.Description = val
 }
 
-// DefaultErrorResponseStatusCode wraps DefaultErrorResponse with StatusCode.
-type DefaultErrorResponseStatusCode struct {
+// ErrorResponseStatusCode wraps ErrorResponse with StatusCode.
+type ErrorResponseStatusCode struct {
 	StatusCode int
-	Response   DefaultErrorResponse
+	Response   ErrorResponse
 }
 
 // GetStatusCode returns the value of StatusCode.
-func (s *DefaultErrorResponseStatusCode) GetStatusCode() int {
+func (s *ErrorResponseStatusCode) GetStatusCode() int {
 	return s.StatusCode
 }
 
 // GetResponse returns the value of Response.
-func (s *DefaultErrorResponseStatusCode) GetResponse() DefaultErrorResponse {
+func (s *ErrorResponseStatusCode) GetResponse() ErrorResponse {
 	return s.Response
 }
 
 // SetStatusCode sets the value of StatusCode.
-func (s *DefaultErrorResponseStatusCode) SetStatusCode(val int) {
+func (s *ErrorResponseStatusCode) SetStatusCode(val int) {
 	s.StatusCode = val
 }
 
 // SetResponse sets the value of Response.
-func (s *DefaultErrorResponseStatusCode) SetResponse(val DefaultErrorResponse) {
+func (s *ErrorResponseStatusCode) SetResponse(val ErrorResponse) {
 	s.Response = val
 }
 
-type DefaultErrorResponseSuccess bool
+type ErrorResponseSuccess bool
 
 const (
-	DefaultErrorResponseSuccessFalse DefaultErrorResponseSuccess = false
+	ErrorResponseSuccessFalse ErrorResponseSuccess = false
 )
 
-// AllValues returns all DefaultErrorResponseSuccess values.
-func (DefaultErrorResponseSuccess) AllValues() []DefaultErrorResponseSuccess {
-	return []DefaultErrorResponseSuccess{
-		DefaultErrorResponseSuccessFalse,
+// AllValues returns all ErrorResponseSuccess values.
+func (ErrorResponseSuccess) AllValues() []ErrorResponseSuccess {
+	return []ErrorResponseSuccess{
+		ErrorResponseSuccessFalse,
 	}
 }
 
-// Ref: #/components/schemas/DefaultSuccessResponse
-type DefaultSuccessResponse struct {
-	Success DefaultSuccessResponseSuccess `json:"success"`
-	Data    DefaultSuccessResponseData    `json:"data"`
+// Ref: #/components/schemas/SuccessResponse
+type SuccessResponse struct {
+	Success SuccessResponseSuccess `json:"success"`
+	Data    SuccessResponseData    `json:"data"`
 }
 
 // GetSuccess returns the value of Success.
-func (s *DefaultSuccessResponse) GetSuccess() DefaultSuccessResponseSuccess {
+func (s *SuccessResponse) GetSuccess() SuccessResponseSuccess {
 	return s.Success
 }
 
 // GetData returns the value of Data.
-func (s *DefaultSuccessResponse) GetData() DefaultSuccessResponseData {
+func (s *SuccessResponse) GetData() SuccessResponseData {
 	return s.Data
 }
 
 // SetSuccess sets the value of Success.
-func (s *DefaultSuccessResponse) SetSuccess(val DefaultSuccessResponseSuccess) {
+func (s *SuccessResponse) SetSuccess(val SuccessResponseSuccess) {
 	s.Success = val
 }
 
 // SetData sets the value of Data.
-func (s *DefaultSuccessResponse) SetData(val DefaultSuccessResponseData) {
+func (s *SuccessResponse) SetData(val SuccessResponseData) {
 	s.Data = val
 }
 
-type DefaultSuccessResponseData struct{}
+type SuccessResponseData struct{}
 
-type DefaultSuccessResponseSuccess bool
+type SuccessResponseSuccess bool
 
 const (
-	DefaultSuccessResponseSuccessTrue DefaultSuccessResponseSuccess = true
+	SuccessResponseSuccessTrue SuccessResponseSuccess = true
 )
 
-// AllValues returns all DefaultSuccessResponseSuccess values.
-func (DefaultSuccessResponseSuccess) AllValues() []DefaultSuccessResponseSuccess {
-	return []DefaultSuccessResponseSuccess{
-		DefaultSuccessResponseSuccessTrue,
+// AllValues returns all SuccessResponseSuccess values.
+func (SuccessResponseSuccess) AllValues() []SuccessResponseSuccess {
+	return []SuccessResponseSuccess{
+		SuccessResponseSuccessTrue,
 	}
+}
+
+// Ref: #/components/schemas/V1RegistrationsCreateRegistrationRequestBody
+type V1RegistrationsCreateRegistrationRequestBody struct {
+	Email string `json:"email"`
+}
+
+// GetEmail returns the value of Email.
+func (s *V1RegistrationsCreateRegistrationRequestBody) GetEmail() string {
+	return s.Email
+}
+
+// SetEmail sets the value of Email.
+func (s *V1RegistrationsCreateRegistrationRequestBody) SetEmail(val string) {
+	s.Email = val
 }

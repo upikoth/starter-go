@@ -115,7 +115,7 @@ func decodeV1CheckHealthResponse(resp *http.Response) (res *SuccessResponse, _ e
 	return res, errors.Wrap(defRes, "error")
 }
 
-func decodeV1CreateRegistrationResponse(resp *http.Response) (res *SuccessResponse, _ error) {
+func decodeV1CreateRegistrationResponse(resp *http.Response) (res *V1RegistrationsCreateRegistrationResponse, _ error) {
 	switch resp.StatusCode {
 	case 200:
 		// Code 200.
@@ -131,7 +131,7 @@ func decodeV1CreateRegistrationResponse(resp *http.Response) (res *SuccessRespon
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response SuccessResponse
+			var response V1RegistrationsCreateRegistrationResponse
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err

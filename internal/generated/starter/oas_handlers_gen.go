@@ -188,7 +188,7 @@ func (s *Server) handleV1CreateRegistrationRequest(args [0]string, argsEscaped b
 		}
 	}()
 
-	var response *SuccessResponse
+	var response *V1RegistrationsCreateRegistrationResponse
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -203,7 +203,7 @@ func (s *Server) handleV1CreateRegistrationRequest(args [0]string, argsEscaped b
 		type (
 			Request  = *V1RegistrationsCreateRegistrationRequestBody
 			Params   = struct{}
-			Response = *SuccessResponse
+			Response = *V1RegistrationsCreateRegistrationResponse
 		)
 		response, err = middleware.HookMiddleware[
 			Request,

@@ -8,6 +8,8 @@
 		"gonic",
 		"joho",
 		"kelseyhightower",
-		"loggerlog"
+		"loggerlog",
+		"smtpclient",
+		"ycpstarter"
 	],
 }

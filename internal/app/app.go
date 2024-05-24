@@ -6,6 +6,7 @@ import (
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/controller"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
+	"github.com/upikoth/starter-go/internal/service"
 )
 
 type App struct {
@@ -15,7 +16,13 @@ type App struct {
 }
 
 func New(config *config.Config, logger logger.Logger) (*App, error) {
-	controller, err := controller.New(config, logger)
+	service, err := service.New(logger)
+
+	if err != nil {
+		return nil, err
+	}
+
+	controller, err := controller.New(config, logger, service)
 
 	if err != nil {
 		return nil, err

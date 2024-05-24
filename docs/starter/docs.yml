@@ -28,7 +28,7 @@ paths:
       responses:
         200:
           description: Успешный ответ
-          $ref: '#/components/responses/SuccessResponse'
+          $ref: '#/components/responses/V1RegistrationsCreateRegistrationResponse'
         default:
           description: Ошибка
           $ref: "#/components/responses/ErrorResponse"
@@ -81,6 +81,28 @@ components:
           type: string
           format: email
 
+    V1RegistrationsCreateRegistrationResponse:
+      type: object
+      required:
+        - success
+        - data
+      properties: 
+        success:
+          type: boolean
+          enum:
+            - true
+        data:
+          type: object
+          required:
+            - id
+            - email
+          properties: 
+            id:
+              type: string
+            email:
+              type: string
+              format: email
+
   requestBodies:
     V1RegistrationsCreateRegistrationRequestBody:
       description: Запрос для создания заявки на регистрацию
@@ -104,3 +126,10 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+
+    V1RegistrationsCreateRegistrationResponse:
+      description: Ответ при успешном создании заявки на регистрацию
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/V1RegistrationsCreateRegistrationResponse'

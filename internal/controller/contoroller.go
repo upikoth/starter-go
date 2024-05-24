@@ -6,6 +6,7 @@ import (
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/controller/http"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
+	"github.com/upikoth/starter-go/internal/service"
 )
 
 type Controller struct {
@@ -14,8 +15,12 @@ type Controller struct {
 	config *config.Controller
 }
 
-func New(config *config.Config, logger logger.Logger) (*Controller, error) {
-	http, err := http.New(&config.Controller.HTTP, logger)
+func New(
+	config *config.Config,
+	logger logger.Logger,
+	service *service.Service,
+) (*Controller, error) {
+	http, err := http.New(&config.Controller.HTTP, logger, service)
 
 	if err != nil {
 		return nil, err

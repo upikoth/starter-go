@@ -33,7 +33,7 @@ type Invoker interface {
 	// Создать заявку на регистрацию пользователя.
 	//
 	// POST /api/v1/registrations
-	V1CreateRegistration(ctx context.Context, request *V1RegistrationsCreateRegistrationRequestBody) (*SuccessResponse, error)
+	V1CreateRegistration(ctx context.Context, request *V1RegistrationsCreateRegistrationRequestBody) (*V1RegistrationsCreateRegistrationResponse, error)
 }
 
 // Client implements OAS client.
@@ -165,12 +165,12 @@ func (c *Client) sendV1CheckHealth(ctx context.Context) (res *SuccessResponse, e
 // Создать заявку на регистрацию пользователя.
 //
 // POST /api/v1/registrations
-func (c *Client) V1CreateRegistration(ctx context.Context, request *V1RegistrationsCreateRegistrationRequestBody) (*SuccessResponse, error) {
+func (c *Client) V1CreateRegistration(ctx context.Context, request *V1RegistrationsCreateRegistrationRequestBody) (*V1RegistrationsCreateRegistrationResponse, error) {
 	res, err := c.sendV1CreateRegistration(ctx, request)
 	return res, err
 }
 
-func (c *Client) sendV1CreateRegistration(ctx context.Context, request *V1RegistrationsCreateRegistrationRequestBody) (res *SuccessResponse, err error) {
+func (c *Client) sendV1CreateRegistration(ctx context.Context, request *V1RegistrationsCreateRegistrationRequestBody) (res *V1RegistrationsCreateRegistrationResponse, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("V1CreateRegistration"),
 		semconv.HTTPMethodKey.String("POST"),

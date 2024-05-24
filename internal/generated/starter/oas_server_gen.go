@@ -19,7 +19,7 @@ type Handler interface {
 	// Создать заявку на регистрацию пользователя.
 	//
 	// POST /api/v1/registrations
-	V1CreateRegistration(ctx context.Context, req *V1RegistrationsCreateRegistrationRequestBody) (*SuccessResponse, error)
+	V1CreateRegistration(ctx context.Context, req *V1RegistrationsCreateRegistrationRequestBody) (*V1RegistrationsCreateRegistrationResponse, error)
 	// NewError creates *ErrorResponseStatusCode from error returned by handler.
 	//
 	// Used for common default response.

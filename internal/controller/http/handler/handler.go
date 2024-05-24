@@ -8,15 +8,18 @@ import (
 	starter "github.com/upikoth/starter-go/internal/generated/starter"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
+	"github.com/upikoth/starter-go/internal/service"
 )
 
 type Handler struct {
-	logger logger.Logger
+	logger  logger.Logger
+	service *service.Service
 }
 
-func New(logger logger.Logger) *Handler {
+func New(logger logger.Logger, service *service.Service) *Handler {
 	return &Handler{
-		logger: logger,
+		logger:  logger,
+		service: service,
 	}
 }
 

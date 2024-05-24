@@ -4,14 +4,28 @@ import (
 	"context"
 
 	starter "github.com/upikoth/starter-go/internal/generated/starter"
+	"github.com/upikoth/starter-go/internal/models"
 )
 
 func (h *Handler) V1CreateRegistration(
 	_ context.Context,
 	req *starter.V1RegistrationsCreateRegistrationRequestBody,
-) (*starter.SuccessResponse, error) {
-	h.logger.Info(req)
-	return &starter.SuccessResponse{
-		Success: starter.SuccessResponseSuccessTrue,
+) (*starter.V1RegistrationsCreateRegistrationResponse, error) {
+	registrationCreateParams := models.RegistrationCreateParams{
+		Email: req.Email,
+	}
+
+	registration, err := h.service.Registrations.Create(registrationCreateParams)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &starter.V1RegistrationsCreateRegistrationResponse{
+		Success: true,
+		Data: starter.V1RegistrationsCreateRegistrationResponseData{
+			ID:    registration.ID,
+			Email: registration.Email,
+		},
 	}, nil
 }

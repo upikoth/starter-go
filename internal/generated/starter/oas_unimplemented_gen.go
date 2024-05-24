@@ -27,7 +27,7 @@ func (UnimplementedHandler) V1CheckHealth(ctx context.Context) (r *SuccessRespon
 // Создать заявку на регистрацию пользователя.
 //
 // POST /api/v1/registrations
-func (UnimplementedHandler) V1CreateRegistration(ctx context.Context, req *V1RegistrationsCreateRegistrationRequestBody) (r *SuccessResponse, _ error) {
+func (UnimplementedHandler) V1CreateRegistration(ctx context.Context, req *V1RegistrationsCreateRegistrationRequestBody) (r *V1RegistrationsCreateRegistrationResponse, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

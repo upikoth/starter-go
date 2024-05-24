@@ -168,3 +168,67 @@ func (s *V1RegistrationsCreateRegistrationRequestBody) GetEmail() string {
 func (s *V1RegistrationsCreateRegistrationRequestBody) SetEmail(val string) {
 	s.Email = val
 }
+
+// Ref: #/components/schemas/V1RegistrationsCreateRegistrationResponse
+type V1RegistrationsCreateRegistrationResponse struct {
+	Success V1RegistrationsCreateRegistrationResponseSuccess `json:"success"`
+	Data    V1RegistrationsCreateRegistrationResponseData    `json:"data"`
+}
+
+// GetSuccess returns the value of Success.
+func (s *V1RegistrationsCreateRegistrationResponse) GetSuccess() V1RegistrationsCreateRegistrationResponseSuccess {
+	return s.Success
+}
+
+// GetData returns the value of Data.
+func (s *V1RegistrationsCreateRegistrationResponse) GetData() V1RegistrationsCreateRegistrationResponseData {
+	return s.Data
+}
+
+// SetSuccess sets the value of Success.
+func (s *V1RegistrationsCreateRegistrationResponse) SetSuccess(val V1RegistrationsCreateRegistrationResponseSuccess) {
+	s.Success = val
+}
+
+// SetData sets the value of Data.
+func (s *V1RegistrationsCreateRegistrationResponse) SetData(val V1RegistrationsCreateRegistrationResponseData) {
+	s.Data = val
+}
+
+type V1RegistrationsCreateRegistrationResponseData struct {
+	ID    string `json:"id"`
+	Email string `json:"email"`
+}
+
+// GetID returns the value of ID.
+func (s *V1RegistrationsCreateRegistrationResponseData) GetID() string {
+	return s.ID
+}
+
+// GetEmail returns the value of Email.
+func (s *V1RegistrationsCreateRegistrationResponseData) GetEmail() string {
+	return s.Email
+}
+
+// SetID sets the value of ID.
+func (s *V1RegistrationsCreateRegistrationResponseData) SetID(val string) {
+	s.ID = val
+}
+
+// SetEmail sets the value of Email.
+func (s *V1RegistrationsCreateRegistrationResponseData) SetEmail(val string) {
+	s.Email = val
+}
+
+type V1RegistrationsCreateRegistrationResponseSuccess bool
+
+const (
+	V1RegistrationsCreateRegistrationResponseSuccessTrue V1RegistrationsCreateRegistrationResponseSuccess = true
+)
+
+// AllValues returns all V1RegistrationsCreateRegistrationResponseSuccess values.
+func (V1RegistrationsCreateRegistrationResponseSuccess) AllValues() []V1RegistrationsCreateRegistrationResponseSuccess {
+	return []V1RegistrationsCreateRegistrationResponseSuccess{
+		V1RegistrationsCreateRegistrationResponseSuccessTrue,
+	}
+}

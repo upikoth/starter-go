@@ -9,6 +9,7 @@ import (
 	"github.com/upikoth/starter-go/internal/controller/http/handler"
 	starter "github.com/upikoth/starter-go/internal/generated/starter"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
+	"github.com/upikoth/starter-go/internal/service"
 )
 
 type HTTP struct {
@@ -16,8 +17,12 @@ type HTTP struct {
 	starterServer *http.Server
 }
 
-func New(config *config.ControllerHTTP, logger logger.Logger) (*HTTP, error) {
-	handler := handler.New(logger)
+func New(
+	config *config.ControllerHTTP,
+	logger logger.Logger,
+	service *service.Service,
+) (*HTTP, error) {
+	handler := handler.New(logger, service)
 
 	srv, err := starter.NewServer(
 		handler,

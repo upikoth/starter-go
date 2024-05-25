@@ -4,6 +4,8 @@ import "github.com/kelseyhightower/envconfig"
 
 type Config struct {
 	Controller Controller
+	Service    Service
+	Repository Repository
 }
 
 type Controller struct {
@@ -12,6 +14,28 @@ type Controller struct {
 
 type ControllerHTTP struct {
 	Port string `envconfig:"PORT" required:"true"`
+}
+
+type Service struct {
+	Registrations Registrations
+}
+
+type Registrations struct {
+	FrontURL                         string `envconfig:"FRONT_URL" required:"true"`
+	FrontConfirmationRegistrationURL string `envconfig:"FRONT_CONFIRMATION_REGISTRATION_URL" required:"true"`
+}
+
+type Repository struct {
+	YcpStarter YcpStarter
+}
+
+type YcpStarter struct {
+	Host        string `envconfig:"YCP_STARTER_HOST" required:"true"`
+	Port        string `envconfig:"YCP_STARTER_PORT" required:"true"`
+	FromName    string `envconfig:"YCP_STARTER_FROM_NAME" required:"true"`
+	FromAddress string `envconfig:"YCP_STARTER_FROM_ADDRESS" required:"true"`
+	Username    string `envconfig:"YCP_STARTER_USERNAME" required:"true"`
+	Password    string `envconfig:"YCP_STARTER_PASSWORD" required:"true"`
 }
 
 func New() (*Config, error) {

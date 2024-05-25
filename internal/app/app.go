@@ -16,7 +16,7 @@ type App struct {
 }
 
 func New(config *config.Config, logger logger.Logger) (*App, error) {
-	service, err := service.New(logger)
+	service, err := service.New(logger, config)
 
 	if err != nil {
 		return nil, err

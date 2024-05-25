@@ -5,11 +5,17 @@
 	],
 	"go.lintOnSave": "package",
 	"cSpell.words": [
+		"bgcolor",
+		"cellspacing",
 		"gonic",
 		"joho",
 		"kelseyhightower",
 		"loggerlog",
+		"noopener",
+		"noreferrer",
 		"smtpclient",
-		"ycpstarter"
+		"tbody",
+		"ycpstarter",
+		"ydbstarter"
 	],
 }

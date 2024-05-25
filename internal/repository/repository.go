@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 	ycpstarter "github.com/upikoth/starter-go/internal/repository/ycp-starter"
 )
@@ -10,9 +11,18 @@ type Repository struct {
 	logger     logger.Logger
 }
 
-func New(logger logger.Logger) (*Repository, error) {
+func New(
+	logger logger.Logger,
+	config *config.Repository,
+) (*Repository, error) {
+	ycpStarter, err := ycpstarter.New(logger, &config.YcpStarter)
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &Repository{
-		YcpStarter: ycpstarter.New(logger),
+		YcpStarter: ycpStarter,
 		logger:     logger,
 	}, nil
 }

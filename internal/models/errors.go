@@ -6,6 +6,7 @@ type ErrorCode string
 
 const (
 	ErrorCodeValidationByOpenapi ErrorCode = "1"
+	ErrorCodeSMTPSendEmail       ErrorCode = "2"
 )
 
 type Error struct {

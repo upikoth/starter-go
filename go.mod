@@ -8,8 +8,9 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/ogen-go/ogen v1.1.1
+	github.com/ogen-go/ogen v1.2.0
 	github.com/ydb-platform/gorm-driver v0.1.3
+	github.com/ydb-platform/ydb-go-sdk-auth-environ v0.3.0
 	go.opentelemetry.io/otel v1.27.0
 	go.opentelemetry.io/otel/metric v1.27.0
 	go.opentelemetry.io/otel/trace v1.27.0
@@ -33,7 +34,6 @@ require (
 	github.com/segmentio/asm v1.2.0 // indirect
 	github.com/yandex-cloud/go-genproto v0.0.0-20211115083454-9ca41db5ed9e // indirect
 	github.com/ydb-platform/ydb-go-genproto v0.0.0-20240316140903-4a47abca1cca // indirect
-	github.com/ydb-platform/ydb-go-sdk-auth-environ v0.3.0 // indirect
 	github.com/ydb-platform/ydb-go-sdk/v3 v3.68.1 // indirect
 	github.com/ydb-platform/ydb-go-yc v0.12.1 // indirect
 	github.com/ydb-platform/ydb-go-yc-metadata v0.6.1 // indirect

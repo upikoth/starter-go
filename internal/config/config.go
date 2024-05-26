@@ -27,6 +27,7 @@ type Registrations struct {
 
 type Repository struct {
 	YcpStarter YcpStarter
+	YdbStarter YdbStarter
 }
 
 type YcpStarter struct {
@@ -36,6 +37,13 @@ type YcpStarter struct {
 	FromAddress string `envconfig:"YCP_STARTER_FROM_ADDRESS" required:"true"`
 	Username    string `envconfig:"YCP_STARTER_USERNAME" required:"true"`
 	Password    string `envconfig:"YCP_STARTER_PASSWORD" required:"true"`
+}
+
+type YdbStarter struct {
+	Dsn                 string `envconfig:"YDB_STARTER_DSN" required:"true"`
+	AuthFileDirName     string `envconfig:"YDB_STARTER_AUTH_FILE_DIR_NAME" required:"true"`
+	AuthFileName        string `envconfig:"YDB_STARTER_AUTH_FILE_NAME" required:"true"`
+	YcSaJSONCredentials []byte `envconfig:"YC_SA_JSON_CREDENTIALS"`
 }
 
 func New() (*Config, error) {

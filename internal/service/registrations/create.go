@@ -83,10 +83,19 @@ func (r *Registrations) Create(params models.RegistrationCreateParams) (models.R
 
 	if err != nil {
 		return registration, &models.Error{
-			Code:        models.ErrorCodeSMTPSendEmail,
+			Code:        models.ErrorCodeRegistrationSMTPSendEmail,
 			Description: err.Error(),
 		}
 	}
 
-	return registration, nil
+	resRegistration, err := r.repository.YdbStarter.Registrations.Create(registration)
+
+	if err != nil {
+		return registration, &models.Error{
+			Code:        models.ErrorCodeRegistrationYdbStarterCreate,
+			Description: err.Error(),
+		}
+	}
+
+	return resRegistration, nil
 }

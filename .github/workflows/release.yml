@@ -20,6 +20,7 @@ jobs:
   build-push-image-update-container:
     needs: lint
     runs-on: ubuntu-latest
+    environment: prod
     env:
       IMAGE: cr.yandex/${{ vars.YC_REGISTRY }}:${{ github.sha }}
     steps:
@@ -39,3 +40,17 @@ jobs:
           folder-id: b1g2g98mce9fdmv7vrd2
           revision-service-account-id: ajeglge1pheaqtkl4vn8
           revision-image-url: ${{ env.IMAGE }}
+          revision-execution-timeout: 30
+          revision-concurrency: 8
+          revision-env: |
+            YCP_STARTER_HOST=${{ vars.YCP_STARTER_HOST }}
+            YCP_STARTER_PORT=${{ vars.YCP_STARTER_PORT }}
+            YCP_STARTER_FROM_NAME=${{ vars.YCP_STARTER_FROM_NAME }}
+            YCP_STARTER_FROM_ADDRESS=${{ vars.YCP_STARTER_FROM_ADDRESS }}
+            YCP_STARTER_USERNAME=${{ secrets.YCP_STARTER_USERNAME }}
+            YCP_STARTER_PASSWORD=${{ secrets.YCP_STARTER_PASSWORD }}
+            YDB_STARTER_DSN=${{ secrets.YDB_STARTER_DSN }}
+            YDB_STARTER_AUTH_FILE_DIR_NAME=${{ vars.YDB_STARTER_AUTH_FILE_DIR_NAME }}
+            YDB_STARTER_AUTH_FILE_NAME=${{ vars.YDB_STARTER_AUTH_FILE_NAME }}
+            FRONT_URL=${{ vars.FRONT_URL }}
+            FRONT_CONFIRMATION_REGISTRATION_URL=${{ vars.FRONT_CONFIRMATION_REGISTRATION_URL }}

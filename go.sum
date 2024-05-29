@@ -757,6 +757,8 @@ github.com/ogen-go/ogen v1.1.1 h1:ccHc/vgS+WbOLLgM4JYW7EDiBv7DPfbvKCnbo5fctSY=
 github.com/ogen-go/ogen v1.1.1/go.mod h1:ZmPa2LwJrwXKPo3s3p/XFMg5znV60IX5950UftdNmb4=
 github.com/ogen-go/ogen v1.2.0 h1:Qd1xobX86jhb1rrLoQak6KuDgErYOxKghkvfPX9tc7E=
 github.com/ogen-go/ogen v1.2.0/go.mod h1:P2zQdEu8UqaVRfD5GEFvl+9q63VjMLvDquq1wVbyInM=
+github.com/ogen-go/ogen v1.2.1 h1:C5A0lvUMu2wl+eWIxnpXMWnuOJ26a2FyzR1CIC2qG0M=
+github.com/ogen-go/ogen v1.2.1/go.mod h1:P2zQdEu8UqaVRfD5GEFvl+9q63VjMLvDquq1wVbyInM=
 github.com/phpdave11/gofpdf v1.4.2/go.mod h1:zpO6xFn9yxo3YLyMvW8HcKWVdbNqgIfOOp2dXMnm1mY=
 github.com/phpdave11/gofpdi v1.0.12/go.mod h1:vBmVV0Do6hSBHC8uKUQ71JGW+ZGQq74llk/7bXwjDoI=
 github.com/phpdave11/gofpdi v1.0.13/go.mod h1:vBmVV0Do6hSBHC8uKUQ71JGW+ZGQq74llk/7bXwjDoI=
@@ -815,6 +817,8 @@ github.com/ydb-platform/ydb-go-genproto v0.0.0-20240316140903-4a47abca1cca h1:Pl
 github.com/ydb-platform/ydb-go-genproto v0.0.0-20240316140903-4a47abca1cca/go.mod h1:Er+FePu1dNUieD+XTMDduGpQuCPssK5Q4BjF+IIXJ3I=
 github.com/ydb-platform/ydb-go-sdk-auth-environ v0.3.0 h1:JxSvw+Moont8qCmibP2MjSEIHfkWJLkw0fHZemAk+d0=
 github.com/ydb-platform/ydb-go-sdk-auth-environ v0.3.0/go.mod h1:YzCPoNrTbrXZg9bO2YkbjI6eQLkaRIE9Bq8ponu0g8A=
+github.com/ydb-platform/ydb-go-sdk-auth-environ v0.4.2 h1:qsF9h/XDaMqriPPRloe6tCi4b7jIeWqUTQy+J26PwiQ=
+github.com/ydb-platform/ydb-go-sdk-auth-environ v0.4.2/go.mod h1:feJz7wSEf53OKMxZDoYRxsMQt123fEv8uEaXyUYkwMg=
 github.com/ydb-platform/ydb-go-sdk/v3 v3.44.0/go.mod h1:oSLwnuilwIpaF5bJJMAofnGgzPJusoI3zWMNb8I+GnM=
 github.com/ydb-platform/ydb-go-sdk/v3 v3.47.3/go.mod h1:bWnOIcUHd7+Sl7DN+yhyY1H/I61z53GczvwJgXMgvj0=
 github.com/ydb-platform/ydb-go-sdk/v3 v3.48.3/go.mod h1:bWnOIcUHd7+Sl7DN+yhyY1H/I61z53GczvwJgXMgvj0=

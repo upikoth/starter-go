@@ -42,6 +42,7 @@ jobs:
           revision-image-url: ${{ env.IMAGE }}
           revision-execution-timeout: 30
           revision-concurrency: 8
+          revision-log-options-log-group-id: e23gqlppq1ngt32ppjrk
           revision-env: |
             YCP_STARTER_HOST=${{ vars.YCP_STARTER_HOST }}
             YCP_STARTER_PORT=${{ vars.YCP_STARTER_PORT }}

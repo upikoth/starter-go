@@ -36,13 +36,13 @@ jobs:
       - uses: yc-actions/yc-sls-container-deploy@v2
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
-          container-name: starter
-          folder-id: b1g2g98mce9fdmv7vrd2
-          revision-service-account-id: ajeglge1pheaqtkl4vn8
+          container-name: ${{ vars.YC_CONTAINER_NAME }}
+          folder-id: ${{ vars.YC_FOLDER_ID }}
+          revision-service-account-id: ${{ vars.YC_SERVICE_ACCOUNT_ID }}
           revision-image-url: ${{ env.IMAGE }}
-          revision-execution-timeout: 30
-          revision-concurrency: 8
-          revision-log-options-log-group-id: e23gqlppq1ngt32ppjrk
+          revision-execution-timeout: 300
+          revision-concurrency: 16
+          revision-log-options-log-group-id: ${{ vars.YC_LOG_OPTIONS_LOG_GROUP_ID }}
           revision-env: |
             YCP_STARTER_HOST=${{ vars.YCP_STARTER_HOST }}
             YCP_STARTER_PORT=${{ vars.YCP_STARTER_PORT }}

@@ -44,7 +44,7 @@ jobs:
           revision-concurrency: 16
           revision-log-options-log-group-id: ${{ vars.YC_LOG_OPTIONS_LOG_GROUP_ID }}
           revision-storage-mounts: |
-            - ${{ vars.YC_S3_PATH }}:${{ vars.YDB_STARTER_AUTH_FILE_DIR_NAME }}
+            ${{ vars.YC_S3_PATH }}:${{ vars.YDB_STARTER_AUTH_FILE_DIR_NAME }}
           revision-env: |
             YCP_STARTER_HOST=${{ vars.YCP_STARTER_HOST }}
             YCP_STARTER_PORT=${{ vars.YCP_STARTER_PORT }}

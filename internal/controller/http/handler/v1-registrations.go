@@ -8,14 +8,14 @@ import (
 )
 
 func (h *Handler) V1CreateRegistration(
-	_ context.Context,
+	context context.Context,
 	req *starter.V1RegistrationsCreateRegistrationRequestBody,
 ) (*starter.V1RegistrationsCreateRegistrationResponse, error) {
 	registrationCreateParams := models.RegistrationCreateParams{
 		Email: req.Email,
 	}
 
-	registration, err := h.service.Registrations.Create(registrationCreateParams)
+	registration, err := h.service.Registrations.Create(context, registrationCreateParams)
 
 	if err != nil {
 		return nil, err

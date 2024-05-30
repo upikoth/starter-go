@@ -1,6 +1,8 @@
 package registrations
 
 import (
+	"context"
+
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 	"gorm.io/gorm"
@@ -27,9 +29,12 @@ func New(
 	}
 }
 
-func (r *Registrations) Create(registrationInput models.Registration) (models.Registration, error) {
+func (r *Registrations) Create(
+	context context.Context,
+	registrationInput models.Registration,
+) (models.Registration, error) {
 	registration := toLocalModel(registrationInput)
-	res := r.db.Create(&registration)
+	res := r.db.WithContext(context).Create(&registration)
 	createdRegistration := fromLocalModel(registration)
 
 	if res.Error != nil {

@@ -1,6 +1,7 @@
 package registrations
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/google/uuid"
@@ -61,7 +62,10 @@ var RegistrationEmailTemplate = `
 </table>
 `
 
-func (r *Registrations) Create(params models.RegistrationCreateParams) (models.Registration, error) {
+func (r *Registrations) Create(
+	context context.Context,
+	params models.RegistrationCreateParams,
+) (models.Registration, error) {
 	registration := models.Registration{
 		ID:                uuid.New().String(),
 		Email:             params.Email,
@@ -88,7 +92,7 @@ func (r *Registrations) Create(params models.RegistrationCreateParams) (models.R
 		}
 	}
 
-	resRegistration, err := r.repository.YdbStarter.Registrations.Create(registration)
+	resRegistration, err := r.repository.YdbStarter.Registrations.Create(context, registration)
 
 	if err != nil {
 		return registration, &models.Error{

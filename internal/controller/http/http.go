@@ -2,6 +2,7 @@ package http
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -33,7 +34,7 @@ func New(
 	})
 
 	if err != nil {
-		logger.Error("Sentry initialization failed: %v\n", err)
+		logger.Error(fmt.Sprintf("Sentry initialization failed: %v\n", err))
 	}
 
 	srv, err := starter.NewServer(

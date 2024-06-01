@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -24,19 +25,19 @@ func main() {
 
 	config, err := config.New()
 	if err != nil {
-		logger.Fatal(err)
+		logger.Fatal(err.Error())
 	}
 
 	app, err := app.New(config, logger)
 	if err != nil {
-		logger.Fatal(err)
+		logger.Fatal(err.Error())
 	}
 
 	go func() {
 		logger.Info("Запуск приложения")
 
 		if appErr := app.Start(); !errors.Is(appErr, http.ErrServerClosed) {
-			logger.Fatal(appErr)
+			logger.Fatal(appErr.Error())
 		}
 
 		logger.Info("Приложение перестало принимать новые запросы")
@@ -54,7 +55,7 @@ func main() {
 	defer shutdownRelease()
 
 	if stopErr := app.Stop(shutdownCtx); stopErr != nil {
-		logger.Fatal("Не удалось корректно остановить сервер, ошибка: %v", stopErr)
+		logger.Fatal(fmt.Sprintf("Не удалось корректно остановить сервер, ошибка: %v", stopErr))
 	}
 
 	logger.Info("Приложение остановлено")

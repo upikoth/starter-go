@@ -1,15 +1,17 @@
 package logger
 
-import loggerlog "github.com/upikoth/starter-go/internal/pkg/logger/logger-log"
+import (
+	loggerzerolog "github.com/upikoth/starter-go/internal/pkg/logger/logger-zerolog"
+)
 
 type Logger interface {
-	Debug(args ...any)
-	Info(args ...any)
-	Warn(args ...any)
-	Error(args ...any)
-	Fatal(args ...any)
+	Debug(msg string)
+	Info(msg string)
+	Warn(msg string)
+	Error(msg string)
+	Fatal(msg string)
 }
 
 func New() Logger {
-	return loggerlog.New()
+	return loggerzerolog.New()
 }

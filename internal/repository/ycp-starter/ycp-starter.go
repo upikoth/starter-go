@@ -51,7 +51,7 @@ func (y *YcpStarter) SendEmail(
 		disconnectError := y.client.Disconnect()
 
 		if err != nil {
-			y.logger.Error(disconnectError)
+			y.logger.Error(disconnectError.Error())
 		}
 	}()
 

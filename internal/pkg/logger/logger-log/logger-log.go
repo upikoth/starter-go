@@ -8,22 +8,22 @@ func New() *LoggerLog {
 	return &LoggerLog{}
 }
 
-func (l *LoggerLog) Debug(args ...any) {
-	log.Println(args...)
+func (l *LoggerLog) Debug(msg string) {
+	log.Println(msg)
 }
 
-func (l *LoggerLog) Info(args ...any) {
-	log.Println(args...)
+func (l *LoggerLog) Info(msg string) {
+	log.Println(msg)
 }
 
-func (l *LoggerLog) Warn(args ...any) {
-	log.Println(args...)
+func (l *LoggerLog) Warn(msg string) {
+	log.Println(msg)
 }
 
-func (l *LoggerLog) Error(args ...any) {
-	log.Println(args...)
+func (l *LoggerLog) Error(msg string) {
+	log.Println(msg)
 }
 
-func (l *LoggerLog) Fatal(args ...any) {
-	log.Fatal(args...)
+func (l *LoggerLog) Fatal(msg string) {
+	log.Fatal(msg)
 }

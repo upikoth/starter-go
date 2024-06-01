@@ -13,7 +13,8 @@ type Controller struct {
 }
 
 type ControllerHTTP struct {
-	Port string `envconfig:"PORT" required:"true"`
+	Port      string `envconfig:"PORT" required:"true"`
+	SentryDsn string `envconfig:"SENTRY_DSN" required:"true"`
 }
 
 type Service struct {

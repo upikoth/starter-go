@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/controller"
@@ -22,18 +23,21 @@ func New(config *config.Config, logger logger.Logger) (*App, error) {
 	repository, err := repository.New(logger, &config.Repository)
 
 	if err != nil {
+		logger.Error(fmt.Sprintf("Ошибка при инициализации repository: %s", err))
 		return nil, err
 	}
 
 	service, err := service.New(logger, config, repository)
 
 	if err != nil {
+		logger.Error(fmt.Sprintf("Ошибка при инициализации service: %s", err))
 		return nil, err
 	}
 
 	controller, err := controller.New(config, logger, service)
 
 	if err != nil {
+		logger.Error(fmt.Sprintf("Ошибка при инициализации controller: %s", err))
 		return nil, err
 	}
 
@@ -50,8 +54,11 @@ func (s *App) Start() error {
 	err := s.repository.Connect()
 
 	if err != nil {
+		s.logger.Error(fmt.Sprintf("Ошибка при подключении к repository: %s", err))
 		return err
 	}
+
+	s.logger.Debug("Подключение к repository прошло без ошибок")
 
 	return s.controller.Start()
 }
@@ -60,8 +67,11 @@ func (s *App) Stop(ctx context.Context) error {
 	err := s.repository.Disconnect()
 
 	if err != nil {
+		s.logger.Error(fmt.Sprintf("Ошибка при отключении от repository: %s", err))
 		return err
 	}
+
+	s.logger.Debug("Отключение от repository прошло без ошибок")
 
 	return s.controller.Stop(ctx)
 }

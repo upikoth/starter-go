@@ -2,12 +2,9 @@ package http
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"time"
 
-	"github.com/getsentry/sentry-go"
-	"github.com/ogen-go/ogen/middleware"
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/controller/http/handler"
 	starter "github.com/upikoth/starter-go/internal/generated/starter"
@@ -22,30 +19,16 @@ type HTTP struct {
 
 func New(
 	config *config.ControllerHTTP,
-	logger logger.Logger,
+	loggerInstance logger.Logger,
 	service *service.Service,
 ) (*HTTP, error) {
-	handler := handler.New(logger, service)
-
-	err := sentry.Init(sentry.ClientOptions{
-		Dsn:              config.SentryDsn,
-		EnableTracing:    true,
-		TracesSampleRate: 1.0,
-	})
-
-	if err != nil {
-		logger.Error(fmt.Sprintf("Sentry initialization failed: %v\n", err))
-	}
+	handler := handler.New(loggerInstance, service)
 
 	srv, err := starter.NewServer(
 		handler,
 		starter.WithErrorHandler(getStarterErrorHandler(handler)),
-		starter.WithMiddleware(func(req middleware.Request, next middleware.Next) (middleware.Response, error) {
-			transaction := sentry.StartTransaction(req.Context, req.Raw.RequestURI, sentry.ContinueFromRequest(req.Raw))
-			res, errorResponse := next(req)
-			transaction.Finish()
-			return res, errorResponse
-		}),
+		starter.WithMiddleware(logger.HTTPSentryMiddleware),
+		starter.WithMiddleware(logger.GetHTTPMiddleware(loggerInstance)),
 	)
 
 	if err != nil {
@@ -69,7 +52,7 @@ func New(
 	}
 
 	return &HTTP{
-		logger:        logger,
+		logger:        loggerInstance,
 		starterServer: starterServer,
 	}, nil
 }

@@ -21,26 +21,31 @@ func main() {
 	// В других случаях значения переменных окружения уже должны быть установлены.
 	// Поэтому ошибку загрузки файла обрабатывать не нужно.
 	_ = godotenv.Load()
-	logger := logger.New()
+	loggerInstance := logger.New()
 
 	config, err := config.New()
 	if err != nil {
-		logger.Fatal(err.Error())
+		loggerInstance.Fatal(err.Error())
 	}
 
-	app, err := app.New(config, logger)
+	logger.InitSentry(
+		&config.Controller.HTTP,
+		loggerInstance,
+	)
+
+	app, err := app.New(config, loggerInstance)
 	if err != nil {
-		logger.Fatal(err.Error())
+		loggerInstance.Fatal(err.Error())
 	}
 
 	go func() {
-		logger.Info("Запуск приложения")
+		loggerInstance.Info("Запуск приложения")
 
 		if appErr := app.Start(); !errors.Is(appErr, http.ErrServerClosed) {
-			logger.Fatal(appErr.Error())
+			loggerInstance.Fatal(appErr.Error())
 		}
 
-		logger.Info("Приложение перестало принимать новые запросы")
+		loggerInstance.Info("Приложение перестало принимать новые запросы")
 	}()
 
 	sigChan := make(chan os.Signal, 1)
@@ -55,8 +60,8 @@ func main() {
 	defer shutdownRelease()
 
 	if stopErr := app.Stop(shutdownCtx); stopErr != nil {
-		logger.Fatal(fmt.Sprintf("Не удалось корректно остановить сервер, ошибка: %v", stopErr))
+		loggerInstance.Fatal(fmt.Sprintf("Не удалось корректно остановить сервер, ошибка: %v", stopErr))
 	}
 
-	logger.Info("Приложение остановлено")
+	loggerInstance.Info("Приложение остановлено")
 }

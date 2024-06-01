@@ -57,4 +57,5 @@ jobs:
             YDB_STARTER_AUTH_FILE_NAME=${{ vars.YDB_STARTER_AUTH_FILE_NAME }}
             FRONT_URL=${{ vars.FRONT_URL }}
             SENTRY_DSN=${{ vars.SENTRY_DSN }}
+            ENVIRONMENT=${{ vars.ENVIRONMENT }}
             FRONT_CONFIRMATION_REGISTRATION_URL=${{ vars.FRONT_CONFIRMATION_REGISTRATION_URL }}

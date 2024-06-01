@@ -5,9 +5,9 @@ import "net/http"
 type ErrorCode string
 
 const (
-	ErrorCodeValidationByOpenapi          ErrorCode = "1"
-	ErrorCodeRegistrationSMTPSendEmail    ErrorCode = "2"
-	ErrorCodeRegistrationYdbStarterCreate ErrorCode = "3"
+	ErrorCodeValidationByOpenapi               ErrorCode = "1"
+	ErrorCodeRegistrationSMTPSendEmail         ErrorCode = "2"
+	ErrorCodeRegistrationYdbStarterCreateEmail ErrorCode = "3"
 )
 
 type Error struct {

@@ -96,7 +96,7 @@ func (r *Registrations) Create(
 
 	if err != nil {
 		return registration, &models.Error{
-			Code:        models.ErrorCodeRegistrationYdbStarterCreate,
+			Code:        models.ErrorCodeRegistrationYdbStarterCreateEmail,
 			Description: err.Error(),
 		}
 	}

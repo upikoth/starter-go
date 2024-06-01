@@ -16,6 +16,7 @@ type Logger interface {
 	Warn(msg string)
 	Error(msg string)
 	Fatal(msg string)
+	SetPrettyOutputToConsole()
 }
 
 func New() Logger {

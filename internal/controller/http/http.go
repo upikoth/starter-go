@@ -37,7 +37,7 @@ func New(
 
 	mux := http.NewServeMux()
 
-	mux.Handle("/api/", srv)
+	mux.Handle("/api/", corsMiddleware(srv))
 
 	starter := http.FileServer(http.Dir("docs/starter"))
 	mux.Handle("/api/docs/starter/", http.StripPrefix("/api/docs/starter/", starter))
@@ -75,4 +75,19 @@ func getStarterErrorHandler(handler *handler.Handler) starter.ErrorHandler {
 		bytes, _ := res.Response.MarshalJSON()
 		_, _ = w.Write(bytes)
 	}
+}
+
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Baggage, Sentry-Trace")
+
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
 }

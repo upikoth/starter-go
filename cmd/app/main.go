@@ -28,6 +28,10 @@ func main() {
 		loggerInstance.Fatal(err.Error())
 	}
 
+	if config.Environment == "development" {
+		loggerInstance.SetPrettyOutputToConsole()
+	}
+
 	logger.InitSentry(
 		&config.Controller.HTTP,
 		loggerInstance,

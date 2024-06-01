@@ -3,9 +3,10 @@ package config
 import "github.com/kelseyhightower/envconfig"
 
 type Config struct {
-	Controller Controller
-	Service    Service
-	Repository Repository
+	Environment string `envconfig:"ENVIRONMENT" required:"true"`
+	Controller  Controller
+	Service     Service
+	Repository  Repository
 }
 
 type Controller struct {

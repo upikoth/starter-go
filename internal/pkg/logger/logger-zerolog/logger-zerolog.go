@@ -1,6 +1,9 @@
 package loggerzerolog
 
 import (
+	"os"
+
+	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
 
@@ -28,4 +31,8 @@ func (l *LoggerZeroLog) Error(msg string) {
 
 func (l *LoggerZeroLog) Fatal(msg string) {
 	log.Fatal().Msg(msg)
+}
+
+func (l *LoggerZeroLog) SetPrettyOutputToConsole() {
+	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 }

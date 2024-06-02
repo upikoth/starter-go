@@ -10,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/joho/godotenv"
 	"github.com/upikoth/starter-go/internal/app"
 	"github.com/upikoth/starter-go/internal/config"
@@ -32,7 +33,7 @@ func main() {
 		loggerInstance.SetPrettyOutputToConsole()
 	}
 
-	logger.InitSentry(
+	initSentry(
 		&config.Controller.HTTP,
 		loggerInstance,
 	)
@@ -68,4 +69,25 @@ func main() {
 	}
 
 	loggerInstance.Info("Приложение остановлено")
+}
+
+func initSentry(
+	config *config.ControllerHTTP,
+	logger logger.Logger,
+) {
+	err := sentry.Init(sentry.ClientOptions{
+		Dsn:                config.SentryDsn,
+		Environment:        config.Environment,
+		EnableTracing:      true,
+		AttachStacktrace:   true,
+		TracesSampleRate:   1.0,
+		ProfilesSampleRate: 1.0,
+		SampleRate:         1.0,
+	})
+
+	if err != nil {
+		logger.Error(fmt.Sprintf("Не удалось инициализировать Sentry: %v\n", err))
+	} else {
+		logger.Debug("Sentry успешно инициализирована")
+	}
 }

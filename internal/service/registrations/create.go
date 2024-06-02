@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
 	"github.com/upikoth/starter-go/internal/models"
 )
@@ -63,9 +64,15 @@ var RegistrationEmailTemplate = `
 `
 
 func (r *Registrations) Create(
-	context context.Context,
+	inputCtx context.Context,
 	params models.RegistrationCreateParams,
 ) (models.Registration, error) {
+	span := sentry.StartSpan(inputCtx, "Service: Registrations.Create")
+	defer func() {
+		span.Finish()
+	}()
+	ctx := span.Context()
+
 	registration := models.Registration{
 		ID:                uuid.New().String(),
 		Email:             params.Email,
@@ -80,21 +87,24 @@ func (r *Registrations) Create(
 	)
 
 	err := r.repository.YcpStarter.SendEmail(
+		ctx,
 		registration.Email,
 		"Регистрация на "+r.config.FrontURL,
 		registrationEmail,
 	)
 
 	if err != nil {
+		sentry.CaptureException(err)
 		return registration, &models.Error{
 			Code:        models.ErrorCodeRegistrationSMTPSendEmail,
 			Description: err.Error(),
 		}
 	}
 
-	resRegistration, err := r.repository.YdbStarter.Registrations.Create(context, registration)
+	resRegistration, err := r.repository.YdbStarter.Registrations.Create(ctx, registration)
 
 	if err != nil {
+		sentry.CaptureException(err)
 		return registration, &models.Error{
 			Code:        models.ErrorCodeRegistrationYdbStarterCreateEmail,
 			Description: err.Error(),

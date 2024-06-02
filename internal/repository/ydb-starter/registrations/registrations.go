@@ -3,6 +3,7 @@ package registrations
 import (
 	"context"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 	"gorm.io/gorm"
@@ -30,14 +31,21 @@ func New(
 }
 
 func (r *Registrations) Create(
-	context context.Context,
+	inputCtx context.Context,
 	registrationInput models.Registration,
 ) (models.Registration, error) {
+	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.Registrations.Create")
+	defer func() {
+		span.Finish()
+	}()
+	ctx := span.Context()
+
 	registration := toLocalModel(registrationInput)
-	res := r.db.WithContext(context).Create(&registration)
+	res := r.db.WithContext(ctx).Create(&registration)
 	createdRegistration := fromLocalModel(registration)
 
 	if res.Error != nil {
+		sentry.CaptureException(res.Error)
 		return createdRegistration, res.Error
 	}
 

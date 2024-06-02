@@ -1,8 +1,10 @@
 package ycpstarter
 
 import (
+	"context"
 	"net/mail"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 	smtpclient "github.com/upikoth/starter-go/internal/pkg/smtp-client"
@@ -37,13 +39,20 @@ func New(
 }
 
 func (y *YcpStarter) SendEmail(
+	inputCtx context.Context,
 	toEmail string,
 	title string,
 	body string,
 ) error {
+	span := sentry.StartSpan(inputCtx, "Repository: YcpStarter.SendEmail")
+	defer func() {
+		span.Finish()
+	}()
+
 	err := y.client.Connect()
 
 	if err != nil {
+		sentry.CaptureException(err)
 		return err
 	}
 

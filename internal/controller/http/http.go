@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/getsentry/sentry-go"
+	"github.com/ogen-go/ogen/middleware"
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/controller/http/handler"
 	starter "github.com/upikoth/starter-go/internal/generated/starter"
@@ -27,8 +29,10 @@ func New(
 	srv, err := starter.NewServer(
 		handler,
 		starter.WithErrorHandler(getStarterErrorHandler(handler)),
-		starter.WithMiddleware(logger.HTTPSentryMiddleware),
-		starter.WithMiddleware(logger.GetHTTPMiddleware(loggerInstance)),
+		starter.WithMiddleware(
+			httpSentryMiddleware,
+			logger.GetHTTPMiddleware(loggerInstance),
+		),
 	)
 
 	if err != nil {
@@ -90,4 +94,28 @@ func corsMiddleware(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 	})
+}
+
+func httpSentryMiddleware(req middleware.Request, next middleware.Next) (middleware.Response, error) {
+	transaction := sentry.StartTransaction(
+		req.Context,
+		req.Raw.RequestURI,
+		sentry.ContinueFromRequest(req.Raw),
+	)
+
+	ctx := transaction.Context()
+	req.SetContext(ctx)
+
+	res, errorResponse := next(req)
+
+	if errorResponse != nil {
+		sentry.CaptureEvent(&sentry.Event{
+			Level:   sentry.LevelInfo,
+			Message: errorResponse.Error(),
+		})
+	}
+
+	transaction.Finish()
+
+	return res, errorResponse
 }

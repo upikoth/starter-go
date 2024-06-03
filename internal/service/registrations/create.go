@@ -79,6 +79,30 @@ func (r *Registrations) Create(
 		ConfirmationToken: uuid.New().String(),
 	}
 
+	existingRegistration, err := r.repository.YdbStarter.Registrations.GetByEmail(ctx, registration.Email)
+
+	if err != nil {
+		sentry.CaptureException(err)
+		return registration, &models.Error{
+			Code:        models.ErrorCodeRegistrationYdbStarterCreateEmail,
+			Description: err.Error(),
+		}
+	}
+
+	if existingRegistration.ID != "" {
+		registration = existingRegistration
+	} else {
+		registration, err = r.repository.YdbStarter.Registrations.Create(ctx, registration)
+	}
+
+	if err != nil {
+		sentry.CaptureException(err)
+		return registration, &models.Error{
+			Code:        models.ErrorCodeRegistrationYdbStarterCreateEmail,
+			Description: err.Error(),
+		}
+	}
+
 	registrationEmail := fmt.Sprintf(
 		RegistrationEmailTemplate,
 		r.config.FrontURL,
@@ -86,7 +110,7 @@ func (r *Registrations) Create(
 		registration.ConfirmationToken,
 	)
 
-	err := r.repository.YcpStarter.SendEmail(
+	err = r.repository.YcpStarter.SendEmail(
 		ctx,
 		registration.Email,
 		"Регистрация на "+r.config.FrontURL,
@@ -101,15 +125,5 @@ func (r *Registrations) Create(
 		}
 	}
 
-	resRegistration, err := r.repository.YdbStarter.Registrations.Create(ctx, registration)
-
-	if err != nil {
-		sentry.CaptureException(err)
-		return registration, &models.Error{
-			Code:        models.ErrorCodeRegistrationYdbStarterCreateEmail,
-			Description: err.Error(),
-		}
-	}
-
-	return resRegistration, nil
+	return registration, nil
 }

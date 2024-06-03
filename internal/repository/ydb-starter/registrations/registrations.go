@@ -32,7 +32,7 @@ func New(
 
 func (r *Registrations) Create(
 	inputCtx context.Context,
-	registrationInput models.Registration,
+	registrationToCreate models.Registration,
 ) (models.Registration, error) {
 	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.Registrations.Create")
 	defer func() {
@@ -40,7 +40,7 @@ func (r *Registrations) Create(
 	}()
 	ctx := span.Context()
 
-	registration := toLocalModel(registrationInput)
+	registration := toLocalModel(registrationToCreate)
 	res := r.db.WithContext(ctx).Create(&registration)
 	createdRegistration := fromLocalModel(registration)
 
@@ -50,6 +50,50 @@ func (r *Registrations) Create(
 	}
 
 	return createdRegistration, nil
+}
+
+func (r *Registrations) Update(
+	inputCtx context.Context,
+	registrationToUpdate models.Registration,
+) (models.Registration, error) {
+	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.Registrations.Update")
+	defer func() {
+		span.Finish()
+	}()
+	ctx := span.Context()
+
+	registration := toLocalModel(registrationToUpdate)
+	res := r.db.WithContext(ctx).Updates(&registration)
+	updatedRegistration := fromLocalModel(registration)
+
+	if res.Error != nil {
+		sentry.CaptureException(res.Error)
+		return updatedRegistration, res.Error
+	}
+
+	return updatedRegistration, nil
+}
+
+func (r *Registrations) GetByEmail(
+	inputCtx context.Context,
+	email string,
+) (models.Registration, error) {
+	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.Registrations.GetByEmail")
+	defer func() {
+		span.Finish()
+	}()
+	ctx := span.Context()
+
+	registration := Registration{}
+	res := r.db.WithContext(ctx).Where(Registration{Email: email}).FirstOrInit(&registration)
+	foundRegistration := fromLocalModel(registration)
+
+	if res.Error != nil {
+		sentry.CaptureException(res.Error)
+		return foundRegistration, res.Error
+	}
+
+	return foundRegistration, nil
 }
 
 func toLocalModel(registration models.Registration) Registration {

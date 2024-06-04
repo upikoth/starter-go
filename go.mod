@@ -1,6 +1,6 @@
 module github.com/upikoth/starter-go
 
-go 1.22.3
+go 1.22.4
 
 require (
 	github.com/getsentry/sentry-go v0.28.0
@@ -10,6 +10,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/ogen-go/ogen v1.2.1
+	github.com/rs/zerolog v1.33.0
 	github.com/ydb-platform/gorm-driver v0.1.3
 	github.com/ydb-platform/ydb-go-sdk-auth-environ v0.4.2
 	go.opentelemetry.io/otel v1.27.0
@@ -32,7 +33,6 @@ require (
 	github.com/jonboulle/clockwork v0.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
-	github.com/rs/zerolog v1.33.0 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
 	github.com/yandex-cloud/go-genproto v0.0.0-20211115083454-9ca41db5ed9e // indirect
 	github.com/ydb-platform/ydb-go-genproto v0.0.0-20240316140903-4a47abca1cca // indirect

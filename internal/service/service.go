@@ -5,10 +5,12 @@ import (
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 	"github.com/upikoth/starter-go/internal/repository"
 	"github.com/upikoth/starter-go/internal/service/registrations"
+	"github.com/upikoth/starter-go/internal/service/sessions"
 )
 
 type Service struct {
 	Registrations *registrations.Registrations
+	Sessions      *sessions.Sessions
 }
 
 func New(
@@ -20,6 +22,10 @@ func New(
 		Registrations: registrations.New(
 			logger,
 			&config.Service.Registrations,
+			repository,
+		),
+		Sessions: sessions.New(
+			logger,
 			repository,
 		),
 	}, nil

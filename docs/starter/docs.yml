@@ -47,7 +47,31 @@ paths:
           description: Ошибка
           $ref: "#/components/responses/ErrorResponse"
 
+  /api/v1/session:
+    get:
+      tags:
+        - sessions
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationToken'
+      description: Получить информацию о сессии пользователя
+      operationId: V1GetCurrentSession
+      responses:
+        200:
+          description: Успешный ответ, пользователь авторизован
+          $ref: '#/components/responses/SuccessResponse'
+        default:
+          description: Ошибка
+          $ref: "#/components/responses/ErrorResponse"
+
 components:
+  parameters:
+    AuthorizationToken:
+      name: Authorization-Token
+      in: header
+      required: true
+      schema:
+        type: string
+
   schemas:
     SuccessResponse:
       type: object

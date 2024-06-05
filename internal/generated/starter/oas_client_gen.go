@@ -15,6 +15,7 @@ import (
 	semconv "go.opentelemetry.io/otel/semconv/v1.19.0"
 	"go.opentelemetry.io/otel/trace"
 
+	"github.com/ogen-go/ogen/conv"
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/otelogen"
 	"github.com/ogen-go/ogen/uri"
@@ -40,6 +41,12 @@ type Invoker interface {
 	//
 	// POST /api/v1/registrations
 	V1CreateRegistration(ctx context.Context, request *V1RegistrationsCreateRegistrationRequestBody) (*V1RegistrationsCreateRegistrationResponse, error)
+	// V1GetCurrentSession invokes V1GetCurrentSession operation.
+	//
+	// Получить информацию о сессии пользователя.
+	//
+	// GET /api/v1/session
+	V1GetCurrentSession(ctx context.Context, params V1GetCurrentSessionParams) (*SuccessResponse, error)
 }
 
 // Client implements OAS client.
@@ -309,6 +316,92 @@ func (c *Client) sendV1CreateRegistration(ctx context.Context, request *V1Regist
 
 	stage = "DecodeResponse"
 	result, err := decodeV1CreateRegistrationResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// V1GetCurrentSession invokes V1GetCurrentSession operation.
+//
+// Получить информацию о сессии пользователя.
+//
+// GET /api/v1/session
+func (c *Client) V1GetCurrentSession(ctx context.Context, params V1GetCurrentSessionParams) (*SuccessResponse, error) {
+	res, err := c.sendV1GetCurrentSession(ctx, params)
+	return res, err
+}
+
+func (c *Client) sendV1GetCurrentSession(ctx context.Context, params V1GetCurrentSessionParams) (res *SuccessResponse, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("V1GetCurrentSession"),
+		semconv.HTTPMethodKey.String("GET"),
+		semconv.HTTPRouteKey.String("/api/v1/session"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "V1GetCurrentSession",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/api/v1/session"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "GET", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+
+	stage = "EncodeHeaderParams"
+	h := uri.NewHeaderEncoder(r.Header)
+	{
+		cfg := uri.HeaderParameterEncodingConfig{
+			Name:    "Authorization-Token",
+			Explode: false,
+		}
+		if err := h.EncodeParam(cfg, func(e uri.Encoder) error {
+			return e.EncodeValue(conv.StringToString(params.AuthorizationToken))
+		}); err != nil {
+			return res, errors.Wrap(err, "encode header")
+		}
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeV1GetCurrentSessionResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}

@@ -104,6 +104,27 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 
 				elem = origElem
+			case 's': // Prefix: "session"
+				origElem := elem
+				if l := len("session"); len(elem) >= l && elem[0:l] == "session" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					// Leaf node.
+					switch r.Method {
+					case "GET":
+						s.handleV1GetCurrentSessionRequest([0]string{}, elemIsEscaped, w, r)
+					default:
+						s.notAllowed(w, r, "GET")
+					}
+
+					return
+				}
+
+				elem = origElem
 			}
 
 			elem = origElem
@@ -248,6 +269,31 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						r.summary = ""
 						r.operationID = "V1CreateRegistration"
 						r.pathPattern = "/api/v1/registrations"
+						r.args = args
+						r.count = 0
+						return r, true
+					default:
+						return
+					}
+				}
+
+				elem = origElem
+			case 's': // Prefix: "session"
+				origElem := elem
+				if l := len("session"); len(elem) >= l && elem[0:l] == "session" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					// Leaf node.
+					switch method {
+					case "GET":
+						r.name = "V1GetCurrentSession"
+						r.summary = ""
+						r.operationID = "V1GetCurrentSession"
+						r.pathPattern = "/api/v1/session"
 						r.args = args
 						r.count = 0
 						return r, true

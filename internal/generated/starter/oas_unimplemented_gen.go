@@ -40,6 +40,15 @@ func (UnimplementedHandler) V1CreateRegistration(ctx context.Context, req *V1Reg
 	return r, ht.ErrNotImplemented
 }
 
+// V1GetCurrentSession implements V1GetCurrentSession operation.
+//
+// Получить информацию о сессии пользователя.
+//
+// GET /api/v1/session
+func (UnimplementedHandler) V1GetCurrentSession(ctx context.Context, params V1GetCurrentSessionParams) (r *SuccessResponse, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // NewError creates *ErrorResponseStatusCode from error returned by handler.
 //
 // Used for common default response.

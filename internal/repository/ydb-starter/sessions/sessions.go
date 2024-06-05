@@ -25,7 +25,7 @@ func New(
 	}
 }
 
-func (r *Sessions) Create(
+func (s *Sessions) Create(
 	inputCtx context.Context,
 	sessionToCreate models.Session,
 ) (models.Session, error) {
@@ -36,7 +36,7 @@ func (r *Sessions) Create(
 	ctx := span.Context()
 
 	session := ydbsmodels.NewYdbsSessionModel(sessionToCreate)
-	res := r.db.WithContext(ctx).Create(&session)
+	res := s.db.WithContext(ctx).Create(&session)
 	createdSession := session.FromYdbsModel()
 
 	if res.Error != nil {
@@ -45,4 +45,29 @@ func (r *Sessions) Create(
 	}
 
 	return createdSession, nil
+}
+
+func (s *Sessions) GetByToken(
+	inputCtx context.Context,
+	token string,
+) (models.Session, error) {
+	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.Sessions.GetByToken")
+	defer func() {
+		span.Finish()
+	}()
+	ctx := span.Context()
+
+	session := ydbsmodels.Session{}
+	res := s.db.
+		WithContext(ctx).
+		Where(ydbsmodels.Session{Token: token}).
+		FirstOrInit(&session)
+	foundSession := session.FromYdbsModel()
+
+	if res.Error != nil {
+		sentry.CaptureException(res.Error)
+		return foundSession, res.Error
+	}
+
+	return foundSession, nil
 }

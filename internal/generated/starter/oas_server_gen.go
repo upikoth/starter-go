@@ -26,6 +26,12 @@ type Handler interface {
 	//
 	// POST /api/v1/registrations
 	V1CreateRegistration(ctx context.Context, req *V1RegistrationsCreateRegistrationRequestBody) (*V1RegistrationsCreateRegistrationResponse, error)
+	// V1GetCurrentSession implements V1GetCurrentSession operation.
+	//
+	// Получить информацию о сессии пользователя.
+	//
+	// GET /api/v1/session
+	V1GetCurrentSession(ctx context.Context, params V1GetCurrentSessionParams) (*SuccessResponse, error)
 	// NewError creates *ErrorResponseStatusCode from error returned by handler.
 	//
 	// Used for common default response.

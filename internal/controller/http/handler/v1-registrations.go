@@ -25,6 +25,7 @@ func (h *Handler) V1CreateRegistration(
 	registration, err := h.service.Registrations.Create(ctx, registrationCreateParams)
 
 	if err != nil {
+		sentry.CaptureException(err)
 		return nil, err
 	}
 
@@ -33,6 +34,36 @@ func (h *Handler) V1CreateRegistration(
 		Data: starter.V1RegistrationsCreateRegistrationResponseData{
 			ID:    registration.ID,
 			Email: registration.Email,
+		},
+	}, nil
+}
+
+func (h *Handler) V1ConfirmRegistration(
+	inputCtx context.Context,
+	req *starter.V1RegistrationsConfirmRegistrationRequestBody,
+) (*starter.V1RegistrationsConfirmRegistrationResponse, error) {
+	span := sentry.StartSpan(inputCtx, "Controller: V1ConfirmRegistration")
+	defer func() {
+		span.Finish()
+	}()
+	ctx := span.Context()
+
+	registrationConfirmParams := models.RegistrationConfirmParams{
+		ConfirmationToken: req.ConfirmationToken,
+		Password:          req.Password,
+	}
+
+	authToken, err := h.service.Registrations.Confirm(ctx, registrationConfirmParams)
+
+	if err != nil {
+		sentry.CaptureException(err)
+		return nil, err
+	}
+
+	return &starter.V1RegistrationsConfirmRegistrationResponse{
+		Success: true,
+		Data: starter.V1RegistrationsConfirmRegistrationResponseData{
+			Token: authToken,
 		},
 	}, nil
 }

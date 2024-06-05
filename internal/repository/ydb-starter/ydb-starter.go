@@ -6,15 +6,22 @@ import (
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 	"github.com/upikoth/starter-go/internal/repository/ydb-starter/registrations"
+	registrationsandusers "github.com/upikoth/starter-go/internal/repository/ydb-starter/registrations-and-users"
+	"github.com/upikoth/starter-go/internal/repository/ydb-starter/sessions"
+	"github.com/upikoth/starter-go/internal/repository/ydb-starter/users"
+	ydbsmodels "github.com/upikoth/starter-go/internal/repository/ydb-starter/ydbs-models"
 	ydb "github.com/ydb-platform/gorm-driver"
 	environ "github.com/ydb-platform/ydb-go-sdk-auth-environ"
 	"gorm.io/gorm"
 )
 
 type YdbStarter struct {
-	Registrations *registrations.Registrations
-	db            *gorm.DB
-	config        *config.YdbStarter
+	Registrations         *registrations.Registrations
+	RegistrationsAndUsers *registrationsandusers.RegistrationsAndUsers
+	Sessions              *sessions.Sessions
+	Users                 *users.Users
+	db                    *gorm.DB
+	config                *config.YdbStarter
 }
 
 func New(
@@ -24,9 +31,12 @@ func New(
 	db := &gorm.DB{}
 
 	return &YdbStarter{
-		Registrations: registrations.New(db, logger),
-		db:            db,
-		config:        config,
+		Registrations:         registrations.New(db, logger),
+		RegistrationsAndUsers: registrationsandusers.New(db, logger),
+		Sessions:              sessions.New(db, logger),
+		Users:                 users.New(db, logger),
+		db:                    db,
+		config:                config,
 	}, nil
 }
 
@@ -83,6 +93,8 @@ func (y *YdbStarter) Disconnect() error {
 
 func (y *YdbStarter) AutoMigrate() error {
 	return y.db.AutoMigrate(
-		&registrations.Registration{},
+		&ydbsmodels.Registration{},
+		&ydbsmodels.User{},
+		&ydbsmodels.Session{},
 	)
 }

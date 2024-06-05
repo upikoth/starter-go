@@ -1,0 +1,85 @@
+package registrations
+
+import (
+	"context"
+	"net/http"
+
+	"github.com/getsentry/sentry-go"
+	"github.com/google/uuid"
+	"github.com/upikoth/starter-go/internal/models"
+	"golang.org/x/crypto/bcrypt"
+)
+
+func (r *Registrations) Confirm(
+	inputCtx context.Context,
+	params models.RegistrationConfirmParams,
+) (string, error) {
+	span := sentry.StartSpan(inputCtx, "Service: Registrations.Confirm")
+	defer func() {
+		span.Finish()
+	}()
+	ctx := span.Context()
+
+	registration, err := r.repository.YdbStarter.Registrations.GetByToken(ctx, params.ConfirmationToken)
+
+	if err != nil {
+		sentry.CaptureException(err)
+		return "", &models.Error{
+			Code:        models.ErrorCodeRegistrationYdbStarterCheckConfirmationToken,
+			Description: err.Error(),
+		}
+	}
+
+	if registration.ID == "" {
+		return "", &models.Error{
+			Code:        models.ErrorCodeRegistrationYdbStarterRegistrationNotFound,
+			Description: "Регистрация с переданным токеном не найдена",
+			StatusCode:  http.StatusBadRequest,
+		}
+	}
+
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(params.Password), bcrypt.DefaultCost)
+
+	if err != nil {
+		sentry.CaptureException(err)
+		return "", &models.Error{
+			Code:        models.ErrorCodeRegistrationGeneratePasswordHash,
+			Description: err.Error(),
+		}
+	}
+
+	newUser := models.User{
+		ID:           uuid.New().String(),
+		Email:        registration.Email,
+		PasswordHash: string(passwordHash),
+	}
+
+	createdUser, err :=
+		r.repository.YdbStarter.RegistrationsAndUsers.DeleteRegistrationAndCreateUser(ctx, registration, newUser)
+
+	if err != nil {
+		sentry.CaptureException(err)
+		return "", &models.Error{
+			Code:        models.ErrorCodeRegistrationGeneratePasswordHash,
+			Description: err.Error(),
+		}
+	}
+
+	session := models.Session{
+		ID:     uuid.New().String(),
+		UserID: createdUser.ID,
+		Token:  uuid.New().String(),
+	}
+
+	createdSession, err := r.repository.YdbStarter.Sessions.Create(ctx, session)
+
+	if err != nil {
+		sentry.CaptureException(err)
+		return "", &models.Error{
+			Code:        models.ErrorCodeRegistrationCreateSession,
+			Description: err.Error(),
+		}
+	}
+
+	return createdSession.Token, nil
+}

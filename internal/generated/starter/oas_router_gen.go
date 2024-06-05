@@ -92,10 +92,12 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				if len(elem) == 0 {
 					// Leaf node.
 					switch r.Method {
+					case "PATCH":
+						s.handleV1ConfirmRegistrationRequest([0]string{}, elemIsEscaped, w, r)
 					case "POST":
 						s.handleV1CreateRegistrationRequest([0]string{}, elemIsEscaped, w, r)
 					default:
-						s.notAllowed(w, r, "POST")
+						s.notAllowed(w, r, "PATCH,POST")
 					}
 
 					return
@@ -206,9 +208,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				}
 
 				if len(elem) == 0 {
+					// Leaf node.
 					switch method {
 					case "GET":
-						// Leaf: V1CheckHealth
 						r.name = "V1CheckHealth"
 						r.summary = ""
 						r.operationID = "V1CheckHealth"
@@ -231,9 +233,17 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				}
 
 				if len(elem) == 0 {
+					// Leaf node.
 					switch method {
+					case "PATCH":
+						r.name = "V1ConfirmRegistration"
+						r.summary = ""
+						r.operationID = "V1ConfirmRegistration"
+						r.pathPattern = "/api/v1/registrations"
+						r.args = args
+						r.count = 0
+						return r, true
 					case "POST":
-						// Leaf: V1CreateRegistration
 						r.name = "V1CreateRegistration"
 						r.summary = ""
 						r.operationID = "V1CreateRegistration"

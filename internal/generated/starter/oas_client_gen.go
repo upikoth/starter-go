@@ -28,6 +28,12 @@ type Invoker interface {
 	//
 	// GET /api/v1/health
 	V1CheckHealth(ctx context.Context) (*SuccessResponse, error)
+	// V1ConfirmRegistration invokes V1ConfirmRegistration operation.
+	//
+	// Подтверждение заявки на регистрацию.
+	//
+	// PATCH /api/v1/registrations
+	V1ConfirmRegistration(ctx context.Context, request *V1RegistrationsConfirmRegistrationRequestBody) (*V1RegistrationsConfirmRegistrationResponse, error)
 	// V1CreateRegistration invokes V1CreateRegistration operation.
 	//
 	// Создать заявку на регистрацию пользователя.
@@ -153,6 +159,81 @@ func (c *Client) sendV1CheckHealth(ctx context.Context) (res *SuccessResponse, e
 
 	stage = "DecodeResponse"
 	result, err := decodeV1CheckHealthResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// V1ConfirmRegistration invokes V1ConfirmRegistration operation.
+//
+// Подтверждение заявки на регистрацию.
+//
+// PATCH /api/v1/registrations
+func (c *Client) V1ConfirmRegistration(ctx context.Context, request *V1RegistrationsConfirmRegistrationRequestBody) (*V1RegistrationsConfirmRegistrationResponse, error) {
+	res, err := c.sendV1ConfirmRegistration(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendV1ConfirmRegistration(ctx context.Context, request *V1RegistrationsConfirmRegistrationRequestBody) (res *V1RegistrationsConfirmRegistrationResponse, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("V1ConfirmRegistration"),
+		semconv.HTTPMethodKey.String("PATCH"),
+		semconv.HTTPRouteKey.String("/api/v1/registrations"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "V1ConfirmRegistration",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/api/v1/registrations"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "PATCH", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeV1ConfirmRegistrationRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeV1ConfirmRegistrationResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}

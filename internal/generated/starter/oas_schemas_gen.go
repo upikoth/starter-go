@@ -4,6 +4,8 @@ package api
 
 import (
 	"fmt"
+
+	"github.com/go-faster/jx"
 )
 
 func (s *ErrorResponseStatusCode) Error() string {
@@ -47,7 +49,16 @@ func (s *ErrorResponse) SetError(val ErrorResponseError) {
 	s.Error = val
 }
 
-type ErrorResponseData struct{}
+type ErrorResponseData map[string]jx.Raw
+
+func (s *ErrorResponseData) init() ErrorResponseData {
+	m := *s
+	if m == nil {
+		m = map[string]jx.Raw{}
+		*s = m
+	}
+	return m
+}
 
 type ErrorResponseError struct {
 	Code        string `json:"code"`
@@ -139,7 +150,16 @@ func (s *SuccessResponse) SetData(val SuccessResponseData) {
 	s.Data = val
 }
 
-type SuccessResponseData struct{}
+type SuccessResponseData map[string]jx.Raw
+
+func (s *SuccessResponseData) init() SuccessResponseData {
+	m := *s
+	if m == nil {
+		m = map[string]jx.Raw{}
+		*s = m
+	}
+	return m
+}
 
 type SuccessResponseSuccess bool
 
@@ -151,6 +171,85 @@ const (
 func (SuccessResponseSuccess) AllValues() []SuccessResponseSuccess {
 	return []SuccessResponseSuccess{
 		SuccessResponseSuccessTrue,
+	}
+}
+
+// Ref: #/components/schemas/V1RegistrationsConfirmRegistrationRequestBody
+type V1RegistrationsConfirmRegistrationRequestBody struct {
+	ConfirmationToken string `json:"confirmationToken"`
+	Password          string `json:"password"`
+}
+
+// GetConfirmationToken returns the value of ConfirmationToken.
+func (s *V1RegistrationsConfirmRegistrationRequestBody) GetConfirmationToken() string {
+	return s.ConfirmationToken
+}
+
+// GetPassword returns the value of Password.
+func (s *V1RegistrationsConfirmRegistrationRequestBody) GetPassword() string {
+	return s.Password
+}
+
+// SetConfirmationToken sets the value of ConfirmationToken.
+func (s *V1RegistrationsConfirmRegistrationRequestBody) SetConfirmationToken(val string) {
+	s.ConfirmationToken = val
+}
+
+// SetPassword sets the value of Password.
+func (s *V1RegistrationsConfirmRegistrationRequestBody) SetPassword(val string) {
+	s.Password = val
+}
+
+// Ref: #/components/schemas/V1RegistrationsConfirmRegistrationResponse
+type V1RegistrationsConfirmRegistrationResponse struct {
+	Success V1RegistrationsConfirmRegistrationResponseSuccess `json:"success"`
+	Data    V1RegistrationsConfirmRegistrationResponseData    `json:"data"`
+}
+
+// GetSuccess returns the value of Success.
+func (s *V1RegistrationsConfirmRegistrationResponse) GetSuccess() V1RegistrationsConfirmRegistrationResponseSuccess {
+	return s.Success
+}
+
+// GetData returns the value of Data.
+func (s *V1RegistrationsConfirmRegistrationResponse) GetData() V1RegistrationsConfirmRegistrationResponseData {
+	return s.Data
+}
+
+// SetSuccess sets the value of Success.
+func (s *V1RegistrationsConfirmRegistrationResponse) SetSuccess(val V1RegistrationsConfirmRegistrationResponseSuccess) {
+	s.Success = val
+}
+
+// SetData sets the value of Data.
+func (s *V1RegistrationsConfirmRegistrationResponse) SetData(val V1RegistrationsConfirmRegistrationResponseData) {
+	s.Data = val
+}
+
+type V1RegistrationsConfirmRegistrationResponseData struct {
+	Token string `json:"token"`
+}
+
+// GetToken returns the value of Token.
+func (s *V1RegistrationsConfirmRegistrationResponseData) GetToken() string {
+	return s.Token
+}
+
+// SetToken sets the value of Token.
+func (s *V1RegistrationsConfirmRegistrationResponseData) SetToken(val string) {
+	s.Token = val
+}
+
+type V1RegistrationsConfirmRegistrationResponseSuccess bool
+
+const (
+	V1RegistrationsConfirmRegistrationResponseSuccessTrue V1RegistrationsConfirmRegistrationResponseSuccess = true
+)
+
+// AllValues returns all V1RegistrationsConfirmRegistrationResponseSuccess values.
+func (V1RegistrationsConfirmRegistrationResponseSuccess) AllValues() []V1RegistrationsConfirmRegistrationResponseSuccess {
+	return []V1RegistrationsConfirmRegistrationResponseSuccess{
+		V1RegistrationsConfirmRegistrationResponseSuccessTrue,
 	}
 }
 

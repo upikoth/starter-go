@@ -5,6 +5,7 @@
 	],
 	"go.lintOnSave": "package",
 	"cSpell.words": [
+		"токеном",
 		"bgcolor",
 		"cellspacing",
 		"getsentry",
@@ -17,10 +18,13 @@
 		"noopener",
 		"noreferrer",
 		"ogen",
+		"registrationsandusers",
 		"sentryhttp",
 		"smtpclient",
 		"tbody",
 		"ycpstarter",
+		"ydbs",
+		"ydbsmodels",
 		"ydbstarter",
 		"zerolog"
 	],

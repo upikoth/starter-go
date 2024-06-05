@@ -3,6 +3,7 @@ package registrations
 import (
 	"context"
 	"fmt"
+	"net/http"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
@@ -79,12 +80,30 @@ func (r *Registrations) Create(
 		ConfirmationToken: uuid.New().String(),
 	}
 
+	existingUser, err := r.repository.YdbStarter.Users.GetByEmail(ctx, registration.Email)
+
+	if err != nil {
+		sentry.CaptureException(err)
+		return registration, &models.Error{
+			Code:        models.ErrorCodeRegistrationYdbStarterFindUser,
+			Description: err.Error(),
+		}
+	}
+
+	if existingUser.ID != "" {
+		return registration, &models.Error{
+			Code:        models.ErrorCodeRegistrationUserWithThisEmailAlreadyExist,
+			Description: "Пользователь с указанной почтой уже существует",
+			StatusCode:  http.StatusBadRequest,
+		}
+	}
+
 	existingRegistration, err := r.repository.YdbStarter.Registrations.GetByEmail(ctx, registration.Email)
 
 	if err != nil {
 		sentry.CaptureException(err)
 		return registration, &models.Error{
-			Code:        models.ErrorCodeRegistrationYdbStarterCreateEmail,
+			Code:        models.ErrorCodeRegistrationYdbStarterCreateRegistration,
 			Description: err.Error(),
 		}
 	}
@@ -98,7 +117,7 @@ func (r *Registrations) Create(
 	if err != nil {
 		sentry.CaptureException(err)
 		return registration, &models.Error{
-			Code:        models.ErrorCodeRegistrationYdbStarterCreateEmail,
+			Code:        models.ErrorCodeRegistrationYdbStarterCreateRegistration,
 			Description: err.Error(),
 		}
 	}

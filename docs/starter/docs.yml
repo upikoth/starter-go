@@ -32,6 +32,20 @@ paths:
         default:
           description: Ошибка
           $ref: "#/components/responses/ErrorResponse"
+    patch:
+      tags:
+        - registration
+      description: Подтверждение заявки на регистрацию
+      operationId: V1ConfirmRegistration
+      requestBody:
+        $ref: '#/components/requestBodies/V1RegistrationsConfirmRegistrationRequestBody'
+      responses:
+        200:
+          description: Успешный ответ
+          $ref: '#/components/responses/V1RegistrationsConfirmRegistrationResponse'
+        default:
+          description: Ошибка
+          $ref: "#/components/responses/ErrorResponse"
 
 components:
   schemas:
@@ -103,6 +117,36 @@ components:
               type: string
               format: email
 
+    V1RegistrationsConfirmRegistrationRequestBody:
+      type: object
+      required:
+        - confirmationToken
+        - password
+      properties:
+        confirmationToken:
+          type: string
+        password:
+          type: string
+          minLength: 1
+
+    V1RegistrationsConfirmRegistrationResponse:
+      type: object
+      required:
+        - success
+        - data
+      properties: 
+        success:
+          type: boolean
+          enum:
+            - true
+        data:
+          type: object
+          required:
+            - token
+          properties: 
+            token:
+              type: string
+
   requestBodies:
     V1RegistrationsCreateRegistrationRequestBody:
       description: Запрос для создания заявки на регистрацию
@@ -111,6 +155,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/V1RegistrationsCreateRegistrationRequestBody'
+
+    V1RegistrationsConfirmRegistrationRequestBody:
+      description: Запрос для подтверждения регистрации, создание пользователя с заданным паролем и авторизации
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/V1RegistrationsConfirmRegistrationRequestBody'
 
   responses:
     SuccessResponse:
@@ -133,3 +185,10 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/V1RegistrationsCreateRegistrationResponse'
+
+    V1RegistrationsConfirmRegistrationResponse:
+      description: Ответ при успешном подтверждении регистрации
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/V1RegistrationsConfirmRegistrationResponse'

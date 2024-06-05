@@ -14,6 +14,12 @@ type Handler interface {
 	//
 	// GET /api/v1/health
 	V1CheckHealth(ctx context.Context) (*SuccessResponse, error)
+	// V1ConfirmRegistration implements V1ConfirmRegistration operation.
+	//
+	// Подтверждение заявки на регистрацию.
+	//
+	// PATCH /api/v1/registrations
+	V1ConfirmRegistration(ctx context.Context, req *V1RegistrationsConfirmRegistrationRequestBody) (*V1RegistrationsConfirmRegistrationResponse, error)
 	// V1CreateRegistration implements V1CreateRegistration operation.
 	//
 	// Создать заявку на регистрацию пользователя.

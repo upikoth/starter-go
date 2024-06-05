@@ -63,6 +63,22 @@ paths:
           description: Ошибка
           $ref: "#/components/responses/ErrorResponse"
 
+  /api/v1/sessions:
+    post:
+      tags:
+        - sessions
+      description: Создание сессии пользователя
+      operationId: V1CreateSession
+      requestBody:
+        $ref: '#/components/requestBodies/V1SessionsCreateSessionRequestBody'
+      responses:
+        200:
+          description: Успешный ответ, пользователь авторизован
+          $ref: '#/components/responses/V1SessionsCreateSessionResponse'
+        default:
+          description: Ошибка
+          $ref: "#/components/responses/ErrorResponse"
+
 components:
   parameters:
     AuthorizationToken:
@@ -171,6 +187,37 @@ components:
             token:
               type: string
 
+    V1SessionsCreateSessionRequestBody:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 1
+
+    V1SessionsCreateSessionResponse:
+      type: object
+      required:
+        - success
+        - data
+      properties: 
+        success:
+          type: boolean
+          enum:
+            - true
+        data:
+          type: object
+          required:
+            - token
+          properties: 
+            token:
+              type: string
+
   requestBodies:
     V1RegistrationsCreateRegistrationRequestBody:
       description: Запрос для создания заявки на регистрацию
@@ -187,6 +234,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/V1RegistrationsConfirmRegistrationRequestBody'
+
+    V1SessionsCreateSessionRequestBody:
+      description: Запрос для создания сессии для пользователя
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/V1SessionsCreateSessionRequestBody'
 
   responses:
     SuccessResponse:
@@ -216,3 +271,10 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/V1RegistrationsConfirmRegistrationResponse'
+
+    V1SessionsCreateSessionResponse:
+      description: Ответ при успешном создании сессии
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/V1SessionsCreateSessionResponse'

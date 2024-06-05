@@ -55,6 +55,20 @@ func encodeV1CreateRegistrationResponse(response *V1RegistrationsCreateRegistrat
 	return nil
 }
 
+func encodeV1CreateSessionResponse(response *V1SessionsCreateSessionResponse, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	e := new(jx.Encoder)
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+
+	return nil
+}
+
 func encodeV1GetCurrentSessionResponse(response *SuccessResponse, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(200)

@@ -331,3 +331,82 @@ func (V1RegistrationsCreateRegistrationResponseSuccess) AllValues() []V1Registra
 		V1RegistrationsCreateRegistrationResponseSuccessTrue,
 	}
 }
+
+// Ref: #/components/schemas/V1SessionsCreateSessionRequestBody
+type V1SessionsCreateSessionRequestBody struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+// GetEmail returns the value of Email.
+func (s *V1SessionsCreateSessionRequestBody) GetEmail() string {
+	return s.Email
+}
+
+// GetPassword returns the value of Password.
+func (s *V1SessionsCreateSessionRequestBody) GetPassword() string {
+	return s.Password
+}
+
+// SetEmail sets the value of Email.
+func (s *V1SessionsCreateSessionRequestBody) SetEmail(val string) {
+	s.Email = val
+}
+
+// SetPassword sets the value of Password.
+func (s *V1SessionsCreateSessionRequestBody) SetPassword(val string) {
+	s.Password = val
+}
+
+// Ref: #/components/schemas/V1SessionsCreateSessionResponse
+type V1SessionsCreateSessionResponse struct {
+	Success V1SessionsCreateSessionResponseSuccess `json:"success"`
+	Data    V1SessionsCreateSessionResponseData    `json:"data"`
+}
+
+// GetSuccess returns the value of Success.
+func (s *V1SessionsCreateSessionResponse) GetSuccess() V1SessionsCreateSessionResponseSuccess {
+	return s.Success
+}
+
+// GetData returns the value of Data.
+func (s *V1SessionsCreateSessionResponse) GetData() V1SessionsCreateSessionResponseData {
+	return s.Data
+}
+
+// SetSuccess sets the value of Success.
+func (s *V1SessionsCreateSessionResponse) SetSuccess(val V1SessionsCreateSessionResponseSuccess) {
+	s.Success = val
+}
+
+// SetData sets the value of Data.
+func (s *V1SessionsCreateSessionResponse) SetData(val V1SessionsCreateSessionResponseData) {
+	s.Data = val
+}
+
+type V1SessionsCreateSessionResponseData struct {
+	Token string `json:"token"`
+}
+
+// GetToken returns the value of Token.
+func (s *V1SessionsCreateSessionResponseData) GetToken() string {
+	return s.Token
+}
+
+// SetToken sets the value of Token.
+func (s *V1SessionsCreateSessionResponseData) SetToken(val string) {
+	s.Token = val
+}
+
+type V1SessionsCreateSessionResponseSuccess bool
+
+const (
+	V1SessionsCreateSessionResponseSuccessTrue V1SessionsCreateSessionResponseSuccess = true
+)
+
+// AllValues returns all V1SessionsCreateSessionResponseSuccess values.
+func (V1SessionsCreateSessionResponseSuccess) AllValues() []V1SessionsCreateSessionResponseSuccess {
+	return []V1SessionsCreateSessionResponseSuccess{
+		V1SessionsCreateSessionResponseSuccessTrue,
+	}
+}

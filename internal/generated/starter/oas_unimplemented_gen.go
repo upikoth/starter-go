@@ -40,6 +40,15 @@ func (UnimplementedHandler) V1CreateRegistration(ctx context.Context, req *V1Reg
 	return r, ht.ErrNotImplemented
 }
 
+// V1CreateSession implements V1CreateSession operation.
+//
+// Создание сессии пользователя.
+//
+// POST /api/v1/sessions
+func (UnimplementedHandler) V1CreateSession(ctx context.Context, req *V1SessionsCreateSessionRequestBody) (r *V1SessionsCreateSessionResponse, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // V1GetCurrentSession implements V1GetCurrentSession operation.
 //
 // Получить информацию о сессии пользователя.

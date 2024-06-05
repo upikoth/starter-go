@@ -26,6 +26,12 @@ type Handler interface {
 	//
 	// POST /api/v1/registrations
 	V1CreateRegistration(ctx context.Context, req *V1RegistrationsCreateRegistrationRequestBody) (*V1RegistrationsCreateRegistrationResponse, error)
+	// V1CreateSession implements V1CreateSession operation.
+	//
+	// Создание сессии пользователя.
+	//
+	// POST /api/v1/sessions
+	V1CreateSession(ctx context.Context, req *V1SessionsCreateSessionRequestBody) (*V1SessionsCreateSessionResponse, error)
 	// V1GetCurrentSession implements V1GetCurrentSession operation.
 	//
 	// Получить информацию о сессии пользователя.

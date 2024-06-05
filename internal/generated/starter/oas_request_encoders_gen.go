@@ -38,3 +38,17 @@ func encodeV1CreateRegistrationRequest(
 	ht.SetBody(r, bytes.NewReader(encoded), contentType)
 	return nil
 }
+
+func encodeV1CreateSessionRequest(
+	req *V1SessionsCreateSessionRequestBody,
+	r *http.Request,
+) error {
+	const contentType = "application/json"
+	e := new(jx.Encoder)
+	{
+		req.Encode(e)
+	}
+	encoded := e.Bytes()
+	ht.SetBody(r, bytes.NewReader(encoded), contentType)
+	return nil
+}

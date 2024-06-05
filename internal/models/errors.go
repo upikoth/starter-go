@@ -17,6 +17,9 @@ const (
 	ErrorCodeRegistrationRegistrationNotFound             ErrorCode = "201"
 	ErrorCodeRegistrationGeneratePasswordHash             ErrorCode = "202"
 	ErrorCodeRegistrationCreateSession                    ErrorCode = "203"
+
+	ErrorCodeSessionsDbError              ErrorCode = "300"
+	ErrorCodeSessionsWrongEmailOrPassword ErrorCode = "301"
 )
 
 type Error struct {

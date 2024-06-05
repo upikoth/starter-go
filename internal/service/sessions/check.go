@@ -8,7 +8,7 @@ import (
 	"github.com/upikoth/starter-go/internal/models"
 )
 
-func (s *Sessions) CheckSessionToken(
+func (s *Sessions) CheckToken(
 	inputCtx context.Context,
 	token string,
 ) (models.Session, error) {

@@ -25,7 +25,6 @@ func (h *Handler) V1CreateRegistration(
 	registration, err := h.service.Registrations.Create(ctx, registrationCreateParams)
 
 	if err != nil {
-		sentry.CaptureException(err)
 		return nil, err
 	}
 
@@ -56,7 +55,6 @@ func (h *Handler) V1ConfirmRegistration(
 	authToken, err := h.service.Registrations.Confirm(ctx, registrationConfirmParams)
 
 	if err != nil {
-		sentry.CaptureException(err)
 		return nil, err
 	}
 

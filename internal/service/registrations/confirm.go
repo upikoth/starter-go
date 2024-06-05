@@ -32,7 +32,7 @@ func (r *Registrations) Confirm(
 
 	if registration.ID == "" {
 		return "", &models.Error{
-			Code:        models.ErrorCodeRegistrationYdbStarterRegistrationNotFound,
+			Code:        models.ErrorCodeRegistrationRegistrationNotFound,
 			Description: "Регистрация с переданным токеном не найдена",
 			StatusCode:  http.StatusBadRequest,
 		}

@@ -20,7 +20,7 @@ paths:
   /api/v1/registrations:
     post:
       tags:
-        - registration
+        - registrations
       description: Создать заявку на регистрацию пользователя
       operationId: V1CreateRegistration
       requestBody:
@@ -34,7 +34,7 @@ paths:
           $ref: "#/components/responses/ErrorResponse"
     patch:
       tags:
-        - registration
+        - registrations
       description: Подтверждение заявки на регистрацию
       operationId: V1ConfirmRegistration
       requestBody:

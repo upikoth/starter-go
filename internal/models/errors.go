@@ -6,6 +6,7 @@ type ErrorCode string
 
 const (
 	ErrorCodeValidationByOpenapi ErrorCode = "1"
+	ErrorCodeUserUnauthorized    ErrorCode = "2"
 
 	ErrorCodeRegistrationSMTPSendEmail                 ErrorCode = "100"
 	ErrorCodeRegistrationYdbStarterCreateRegistration  ErrorCode = "101"
@@ -13,7 +14,7 @@ const (
 	ErrorCodeRegistrationUserWithThisEmailAlreadyExist ErrorCode = "103"
 
 	ErrorCodeRegistrationYdbStarterCheckConfirmationToken ErrorCode = "200"
-	ErrorCodeRegistrationYdbStarterRegistrationNotFound   ErrorCode = "201"
+	ErrorCodeRegistrationRegistrationNotFound             ErrorCode = "201"
 	ErrorCodeRegistrationGeneratePasswordHash             ErrorCode = "202"
 	ErrorCodeRegistrationCreateSession                    ErrorCode = "203"
 )

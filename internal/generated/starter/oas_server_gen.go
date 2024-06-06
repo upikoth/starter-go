@@ -8,6 +8,12 @@ import (
 
 // Handler handles operations described by OpenAPI v3 specification.
 type Handler interface {
+	// V1CheckCurrentSession implements V1CheckCurrentSession operation.
+	//
+	// Получить информацию валидна ли текущая сессия.
+	//
+	// GET /api/v1/session
+	V1CheckCurrentSession(ctx context.Context, params V1CheckCurrentSessionParams) (*SuccessResponse, error)
 	// V1CheckHealth implements V1CheckHealth operation.
 	//
 	// Получить информацию о работоспособности приложения.
@@ -32,12 +38,6 @@ type Handler interface {
 	//
 	// POST /api/v1/sessions
 	V1CreateSession(ctx context.Context, req *V1SessionsCreateSessionRequestBody) (*V1SessionsCreateSessionResponse, error)
-	// V1GetCurrentSession implements V1GetCurrentSession operation.
-	//
-	// Получить информацию о сессии пользователя.
-	//
-	// GET /api/v1/session
-	V1GetCurrentSession(ctx context.Context, params V1GetCurrentSessionParams) (*SuccessResponse, error)
 	// NewError creates *ErrorResponseStatusCode from error returned by handler.
 	//
 	// Used for common default response.

@@ -52,7 +52,7 @@ func (h *Handler) V1ConfirmRegistration(
 		Password:          req.Password,
 	}
 
-	authToken, err := h.service.Registrations.Confirm(ctx, registrationConfirmParams)
+	session, err := h.service.Registrations.Confirm(ctx, registrationConfirmParams)
 
 	if err != nil {
 		return nil, err
@@ -61,7 +61,8 @@ func (h *Handler) V1ConfirmRegistration(
 	return &starter.V1RegistrationsConfirmRegistrationResponse{
 		Success: true,
 		Data: starter.V1RegistrationsConfirmRegistrationResponseData{
-			Token: authToken,
+			ID:    session.ID,
+			Token: session.Token,
 		},
 	}, nil
 }

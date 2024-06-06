@@ -12,12 +12,12 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
-// V1GetCurrentSessionParams is parameters of V1GetCurrentSession operation.
-type V1GetCurrentSessionParams struct {
+// V1CheckCurrentSessionParams is parameters of V1CheckCurrentSession operation.
+type V1CheckCurrentSessionParams struct {
 	AuthorizationToken string
 }
 
-func unpackV1GetCurrentSessionParams(packed middleware.Parameters) (params V1GetCurrentSessionParams) {
+func unpackV1CheckCurrentSessionParams(packed middleware.Parameters) (params V1CheckCurrentSessionParams) {
 	{
 		key := middleware.ParameterKey{
 			Name: "Authorization-Token",
@@ -28,7 +28,7 @@ func unpackV1GetCurrentSessionParams(packed middleware.Parameters) (params V1Get
 	return params
 }
 
-func decodeV1GetCurrentSessionParams(args [0]string, argsEscaped bool, r *http.Request) (params V1GetCurrentSessionParams, _ error) {
+func decodeV1CheckCurrentSessionParams(args [0]string, argsEscaped bool, r *http.Request) (params V1CheckCurrentSessionParams, _ error) {
 	h := uri.NewHeaderDecoder(r.Header)
 	// Decode header: Authorization-Token.
 	if err := func() error {

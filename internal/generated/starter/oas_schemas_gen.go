@@ -227,12 +227,23 @@ func (s *V1RegistrationsConfirmRegistrationResponse) SetData(val V1Registrations
 }
 
 type V1RegistrationsConfirmRegistrationResponseData struct {
+	ID    string `json:"id"`
 	Token string `json:"token"`
+}
+
+// GetID returns the value of ID.
+func (s *V1RegistrationsConfirmRegistrationResponseData) GetID() string {
+	return s.ID
 }
 
 // GetToken returns the value of Token.
 func (s *V1RegistrationsConfirmRegistrationResponseData) GetToken() string {
 	return s.Token
+}
+
+// SetID sets the value of ID.
+func (s *V1RegistrationsConfirmRegistrationResponseData) SetID(val string) {
+	s.ID = val
 }
 
 // SetToken sets the value of Token.
@@ -385,12 +396,23 @@ func (s *V1SessionsCreateSessionResponse) SetData(val V1SessionsCreateSessionRes
 }
 
 type V1SessionsCreateSessionResponseData struct {
+	ID    string `json:"id"`
 	Token string `json:"token"`
+}
+
+// GetID returns the value of ID.
+func (s *V1SessionsCreateSessionResponseData) GetID() string {
+	return s.ID
 }
 
 // GetToken returns the value of Token.
 func (s *V1SessionsCreateSessionResponseData) GetToken() string {
 	return s.Token
+}
+
+// SetID sets the value of ID.
+func (s *V1SessionsCreateSessionResponseData) SetID(val string) {
+	s.ID = val
 }
 
 // SetToken sets the value of Token.

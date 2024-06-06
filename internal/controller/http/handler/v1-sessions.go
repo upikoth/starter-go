@@ -8,9 +8,9 @@ import (
 	"github.com/upikoth/starter-go/internal/models"
 )
 
-func (h *Handler) V1GetCurrentSession(
+func (h *Handler) V1CheckCurrentSession(
 	inputCtx context.Context,
-	params starter.V1GetCurrentSessionParams,
+	params starter.V1CheckCurrentSessionParams,
 ) (*starter.SuccessResponse, error) {
 	span := sentry.StartSpan(inputCtx, "Controller: V1GetCurrentSession")
 	defer func() {
@@ -53,6 +53,7 @@ func (h *Handler) V1CreateSession(
 	return &starter.V1SessionsCreateSessionResponse{
 		Success: true,
 		Data: starter.V1SessionsCreateSessionResponseData{
+			ID:    session.ID,
 			Token: session.Token,
 		},
 	}, nil

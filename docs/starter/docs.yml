@@ -53,8 +53,8 @@ paths:
         - sessions
       parameters:
         - $ref: '#/components/parameters/AuthorizationToken'
-      description: Получить информацию о сессии пользователя
-      operationId: V1GetCurrentSession
+      description: Получить информацию валидна ли текущая сессия
+      operationId: V1CheckCurrentSession
       responses:
         200:
           description: Успешный ответ, пользователь авторизован
@@ -182,8 +182,11 @@ components:
         data:
           type: object
           required:
+            - id
             - token
           properties: 
+            id:
+              type: string
             token:
               type: string
 
@@ -213,8 +216,11 @@ components:
         data:
           type: object
           required:
+            - id
             - token
           properties: 
+            id:
+              type: string
             token:
               type: string
 

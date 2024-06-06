@@ -13,6 +13,15 @@ type UnimplementedHandler struct{}
 
 var _ Handler = UnimplementedHandler{}
 
+// V1CheckCurrentSession implements V1CheckCurrentSession operation.
+//
+// Получить информацию валидна ли текущая сессия.
+//
+// GET /api/v1/session
+func (UnimplementedHandler) V1CheckCurrentSession(ctx context.Context, params V1CheckCurrentSessionParams) (r *SuccessResponse, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // V1CheckHealth implements V1CheckHealth operation.
 //
 // Получить информацию о работоспособности приложения.
@@ -46,15 +55,6 @@ func (UnimplementedHandler) V1CreateRegistration(ctx context.Context, req *V1Reg
 //
 // POST /api/v1/sessions
 func (UnimplementedHandler) V1CreateSession(ctx context.Context, req *V1SessionsCreateSessionRequestBody) (r *V1SessionsCreateSessionResponse, _ error) {
-	return r, ht.ErrNotImplemented
-}
-
-// V1GetCurrentSession implements V1GetCurrentSession operation.
-//
-// Получить информацию о сессии пользователя.
-//
-// GET /api/v1/session
-func (UnimplementedHandler) V1GetCurrentSession(ctx context.Context, params V1GetCurrentSessionParams) (r *SuccessResponse, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

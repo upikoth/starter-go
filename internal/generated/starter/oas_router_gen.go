@@ -115,7 +115,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				if len(elem) == 0 {
 					switch r.Method {
 					case "GET":
-						s.handleV1GetCurrentSessionRequest([0]string{}, elemIsEscaped, w, r)
+						s.handleV1CheckCurrentSessionRequest([0]string{}, elemIsEscaped, w, r)
 					default:
 						s.notAllowed(w, r, "GET")
 					}
@@ -311,9 +311,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				if len(elem) == 0 {
 					switch method {
 					case "GET":
-						r.name = "V1GetCurrentSession"
+						r.name = "V1CheckCurrentSession"
 						r.summary = ""
-						r.operationID = "V1GetCurrentSession"
+						r.operationID = "V1CheckCurrentSession"
 						r.pathPattern = "/api/v1/session"
 						r.args = args
 						r.count = 0

@@ -13,7 +13,7 @@ import (
 func (r *Registrations) Confirm(
 	inputCtx context.Context,
 	params models.RegistrationConfirmParams,
-) (string, error) {
+) (models.Session, error) {
 	span := sentry.StartSpan(inputCtx, "Service: Registrations.Confirm")
 	defer func() {
 		span.Finish()
@@ -24,14 +24,14 @@ func (r *Registrations) Confirm(
 
 	if err != nil {
 		sentry.CaptureException(err)
-		return "", &models.Error{
+		return models.Session{}, &models.Error{
 			Code:        models.ErrorCodeRegistrationYdbStarterCheckConfirmationToken,
 			Description: err.Error(),
 		}
 	}
 
 	if registration.ID == "" {
-		return "", &models.Error{
+		return models.Session{}, &models.Error{
 			Code:        models.ErrorCodeRegistrationRegistrationNotFound,
 			Description: "Регистрация с переданным токеном не найдена",
 			StatusCode:  http.StatusBadRequest,
@@ -42,7 +42,7 @@ func (r *Registrations) Confirm(
 
 	if err != nil {
 		sentry.CaptureException(err)
-		return "", &models.Error{
+		return models.Session{}, &models.Error{
 			Code:        models.ErrorCodeRegistrationGeneratePasswordHash,
 			Description: err.Error(),
 		}
@@ -59,7 +59,7 @@ func (r *Registrations) Confirm(
 
 	if err != nil {
 		sentry.CaptureException(err)
-		return "", &models.Error{
+		return models.Session{}, &models.Error{
 			Code:        models.ErrorCodeRegistrationGeneratePasswordHash,
 			Description: err.Error(),
 		}
@@ -75,11 +75,11 @@ func (r *Registrations) Confirm(
 
 	if err != nil {
 		sentry.CaptureException(err)
-		return "", &models.Error{
+		return models.Session{}, &models.Error{
 			Code:        models.ErrorCodeRegistrationCreateSession,
 			Description: err.Error(),
 		}
 	}
 
-	return createdSession.Token, nil
+	return createdSession, nil
 }

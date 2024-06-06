@@ -227,27 +227,41 @@ func (s *V1RegistrationsConfirmRegistrationResponse) SetData(val V1Registrations
 }
 
 type V1RegistrationsConfirmRegistrationResponseData struct {
+	Session V1RegistrationsConfirmRegistrationResponseDataSession `json:"session"`
+}
+
+// GetSession returns the value of Session.
+func (s *V1RegistrationsConfirmRegistrationResponseData) GetSession() V1RegistrationsConfirmRegistrationResponseDataSession {
+	return s.Session
+}
+
+// SetSession sets the value of Session.
+func (s *V1RegistrationsConfirmRegistrationResponseData) SetSession(val V1RegistrationsConfirmRegistrationResponseDataSession) {
+	s.Session = val
+}
+
+type V1RegistrationsConfirmRegistrationResponseDataSession struct {
 	ID    string `json:"id"`
 	Token string `json:"token"`
 }
 
 // GetID returns the value of ID.
-func (s *V1RegistrationsConfirmRegistrationResponseData) GetID() string {
+func (s *V1RegistrationsConfirmRegistrationResponseDataSession) GetID() string {
 	return s.ID
 }
 
 // GetToken returns the value of Token.
-func (s *V1RegistrationsConfirmRegistrationResponseData) GetToken() string {
+func (s *V1RegistrationsConfirmRegistrationResponseDataSession) GetToken() string {
 	return s.Token
 }
 
 // SetID sets the value of ID.
-func (s *V1RegistrationsConfirmRegistrationResponseData) SetID(val string) {
+func (s *V1RegistrationsConfirmRegistrationResponseDataSession) SetID(val string) {
 	s.ID = val
 }
 
 // SetToken sets the value of Token.
-func (s *V1RegistrationsConfirmRegistrationResponseData) SetToken(val string) {
+func (s *V1RegistrationsConfirmRegistrationResponseDataSession) SetToken(val string) {
 	s.Token = val
 }
 
@@ -396,27 +410,41 @@ func (s *V1SessionsCreateSessionResponse) SetData(val V1SessionsCreateSessionRes
 }
 
 type V1SessionsCreateSessionResponseData struct {
+	Session V1SessionsCreateSessionResponseDataSession `json:"session"`
+}
+
+// GetSession returns the value of Session.
+func (s *V1SessionsCreateSessionResponseData) GetSession() V1SessionsCreateSessionResponseDataSession {
+	return s.Session
+}
+
+// SetSession sets the value of Session.
+func (s *V1SessionsCreateSessionResponseData) SetSession(val V1SessionsCreateSessionResponseDataSession) {
+	s.Session = val
+}
+
+type V1SessionsCreateSessionResponseDataSession struct {
 	ID    string `json:"id"`
 	Token string `json:"token"`
 }
 
 // GetID returns the value of ID.
-func (s *V1SessionsCreateSessionResponseData) GetID() string {
+func (s *V1SessionsCreateSessionResponseDataSession) GetID() string {
 	return s.ID
 }
 
 // GetToken returns the value of Token.
-func (s *V1SessionsCreateSessionResponseData) GetToken() string {
+func (s *V1SessionsCreateSessionResponseDataSession) GetToken() string {
 	return s.Token
 }
 
 // SetID sets the value of ID.
-func (s *V1SessionsCreateSessionResponseData) SetID(val string) {
+func (s *V1SessionsCreateSessionResponseDataSession) SetID(val string) {
 	s.ID = val
 }
 
 // SetToken sets the value of Token.
-func (s *V1SessionsCreateSessionResponseData) SetToken(val string) {
+func (s *V1SessionsCreateSessionResponseDataSession) SetToken(val string) {
 	s.Token = val
 }
 

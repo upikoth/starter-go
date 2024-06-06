@@ -182,13 +182,18 @@ components:
         data:
           type: object
           required:
-            - id
-            - token
+            - session
           properties: 
-            id:
-              type: string
-            token:
-              type: string
+            session:
+              type: object
+              required:
+                - id
+                - token
+              properties: 
+                id:
+                  type: string
+                token:
+                  type: string
 
     V1SessionsCreateSessionRequestBody:
       type: object
@@ -216,13 +221,18 @@ components:
         data:
           type: object
           required:
-            - id
-            - token
+            - session
           properties: 
-            id:
-              type: string
-            token:
-              type: string
+            session:
+              type: object
+              required:
+                - id
+                - token
+              properties: 
+                id:
+                  type: string
+                token:
+                  type: string
 
   requestBodies:
     V1RegistrationsCreateRegistrationRequestBody:

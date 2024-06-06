@@ -53,8 +53,10 @@ func (h *Handler) V1CreateSession(
 	return &starter.V1SessionsCreateSessionResponse{
 		Success: true,
 		Data: starter.V1SessionsCreateSessionResponseData{
-			ID:    session.ID,
-			Token: session.Token,
+			Session: starter.V1SessionsCreateSessionResponseDataSession{
+				ID:    session.ID,
+				Token: session.Token,
+			},
 		},
 	}, nil
 }

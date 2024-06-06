@@ -79,6 +79,27 @@ paths:
           description: Ошибка
           $ref: "#/components/responses/ErrorResponse"
 
+  /api/v1/sessions/{id}:
+    delete:
+      tags:
+        - sessions
+      description: Удаление сессии пользователя
+      operationId: V1DeleteSession
+      parameters:
+        - description: Id сессии
+          name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Успешный ответ, сессия удалена
+          $ref: '#/components/responses/SuccessResponse'
+        default:
+          description: Ошибка
+          $ref: "#/components/responses/ErrorResponse"
+
 components:
   parameters:
     AuthorizationToken:

@@ -80,7 +80,14 @@ func (r *Registrations) GetByEmail(
 	ctx := span.Context()
 
 	registration := ydbsmodels.Registration{}
-	res := r.db.WithContext(ctx).Where(ydbsmodels.Registration{Email: email}).FirstOrInit(&registration)
+	res := r.db.
+		WithContext(ctx).
+		Where(ydbsmodels.Registration{Email: email}).
+		FirstOrInit(&registration)
+
+	if res.RowsAffected == 0 {
+		registration = ydbsmodels.Registration{}
+	}
 	foundRegistration := registration.FromYdbsModel()
 
 	if res.Error != nil {
@@ -106,6 +113,10 @@ func (r *Registrations) GetByToken(
 		WithContext(ctx).
 		Where(ydbsmodels.Registration{ConfirmationToken: confirmationToken}).
 		FirstOrInit(&registration)
+
+	if res.RowsAffected == 0 {
+		registration = ydbsmodels.Registration{}
+	}
 	foundRegistration := registration.FromYdbsModel()
 
 	if res.Error != nil {

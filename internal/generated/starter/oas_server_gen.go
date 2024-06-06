@@ -38,6 +38,12 @@ type Handler interface {
 	//
 	// POST /api/v1/sessions
 	V1CreateSession(ctx context.Context, req *V1SessionsCreateSessionRequestBody) (*V1SessionsCreateSessionResponse, error)
+	// V1DeleteSession implements V1DeleteSession operation.
+	//
+	// Удаление сессии пользователя.
+	//
+	// DELETE /api/v1/sessions/{id}
+	V1DeleteSession(ctx context.Context, params V1DeleteSessionParams) (*SuccessResponse, error)
 	// NewError creates *ErrorResponseStatusCode from error returned by handler.
 	//
 	// Used for common default response.

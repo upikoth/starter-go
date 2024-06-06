@@ -18,8 +18,11 @@ const (
 	ErrorCodeRegistrationGeneratePasswordHash             ErrorCode = "202"
 	ErrorCodeRegistrationCreateSession                    ErrorCode = "203"
 
-	ErrorCodeSessionsDbError              ErrorCode = "300"
-	ErrorCodeSessionsWrongEmailOrPassword ErrorCode = "301"
+	ErrorCodeSessionsCreateSessionDbError              ErrorCode = "300"
+	ErrorCodeSessionsCreateSessionWrongEmailOrPassword ErrorCode = "301"
+
+	ErrorCodeSessionsDeleteSessionDbError  ErrorCode = "400"
+	ErrorCodeSessionsDeleteSessionNotFound ErrorCode = "401"
 )
 
 type Error struct {

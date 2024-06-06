@@ -25,14 +25,14 @@ func (s *Sessions) Create(
 	if err != nil {
 		sentry.CaptureException(err)
 		return models.Session{}, &models.Error{
-			Code:        models.ErrorCodeSessionsDbError,
+			Code:        models.ErrorCodeSessionsCreateSessionDbError,
 			Description: err.Error(),
 		}
 	}
 
 	if user.ID == "" {
 		return models.Session{}, &models.Error{
-			Code:        models.ErrorCodeSessionsWrongEmailOrPassword,
+			Code:        models.ErrorCodeSessionsCreateSessionWrongEmailOrPassword,
 			Description: "Неверные email или пароль",
 			StatusCode:  http.StatusBadRequest,
 		}
@@ -42,7 +42,7 @@ func (s *Sessions) Create(
 
 	if err != nil {
 		return models.Session{}, &models.Error{
-			Code:        models.ErrorCodeSessionsWrongEmailOrPassword,
+			Code:        models.ErrorCodeSessionsCreateSessionWrongEmailOrPassword,
 			Description: "Неверные email или пароль",
 			StatusCode:  http.StatusBadRequest,
 		}

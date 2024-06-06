@@ -60,3 +60,24 @@ func (h *Handler) V1CreateSession(
 		},
 	}, nil
 }
+
+func (h *Handler) V1DeleteSession(
+	inputCtx context.Context,
+	params starter.V1DeleteSessionParams,
+) (*starter.SuccessResponse, error) {
+	span := sentry.StartSpan(inputCtx, "Controller: V1DeleteSession")
+	defer func() {
+		span.Finish()
+	}()
+	ctx := span.Context()
+
+	err := h.service.Sessions.DeleteByID(ctx, params.ID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &starter.SuccessResponse{
+		Success: starter.SuccessResponseSuccessTrue,
+	}, nil
+}

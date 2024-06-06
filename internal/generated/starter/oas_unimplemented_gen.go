@@ -58,6 +58,15 @@ func (UnimplementedHandler) V1CreateSession(ctx context.Context, req *V1Sessions
 	return r, ht.ErrNotImplemented
 }
 
+// V1DeleteSession implements V1DeleteSession operation.
+//
+// Удаление сессии пользователя.
+//
+// DELETE /api/v1/sessions/{id}
+func (UnimplementedHandler) V1DeleteSession(ctx context.Context, params V1DeleteSessionParams) (r *SuccessResponse, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // NewError creates *ErrorResponseStatusCode from error returned by handler.
 //
 // Used for common default response.

@@ -62,6 +62,10 @@ func (s *Sessions) GetByToken(
 		WithContext(ctx).
 		Where(ydbsmodels.Session{Token: token}).
 		FirstOrInit(&session)
+
+	if res.RowsAffected == 0 {
+		session = ydbsmodels.Session{}
+	}
 	foundSession := session.FromYdbsModel()
 
 	if res.Error != nil {
@@ -70,4 +74,55 @@ func (s *Sessions) GetByToken(
 	}
 
 	return foundSession, nil
+}
+
+func (s *Sessions) GetByID(
+	inputCtx context.Context,
+	id string,
+) (models.Session, error) {
+	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.Sessions.GetByID")
+	defer func() {
+		span.Finish()
+	}()
+	ctx := span.Context()
+
+	session := ydbsmodels.Session{}
+	res := s.db.
+		WithContext(ctx).
+		Where(ydbsmodels.Session{ID: id}).
+		FirstOrInit(&session)
+
+	if res.RowsAffected == 0 {
+		session = ydbsmodels.Session{}
+	}
+	foundSession := session.FromYdbsModel()
+
+	if res.Error != nil {
+		sentry.CaptureException(res.Error)
+		return foundSession, res.Error
+	}
+
+	return foundSession, nil
+}
+
+func (s *Sessions) DeleteByID(
+	inputCtx context.Context,
+	id string,
+) error {
+	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.Sessions.DeleteByID")
+	defer func() {
+		span.Finish()
+	}()
+	ctx := span.Context()
+
+	res := s.db.
+		WithContext(ctx).
+		Delete(ydbsmodels.Session{ID: id})
+
+	if res.Error != nil {
+		sentry.CaptureException(res.Error)
+		return res.Error
+	}
+
+	return nil
 }

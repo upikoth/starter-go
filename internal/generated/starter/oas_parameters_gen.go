@@ -4,6 +4,9 @@ package api
 
 import (
 	"net/http"
+	"net/url"
+
+	"github.com/go-faster/errors"
 
 	"github.com/ogen-go/ogen/conv"
 	"github.com/ogen-go/ogen/middleware"
@@ -61,6 +64,72 @@ func decodeV1CheckCurrentSessionParams(args [0]string, argsEscaped bool, r *http
 		return params, &ogenerrors.DecodeParamError{
 			Name: "Authorization-Token",
 			In:   "header",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// V1DeleteSessionParams is parameters of V1DeleteSession operation.
+type V1DeleteSessionParams struct {
+	// Id сессии.
+	ID string
+}
+
+func unpackV1DeleteSessionParams(packed middleware.Parameters) (params V1DeleteSessionParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "id",
+			In:   "path",
+		}
+		params.ID = packed[key].(string)
+	}
+	return params
+}
+
+func decodeV1DeleteSessionParams(args [1]string, argsEscaped bool, r *http.Request) (params V1DeleteSessionParams, _ error) {
+	// Decode path: id.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "id",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.ID = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "id",
+			In:   "path",
 			Err:  err,
 		}
 	}

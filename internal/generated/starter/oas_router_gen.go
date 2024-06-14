@@ -82,6 +82,29 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 
 				elem = origElem
+			case 'p': // Prefix: "passwordRecoveryRequests"
+				origElem := elem
+				if l := len("passwordRecoveryRequests"); len(elem) >= l && elem[0:l] == "passwordRecoveryRequests" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					// Leaf node.
+					switch r.Method {
+					case "PATCH":
+						s.handleV1ConfirmPasswordRecoveryRequestRequest([0]string{}, elemIsEscaped, w, r)
+					case "POST":
+						s.handleV1CreatePasswordRecoveryRequestRequest([0]string{}, elemIsEscaped, w, r)
+					default:
+						s.notAllowed(w, r, "PATCH,POST")
+					}
+
+					return
+				}
+
+				elem = origElem
 			case 'r': // Prefix: "registrations"
 				origElem := elem
 				if l := len("registrations"); len(elem) >= l && elem[0:l] == "registrations" {
@@ -288,6 +311,39 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						r.summary = ""
 						r.operationID = "V1CheckHealth"
 						r.pathPattern = "/api/v1/health"
+						r.args = args
+						r.count = 0
+						return r, true
+					default:
+						return
+					}
+				}
+
+				elem = origElem
+			case 'p': // Prefix: "passwordRecoveryRequests"
+				origElem := elem
+				if l := len("passwordRecoveryRequests"); len(elem) >= l && elem[0:l] == "passwordRecoveryRequests" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					// Leaf node.
+					switch method {
+					case "PATCH":
+						r.name = "V1ConfirmPasswordRecoveryRequest"
+						r.summary = ""
+						r.operationID = "V1ConfirmPasswordRecoveryRequest"
+						r.pathPattern = "/api/v1/passwordRecoveryRequests"
+						r.args = args
+						r.count = 0
+						return r, true
+					case "POST":
+						r.name = "V1CreatePasswordRecoveryRequest"
+						r.summary = ""
+						r.operationID = "V1CreatePasswordRecoveryRequest"
+						r.pathPattern = "/api/v1/passwordRecoveryRequests"
 						r.args = args
 						r.count = 0
 						return r, true

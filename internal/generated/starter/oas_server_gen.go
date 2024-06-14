@@ -20,12 +20,24 @@ type Handler interface {
 	//
 	// GET /api/v1/health
 	V1CheckHealth(ctx context.Context) (*SuccessResponse, error)
+	// V1ConfirmPasswordRecoveryRequest implements V1ConfirmPasswordRecoveryRequest operation.
+	//
+	// Подтверждение заявки на восстановление пароля.
+	//
+	// PATCH /api/v1/passwordRecoveryRequests
+	V1ConfirmPasswordRecoveryRequest(ctx context.Context, req *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody) (*V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponse, error)
 	// V1ConfirmRegistration implements V1ConfirmRegistration operation.
 	//
 	// Подтверждение заявки на регистрацию.
 	//
 	// PATCH /api/v1/registrations
 	V1ConfirmRegistration(ctx context.Context, req *V1RegistrationsConfirmRegistrationRequestBody) (*V1RegistrationsConfirmRegistrationResponse, error)
+	// V1CreatePasswordRecoveryRequest implements V1CreatePasswordRecoveryRequest operation.
+	//
+	// Создать заявку на восстановление пароля.
+	//
+	// POST /api/v1/passwordRecoveryRequests
+	V1CreatePasswordRecoveryRequest(ctx context.Context, req *V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestRequestBody) (*V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponse, error)
 	// V1CreateRegistration implements V1CreateRegistration operation.
 	//
 	// Создать заявку на регистрацию пользователя.

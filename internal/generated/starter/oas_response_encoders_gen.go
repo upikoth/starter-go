@@ -41,7 +41,35 @@ func encodeV1CheckHealthResponse(response *SuccessResponse, w http.ResponseWrite
 	return nil
 }
 
+func encodeV1ConfirmPasswordRecoveryRequestResponse(response *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponse, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	e := new(jx.Encoder)
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+
+	return nil
+}
+
 func encodeV1ConfirmRegistrationResponse(response *V1RegistrationsConfirmRegistrationResponse, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	e := new(jx.Encoder)
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+
+	return nil
+}
+
+func encodeV1CreatePasswordRecoveryRequestResponse(response *V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponse, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(200)
 	span.SetStatus(codes.Ok, http.StatusText(200))

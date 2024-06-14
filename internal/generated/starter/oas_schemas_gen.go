@@ -174,6 +174,189 @@ func (SuccessResponseSuccess) AllValues() []SuccessResponseSuccess {
 	}
 }
 
+// Ref: #/components/schemas/V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody
+type V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody struct {
+	ConfirmationToken string `json:"confirmationToken"`
+	NewPassword       string `json:"newPassword"`
+}
+
+// GetConfirmationToken returns the value of ConfirmationToken.
+func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody) GetConfirmationToken() string {
+	return s.ConfirmationToken
+}
+
+// GetNewPassword returns the value of NewPassword.
+func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody) GetNewPassword() string {
+	return s.NewPassword
+}
+
+// SetConfirmationToken sets the value of ConfirmationToken.
+func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody) SetConfirmationToken(val string) {
+	s.ConfirmationToken = val
+}
+
+// SetNewPassword sets the value of NewPassword.
+func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody) SetNewPassword(val string) {
+	s.NewPassword = val
+}
+
+// Ref: #/components/schemas/V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponse
+type V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponse struct {
+	Success V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseSuccess `json:"success"`
+	Data    V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseData    `json:"data"`
+}
+
+// GetSuccess returns the value of Success.
+func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponse) GetSuccess() V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseSuccess {
+	return s.Success
+}
+
+// GetData returns the value of Data.
+func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponse) GetData() V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseData {
+	return s.Data
+}
+
+// SetSuccess sets the value of Success.
+func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponse) SetSuccess(val V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseSuccess) {
+	s.Success = val
+}
+
+// SetData sets the value of Data.
+func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponse) SetData(val V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseData) {
+	s.Data = val
+}
+
+type V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseData struct {
+	Session V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession `json:"session"`
+}
+
+// GetSession returns the value of Session.
+func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseData) GetSession() V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession {
+	return s.Session
+}
+
+// SetSession sets the value of Session.
+func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseData) SetSession(val V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession) {
+	s.Session = val
+}
+
+type V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession struct {
+	ID    string `json:"id"`
+	Token string `json:"token"`
+}
+
+// GetID returns the value of ID.
+func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession) GetID() string {
+	return s.ID
+}
+
+// GetToken returns the value of Token.
+func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession) GetToken() string {
+	return s.Token
+}
+
+// SetID sets the value of ID.
+func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession) SetID(val string) {
+	s.ID = val
+}
+
+// SetToken sets the value of Token.
+func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession) SetToken(val string) {
+	s.Token = val
+}
+
+type V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseSuccess bool
+
+const (
+	V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseSuccessTrue V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseSuccess = true
+)
+
+// AllValues returns all V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseSuccess values.
+func (V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseSuccess) AllValues() []V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseSuccess {
+	return []V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseSuccess{
+		V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseSuccessTrue,
+	}
+}
+
+// Ref: #/components/schemas/V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestRequestBody
+type V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestRequestBody struct {
+	Email string `json:"email"`
+}
+
+// GetEmail returns the value of Email.
+func (s *V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestRequestBody) GetEmail() string {
+	return s.Email
+}
+
+// SetEmail sets the value of Email.
+func (s *V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestRequestBody) SetEmail(val string) {
+	s.Email = val
+}
+
+// Ref: #/components/schemas/V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponse
+type V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponse struct {
+	Success V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponseSuccess `json:"success"`
+	Data    V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponseData    `json:"data"`
+}
+
+// GetSuccess returns the value of Success.
+func (s *V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponse) GetSuccess() V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponseSuccess {
+	return s.Success
+}
+
+// GetData returns the value of Data.
+func (s *V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponse) GetData() V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponseData {
+	return s.Data
+}
+
+// SetSuccess sets the value of Success.
+func (s *V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponse) SetSuccess(val V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponseSuccess) {
+	s.Success = val
+}
+
+// SetData sets the value of Data.
+func (s *V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponse) SetData(val V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponseData) {
+	s.Data = val
+}
+
+type V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponseData struct {
+	ID    string `json:"id"`
+	Email string `json:"email"`
+}
+
+// GetID returns the value of ID.
+func (s *V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponseData) GetID() string {
+	return s.ID
+}
+
+// GetEmail returns the value of Email.
+func (s *V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponseData) GetEmail() string {
+	return s.Email
+}
+
+// SetID sets the value of ID.
+func (s *V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponseData) SetID(val string) {
+	s.ID = val
+}
+
+// SetEmail sets the value of Email.
+func (s *V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponseData) SetEmail(val string) {
+	s.Email = val
+}
+
+type V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponseSuccess bool
+
+const (
+	V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponseSuccessTrue V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponseSuccess = true
+)
+
+// AllValues returns all V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponseSuccess values.
+func (V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponseSuccess) AllValues() []V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponseSuccess {
+	return []V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponseSuccess{
+		V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponseSuccessTrue,
+	}
+}
+
 // Ref: #/components/schemas/V1RegistrationsConfirmRegistrationRequestBody
 type V1RegistrationsConfirmRegistrationRequestBody struct {
 	ConfirmationToken string `json:"confirmationToken"`

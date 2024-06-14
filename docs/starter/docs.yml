@@ -100,6 +100,36 @@ paths:
           description: Ошибка
           $ref: "#/components/responses/ErrorResponse"
 
+  /api/v1/passwordRecoveryRequests:
+    post:
+      tags:
+        - passwordRecoveryRequests
+      description: Создать заявку на восстановление пароля
+      operationId: V1CreatePasswordRecoveryRequest
+      requestBody:
+        $ref: '#/components/requestBodies/V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestRequestBody'
+      responses:
+        200:
+          description: Успешный ответ
+          $ref: '#/components/responses/V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponse'
+        default:
+          description: Ошибка
+          $ref: "#/components/responses/ErrorResponse"
+    patch:
+      tags:
+        - passwordRecoveryRequests
+      description: Подтверждение заявки на восстановление пароля
+      operationId: V1ConfirmPasswordRecoveryRequest
+      requestBody:
+        $ref: '#/components/requestBodies/V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody'
+      responses:
+        200:
+          description: Успешный ответ
+          $ref: '#/components/responses/V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponse'
+        default:
+          description: Ошибка
+          $ref: "#/components/responses/ErrorResponse"
+
 components:
   parameters:
     AuthorizationToken:
@@ -255,6 +285,75 @@ components:
                 token:
                   type: string
 
+    V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestRequestBody:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+
+    V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponse:
+      type: object
+      required:
+        - success
+        - data
+      properties: 
+        success:
+          type: boolean
+          enum:
+            - true
+        data:
+          type: object
+          required:
+            - id
+            - email
+          properties: 
+            id:
+              type: string
+            email:
+              type: string
+              format: email
+
+    V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody:
+      type: object
+      required:
+        - confirmationToken
+        - newPassword
+      properties:
+        confirmationToken:
+          type: string
+        newPassword:
+          type: string
+          minLength: 1
+
+    V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponse:
+      type: object
+      required:
+        - success
+        - data
+      properties: 
+        success:
+          type: boolean
+          enum:
+            - true
+        data:
+          type: object
+          required:
+            - session
+          properties: 
+            session:
+              type: object
+              required:
+                - id
+                - token
+              properties: 
+                id:
+                  type: string
+                token:
+                  type: string
+
   requestBodies:
     V1RegistrationsCreateRegistrationRequestBody:
       description: Запрос для создания заявки на регистрацию
@@ -279,6 +378,22 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/V1SessionsCreateSessionRequestBody'
+
+    V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestRequestBody:
+      description: Запрос для создания заявки на восстановление пароля
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestRequestBody'
+
+    V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody:
+      description: Запрос для подтверждения восстановления пароля, и авторизации
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody'
 
   responses:
     SuccessResponse:
@@ -315,3 +430,17 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/V1SessionsCreateSessionResponse'
+
+    V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponse:
+      description: Ответ при успешном создании заявки восстановление пароля
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponse'
+
+    V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponse:
+      description: Ответ при успешном восстановлении пароля
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponse'

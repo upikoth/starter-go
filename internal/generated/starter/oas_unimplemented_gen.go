@@ -31,12 +31,30 @@ func (UnimplementedHandler) V1CheckHealth(ctx context.Context) (r *SuccessRespon
 	return r, ht.ErrNotImplemented
 }
 
+// V1ConfirmPasswordRecoveryRequest implements V1ConfirmPasswordRecoveryRequest operation.
+//
+// Подтверждение заявки на восстановление пароля.
+//
+// PATCH /api/v1/passwordRecoveryRequests
+func (UnimplementedHandler) V1ConfirmPasswordRecoveryRequest(ctx context.Context, req *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody) (r *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponse, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // V1ConfirmRegistration implements V1ConfirmRegistration operation.
 //
 // Подтверждение заявки на регистрацию.
 //
 // PATCH /api/v1/registrations
 func (UnimplementedHandler) V1ConfirmRegistration(ctx context.Context, req *V1RegistrationsConfirmRegistrationRequestBody) (r *V1RegistrationsConfirmRegistrationResponse, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// V1CreatePasswordRecoveryRequest implements V1CreatePasswordRecoveryRequest operation.
+//
+// Создать заявку на восстановление пароля.
+//
+// POST /api/v1/passwordRecoveryRequests
+func (UnimplementedHandler) V1CreatePasswordRecoveryRequest(ctx context.Context, req *V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestRequestBody) (r *V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponse, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

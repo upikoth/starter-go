@@ -21,12 +21,19 @@ type ControllerHTTP struct {
 	Environment string `envconfig:"ENVIRONMENT" required:"true"`
 }
 type Service struct {
-	Registrations Registrations
+	Registrations            Registrations
+	PasswordRecoveryRequests PasswordRecoveryRequests
 }
 
 type Registrations struct {
 	FrontURL                         string `envconfig:"FRONT_URL" required:"true"`
 	FrontConfirmationRegistrationURL string `envconfig:"FRONT_CONFIRMATION_REGISTRATION_URL" required:"true"`
+}
+
+type PasswordRecoveryRequests struct {
+	FrontURL string `envconfig:"FRONT_URL" required:"true"`
+	//nolint:lll
+	FrontConfirmationPasswordRecoveryRequestURL string `envconfig:"FRONT_CONFIRMATION_PASSWORD_RECOVERY_REQUEST_URL" required:"true"`
 }
 
 type Repository struct {

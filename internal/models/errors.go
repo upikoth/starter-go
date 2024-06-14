@@ -23,6 +23,17 @@ const (
 
 	ErrorCodeSessionsDeleteSessionDbError  ErrorCode = "400"
 	ErrorCodeSessionsDeleteSessionNotFound ErrorCode = "401"
+
+	ErrorCodePasswordRecoveryRequestYdbStarterFindUser                      ErrorCode = "500"
+	ErrorCodePasswordRecoveryRequestYdbStarterCreatePasswordRecoveryRequest ErrorCode = "501"
+	ErrorCodePasswordRecoveryRequestSMTPSendEmail                           ErrorCode = "502"
+
+	ErrorCodePasswordRecoveryRequestYdbStarterCheckConfirmationToken ErrorCode = "600"
+	ErrorCodePasswordRecoveryRequestPasswordRecoveryRequestNotFound  ErrorCode = "601"
+	ErrorCodePasswordRecoveryRequestGeneratePasswordHash             ErrorCode = "602"
+	ErrorCodePasswordRecoveryRequestFindUserByEmail                  ErrorCode = "603"
+	ErrorCodePasswordRecoveryRequestCreateSession                    ErrorCode = "604"
+	ErrorCodePasswordRecoveryRequestUpdateUserPassword               ErrorCode = "605"
 )
 
 type Error struct {

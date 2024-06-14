@@ -49,3 +49,25 @@ func (u *Users) GetByEmail(
 
 	return foundUser, nil
 }
+
+func (u *Users) Update(
+	inputCtx context.Context,
+	userToUpdate models.User,
+) (models.User, error) {
+	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.Users.Update")
+	defer func() {
+		span.Finish()
+	}()
+	ctx := span.Context()
+
+	user := ydbsmodels.NewYdbsUserModel(userToUpdate)
+	res := u.db.WithContext(ctx).Updates(&user)
+	updatedUser := user.FromYdbsModel()
+
+	if res.Error != nil {
+		sentry.CaptureException(res.Error)
+		return updatedUser, res.Error
+	}
+
+	return updatedUser, nil
+}

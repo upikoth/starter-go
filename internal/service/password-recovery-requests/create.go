@@ -129,7 +129,7 @@ func (p *PasswordRecoveryRequests) Create(
 	err = p.repository.YcpStarter.SendEmail(
 		ctx,
 		passwordRecoveryRequest.Email,
-		"Регистрация на "+p.config.FrontURL,
+		"Восстановление пароля на "+p.config.FrontURL,
 		passwordRecoveryRequestEmail,
 	)
 

@@ -538,6 +538,86 @@ func (s *SuccessResponseSuccess) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
+// Encode encodes UserPassword as json.
+func (s UserPassword) Encode(e *jx.Encoder) {
+	unwrapped := string(s)
+
+	e.Str(unwrapped)
+}
+
+// Decode decodes UserPassword from json.
+func (s *UserPassword) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode UserPassword to nil")
+	}
+	var unwrapped string
+	if err := func() error {
+		v, err := d.Str()
+		unwrapped = string(v)
+		if err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = UserPassword(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s UserPassword) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *UserPassword) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes UserRole as json.
+func (s UserRole) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes UserRole from json.
+func (s *UserRole) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode UserRole to nil")
+	}
+	v, err := d.StrBytes()
+	if err != nil {
+		return err
+	}
+	// Try to use constant string.
+	switch UserRole(v) {
+	case UserRoleAdmin:
+		*s = UserRoleAdmin
+	case UserRoleUser:
+		*s = UserRoleUser
+	default:
+		*s = UserRole(v)
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s UserRole) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *UserRole) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode implements json.Marshaler.
 func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody) Encode(e *jx.Encoder) {
 	e.ObjStart()
@@ -553,7 +633,7 @@ func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody) en
 	}
 	{
 		e.FieldStart("newPassword")
-		e.Str(s.NewPassword)
+		s.NewPassword.Encode(e)
 	}
 }
 
@@ -586,9 +666,7 @@ func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody) De
 		case "newPassword":
 			requiredBitSet[0] |= 1 << 1
 			if err := func() error {
-				v, err := d.Str()
-				s.NewPassword = string(v)
-				if err != nil {
+				if err := s.NewPassword.Decode(d); err != nil {
 					return err
 				}
 				return nil
@@ -871,11 +949,16 @@ func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSes
 		e.FieldStart("token")
 		e.Str(s.Token)
 	}
+	{
+		e.FieldStart("userRole")
+		s.UserRole.Encode(e)
+	}
 }
 
-var jsonFieldsNameOfV1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession = [2]string{
+var jsonFieldsNameOfV1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession = [3]string{
 	0: "id",
 	1: "token",
+	2: "userRole",
 }
 
 // Decode decodes V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession from json.
@@ -911,6 +994,16 @@ func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSes
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"token\"")
 			}
+		case "userRole":
+			requiredBitSet[0] |= 1 << 2
+			if err := func() error {
+				if err := s.UserRole.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"userRole\"")
+			}
 		default:
 			return d.Skip()
 		}
@@ -921,7 +1014,7 @@ func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSes
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [1]uint8{
-		0b00000011,
+		0b00000111,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.
@@ -1364,7 +1457,7 @@ func (s *V1RegistrationsConfirmRegistrationRequestBody) encodeFields(e *jx.Encod
 	}
 	{
 		e.FieldStart("password")
-		e.Str(s.Password)
+		s.Password.Encode(e)
 	}
 }
 
@@ -1397,9 +1490,7 @@ func (s *V1RegistrationsConfirmRegistrationRequestBody) Decode(d *jx.Decoder) er
 		case "password":
 			requiredBitSet[0] |= 1 << 1
 			if err := func() error {
-				v, err := d.Str()
-				s.Password = string(v)
-				if err != nil {
+				if err := s.Password.Decode(d); err != nil {
 					return err
 				}
 				return nil
@@ -1682,11 +1773,16 @@ func (s *V1RegistrationsConfirmRegistrationResponseDataSession) encodeFields(e *
 		e.FieldStart("token")
 		e.Str(s.Token)
 	}
+	{
+		e.FieldStart("userRole")
+		s.UserRole.Encode(e)
+	}
 }
 
-var jsonFieldsNameOfV1RegistrationsConfirmRegistrationResponseDataSession = [2]string{
+var jsonFieldsNameOfV1RegistrationsConfirmRegistrationResponseDataSession = [3]string{
 	0: "id",
 	1: "token",
+	2: "userRole",
 }
 
 // Decode decodes V1RegistrationsConfirmRegistrationResponseDataSession from json.
@@ -1722,6 +1818,16 @@ func (s *V1RegistrationsConfirmRegistrationResponseDataSession) Decode(d *jx.Dec
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"token\"")
 			}
+		case "userRole":
+			requiredBitSet[0] |= 1 << 2
+			if err := func() error {
+				if err := s.UserRole.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"userRole\"")
+			}
 		default:
 			return d.Skip()
 		}
@@ -1732,7 +1838,7 @@ func (s *V1RegistrationsConfirmRegistrationResponseDataSession) Decode(d *jx.Dec
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [1]uint8{
-		0b00000011,
+		0b00000111,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.
@@ -2175,7 +2281,7 @@ func (s *V1SessionsCreateSessionRequestBody) encodeFields(e *jx.Encoder) {
 	}
 	{
 		e.FieldStart("password")
-		e.Str(s.Password)
+		s.Password.Encode(e)
 	}
 }
 
@@ -2208,9 +2314,7 @@ func (s *V1SessionsCreateSessionRequestBody) Decode(d *jx.Decoder) error {
 		case "password":
 			requiredBitSet[0] |= 1 << 1
 			if err := func() error {
-				v, err := d.Str()
-				s.Password = string(v)
-				if err != nil {
+				if err := s.Password.Decode(d); err != nil {
 					return err
 				}
 				return nil
@@ -2493,11 +2597,16 @@ func (s *V1SessionsCreateSessionResponseDataSession) encodeFields(e *jx.Encoder)
 		e.FieldStart("token")
 		e.Str(s.Token)
 	}
+	{
+		e.FieldStart("userRole")
+		s.UserRole.Encode(e)
+	}
 }
 
-var jsonFieldsNameOfV1SessionsCreateSessionResponseDataSession = [2]string{
+var jsonFieldsNameOfV1SessionsCreateSessionResponseDataSession = [3]string{
 	0: "id",
 	1: "token",
+	2: "userRole",
 }
 
 // Decode decodes V1SessionsCreateSessionResponseDataSession from json.
@@ -2533,6 +2642,16 @@ func (s *V1SessionsCreateSessionResponseDataSession) Decode(d *jx.Decoder) error
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"token\"")
 			}
+		case "userRole":
+			requiredBitSet[0] |= 1 << 2
+			if err := func() error {
+				if err := s.UserRole.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"userRole\"")
+			}
 		default:
 			return d.Skip()
 		}
@@ -2543,7 +2662,7 @@ func (s *V1SessionsCreateSessionResponseDataSession) Decode(d *jx.Decoder) error
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [1]uint8{
-		0b00000011,
+		0b00000111,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.

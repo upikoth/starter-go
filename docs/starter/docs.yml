@@ -140,6 +140,16 @@ components:
         type: string
 
   schemas:
+    UserRole:
+      type: string
+      enum:
+        - admin
+        - user
+
+    UserPassword:
+      type: string
+      minLength: 1
+
     SuccessResponse:
       type: object
       required:
@@ -217,8 +227,7 @@ components:
         confirmationToken:
           type: string
         password:
-          type: string
-          minLength: 1
+          $ref: "#/components/schemas/UserPassword"
 
     V1RegistrationsConfirmRegistrationResponse:
       type: object
@@ -240,11 +249,14 @@ components:
               required:
                 - id
                 - token
+                - userRole
               properties: 
                 id:
                   type: string
                 token:
                   type: string
+                userRole:
+                  $ref: "#/components/schemas/UserRole"
 
     V1SessionsCreateSessionRequestBody:
       type: object
@@ -256,8 +268,7 @@ components:
           type: string
           format: email
         password:
-          type: string
-          minLength: 1
+          $ref: "#/components/schemas/UserPassword"
 
     V1SessionsCreateSessionResponse:
       type: object
@@ -279,11 +290,14 @@ components:
               required:
                 - id
                 - token
+                - userRole
               properties: 
                 id:
                   type: string
                 token:
                   type: string
+                userRole:
+                  $ref: "#/components/schemas/UserRole"
 
     V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestRequestBody:
       type: object
@@ -325,8 +339,7 @@ components:
         confirmationToken:
           type: string
         newPassword:
-          type: string
-          minLength: 1
+          $ref: "#/components/schemas/UserPassword"
 
     V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponse:
       type: object
@@ -348,11 +361,14 @@ components:
               required:
                 - id
                 - token
+                - userRole
               properties: 
                 id:
                   type: string
                 token:
                   type: string
+                userRole:
+                  $ref: "#/components/schemas/UserRole"
 
   requestBodies:
     V1RegistrationsCreateRegistrationRequestBody:

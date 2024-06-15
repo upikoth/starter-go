@@ -41,7 +41,7 @@ func (h *Handler) V1CreateSession(
 
 	sessionCreateParams := models.SessionCreateParams{
 		Email:    req.Email,
-		Password: req.Password,
+		Password: string(req.Password),
 	}
 
 	session, err := h.service.Sessions.Create(ctx, sessionCreateParams)
@@ -54,8 +54,9 @@ func (h *Handler) V1CreateSession(
 		Success: true,
 		Data: starter.V1SessionsCreateSessionResponseData{
 			Session: starter.V1SessionsCreateSessionResponseDataSession{
-				ID:    session.ID,
-				Token: session.Token,
+				ID:       session.ID,
+				Token:    session.Token,
+				UserRole: starter.UserRole(session.UserRole),
 			},
 		},
 	}, nil

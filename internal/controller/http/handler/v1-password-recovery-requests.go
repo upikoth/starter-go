@@ -50,7 +50,7 @@ func (h *Handler) V1ConfirmPasswordRecoveryRequest(
 
 	passwordRecoveryRequestConfirmParams := models.PasswordRecoveryRequestConfirmParams{
 		ConfirmationToken: req.ConfirmationToken,
-		NewPassword:       req.NewPassword,
+		NewPassword:       string(req.NewPassword),
 	}
 
 	session, err := h.service.PasswordRecoveryRequests.Confirm(ctx, passwordRecoveryRequestConfirmParams)
@@ -63,8 +63,9 @@ func (h *Handler) V1ConfirmPasswordRecoveryRequest(
 		Success: true,
 		Data: starter.V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseData{
 			Session: starter.V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession{
-				ID:    session.ID,
-				Token: session.Token,
+				ID:       session.ID,
+				Token:    session.Token,
+				UserRole: starter.UserRole(session.UserRole),
 			},
 		},
 	}, nil

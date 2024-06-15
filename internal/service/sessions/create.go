@@ -49,9 +49,10 @@ func (s *Sessions) Create(
 	}
 
 	sessionToCreate := models.Session{
-		ID:     uuid.New().String(),
-		UserID: user.ID,
-		Token:  uuid.New().String(),
+		ID:       uuid.New().String(),
+		UserID:   user.ID,
+		UserRole: user.UserRole,
+		Token:    uuid.New().String(),
 	}
 
 	session, err := s.repository.YdbStarter.Sessions.Create(ctx, sessionToCreate)

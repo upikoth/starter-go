@@ -50,7 +50,7 @@ func (h *Handler) V1ConfirmRegistration(
 
 	registrationConfirmParams := models.RegistrationConfirmParams{
 		ConfirmationToken: req.ConfirmationToken,
-		Password:          req.Password,
+		Password:          string(req.Password),
 	}
 
 	session, err := h.service.Registrations.Confirm(ctx, registrationConfirmParams)
@@ -63,8 +63,9 @@ func (h *Handler) V1ConfirmRegistration(
 		Success: true,
 		Data: starter.V1RegistrationsConfirmRegistrationResponseData{
 			Session: starter.V1RegistrationsConfirmRegistrationResponseDataSession{
-				ID:    session.ID,
-				Token: session.Token,
+				ID:       session.ID,
+				Token:    session.Token,
+				UserRole: starter.UserRole(session.UserRole),
 			},
 		},
 	}, nil

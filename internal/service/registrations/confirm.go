@@ -52,6 +52,7 @@ func (r *Registrations) Confirm(
 		ID:           uuid.New().String(),
 		Email:        registration.Email,
 		PasswordHash: string(passwordHash),
+		UserRole:     models.UserRoleUser,
 	}
 
 	createdUser, err :=
@@ -66,9 +67,10 @@ func (r *Registrations) Confirm(
 	}
 
 	session := models.Session{
-		ID:     uuid.New().String(),
-		UserID: createdUser.ID,
-		Token:  uuid.New().String(),
+		ID:       uuid.New().String(),
+		UserID:   createdUser.ID,
+		UserRole: createdUser.UserRole,
+		Token:    uuid.New().String(),
 	}
 
 	createdSession, err := r.repository.YdbStarter.Sessions.Create(ctx, session)

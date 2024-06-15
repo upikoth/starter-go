@@ -5,6 +5,7 @@ package api
 import (
 	"fmt"
 
+	"github.com/go-faster/errors"
 	"github.com/go-faster/jx"
 )
 
@@ -174,10 +175,54 @@ func (SuccessResponseSuccess) AllValues() []SuccessResponseSuccess {
 	}
 }
 
+type UserPassword string
+
+// Ref: #/components/schemas/UserRole
+type UserRole string
+
+const (
+	UserRoleAdmin UserRole = "admin"
+	UserRoleUser  UserRole = "user"
+)
+
+// AllValues returns all UserRole values.
+func (UserRole) AllValues() []UserRole {
+	return []UserRole{
+		UserRoleAdmin,
+		UserRoleUser,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s UserRole) MarshalText() ([]byte, error) {
+	switch s {
+	case UserRoleAdmin:
+		return []byte(s), nil
+	case UserRoleUser:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *UserRole) UnmarshalText(data []byte) error {
+	switch UserRole(data) {
+	case UserRoleAdmin:
+		*s = UserRoleAdmin
+		return nil
+	case UserRoleUser:
+		*s = UserRoleUser
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
+}
+
 // Ref: #/components/schemas/V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody
 type V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody struct {
-	ConfirmationToken string `json:"confirmationToken"`
-	NewPassword       string `json:"newPassword"`
+	ConfirmationToken string       `json:"confirmationToken"`
+	NewPassword       UserPassword `json:"newPassword"`
 }
 
 // GetConfirmationToken returns the value of ConfirmationToken.
@@ -186,7 +231,7 @@ func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody) Ge
 }
 
 // GetNewPassword returns the value of NewPassword.
-func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody) GetNewPassword() string {
+func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody) GetNewPassword() UserPassword {
 	return s.NewPassword
 }
 
@@ -196,7 +241,7 @@ func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody) Se
 }
 
 // SetNewPassword sets the value of NewPassword.
-func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody) SetNewPassword(val string) {
+func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody) SetNewPassword(val UserPassword) {
 	s.NewPassword = val
 }
 
@@ -241,8 +286,9 @@ func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseData) S
 }
 
 type V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession struct {
-	ID    string `json:"id"`
-	Token string `json:"token"`
+	ID       string   `json:"id"`
+	Token    string   `json:"token"`
+	UserRole UserRole `json:"userRole"`
 }
 
 // GetID returns the value of ID.
@@ -255,6 +301,11 @@ func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSes
 	return s.Token
 }
 
+// GetUserRole returns the value of UserRole.
+func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession) GetUserRole() UserRole {
+	return s.UserRole
+}
+
 // SetID sets the value of ID.
 func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession) SetID(val string) {
 	s.ID = val
@@ -263,6 +314,11 @@ func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSes
 // SetToken sets the value of Token.
 func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession) SetToken(val string) {
 	s.Token = val
+}
+
+// SetUserRole sets the value of UserRole.
+func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession) SetUserRole(val UserRole) {
+	s.UserRole = val
 }
 
 type V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseSuccess bool
@@ -359,8 +415,8 @@ func (V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponseSuccess) Al
 
 // Ref: #/components/schemas/V1RegistrationsConfirmRegistrationRequestBody
 type V1RegistrationsConfirmRegistrationRequestBody struct {
-	ConfirmationToken string `json:"confirmationToken"`
-	Password          string `json:"password"`
+	ConfirmationToken string       `json:"confirmationToken"`
+	Password          UserPassword `json:"password"`
 }
 
 // GetConfirmationToken returns the value of ConfirmationToken.
@@ -369,7 +425,7 @@ func (s *V1RegistrationsConfirmRegistrationRequestBody) GetConfirmationToken() s
 }
 
 // GetPassword returns the value of Password.
-func (s *V1RegistrationsConfirmRegistrationRequestBody) GetPassword() string {
+func (s *V1RegistrationsConfirmRegistrationRequestBody) GetPassword() UserPassword {
 	return s.Password
 }
 
@@ -379,7 +435,7 @@ func (s *V1RegistrationsConfirmRegistrationRequestBody) SetConfirmationToken(val
 }
 
 // SetPassword sets the value of Password.
-func (s *V1RegistrationsConfirmRegistrationRequestBody) SetPassword(val string) {
+func (s *V1RegistrationsConfirmRegistrationRequestBody) SetPassword(val UserPassword) {
 	s.Password = val
 }
 
@@ -424,8 +480,9 @@ func (s *V1RegistrationsConfirmRegistrationResponseData) SetSession(val V1Regist
 }
 
 type V1RegistrationsConfirmRegistrationResponseDataSession struct {
-	ID    string `json:"id"`
-	Token string `json:"token"`
+	ID       string   `json:"id"`
+	Token    string   `json:"token"`
+	UserRole UserRole `json:"userRole"`
 }
 
 // GetID returns the value of ID.
@@ -438,6 +495,11 @@ func (s *V1RegistrationsConfirmRegistrationResponseDataSession) GetToken() strin
 	return s.Token
 }
 
+// GetUserRole returns the value of UserRole.
+func (s *V1RegistrationsConfirmRegistrationResponseDataSession) GetUserRole() UserRole {
+	return s.UserRole
+}
+
 // SetID sets the value of ID.
 func (s *V1RegistrationsConfirmRegistrationResponseDataSession) SetID(val string) {
 	s.ID = val
@@ -446,6 +508,11 @@ func (s *V1RegistrationsConfirmRegistrationResponseDataSession) SetID(val string
 // SetToken sets the value of Token.
 func (s *V1RegistrationsConfirmRegistrationResponseDataSession) SetToken(val string) {
 	s.Token = val
+}
+
+// SetUserRole sets the value of UserRole.
+func (s *V1RegistrationsConfirmRegistrationResponseDataSession) SetUserRole(val UserRole) {
+	s.UserRole = val
 }
 
 type V1RegistrationsConfirmRegistrationResponseSuccess bool
@@ -542,8 +609,8 @@ func (V1RegistrationsCreateRegistrationResponseSuccess) AllValues() []V1Registra
 
 // Ref: #/components/schemas/V1SessionsCreateSessionRequestBody
 type V1SessionsCreateSessionRequestBody struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email    string       `json:"email"`
+	Password UserPassword `json:"password"`
 }
 
 // GetEmail returns the value of Email.
@@ -552,7 +619,7 @@ func (s *V1SessionsCreateSessionRequestBody) GetEmail() string {
 }
 
 // GetPassword returns the value of Password.
-func (s *V1SessionsCreateSessionRequestBody) GetPassword() string {
+func (s *V1SessionsCreateSessionRequestBody) GetPassword() UserPassword {
 	return s.Password
 }
 
@@ -562,7 +629,7 @@ func (s *V1SessionsCreateSessionRequestBody) SetEmail(val string) {
 }
 
 // SetPassword sets the value of Password.
-func (s *V1SessionsCreateSessionRequestBody) SetPassword(val string) {
+func (s *V1SessionsCreateSessionRequestBody) SetPassword(val UserPassword) {
 	s.Password = val
 }
 
@@ -607,8 +674,9 @@ func (s *V1SessionsCreateSessionResponseData) SetSession(val V1SessionsCreateSes
 }
 
 type V1SessionsCreateSessionResponseDataSession struct {
-	ID    string `json:"id"`
-	Token string `json:"token"`
+	ID       string   `json:"id"`
+	Token    string   `json:"token"`
+	UserRole UserRole `json:"userRole"`
 }
 
 // GetID returns the value of ID.
@@ -621,6 +689,11 @@ func (s *V1SessionsCreateSessionResponseDataSession) GetToken() string {
 	return s.Token
 }
 
+// GetUserRole returns the value of UserRole.
+func (s *V1SessionsCreateSessionResponseDataSession) GetUserRole() UserRole {
+	return s.UserRole
+}
+
 // SetID sets the value of ID.
 func (s *V1SessionsCreateSessionResponseDataSession) SetID(val string) {
 	s.ID = val
@@ -629,6 +702,11 @@ func (s *V1SessionsCreateSessionResponseDataSession) SetID(val string) {
 // SetToken sets the value of Token.
 func (s *V1SessionsCreateSessionResponseDataSession) SetToken(val string) {
 	s.Token = val
+}
+
+// SetUserRole sets the value of UserRole.
+func (s *V1SessionsCreateSessionResponseDataSession) SetUserRole(val UserRole) {
+	s.UserRole = val
 }
 
 type V1SessionsCreateSessionResponseSuccess bool

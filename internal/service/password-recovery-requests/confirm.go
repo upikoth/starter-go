@@ -83,9 +83,10 @@ func (p *PasswordRecoveryRequests) Confirm(
 	}
 
 	session := models.Session{
-		ID:     uuid.New().String(),
-		UserID: updatedUser.ID,
-		Token:  uuid.New().String(),
+		ID:       uuid.New().String(),
+		UserID:   updatedUser.ID,
+		UserRole: updatedUser.UserRole,
+		Token:    uuid.New().String(),
 	}
 
 	createdSession, err := p.repository.YdbStarter.Sessions.Create(ctx, session)

@@ -7,9 +7,33 @@ const (
 	UserRoleAdmin UserRole = "admin"
 )
 
+type UserAction string
+
+const (
+	UserActionGetAnyUserInfo UserAction = "get-any-user-info"
+)
+
+var userRoleActionMap = map[UserRole]map[UserAction]bool{
+	UserRoleUser: {
+		UserActionGetAnyUserInfo: false,
+	},
+	UserRoleAdmin: {
+		UserActionGetAnyUserInfo: true,
+	},
+}
+
+func (u UserRole) CheckAccessToAction(action UserAction) bool {
+	return userRoleActionMap[u][action]
+}
+
 type User struct {
 	ID           string
 	Email        string
 	PasswordHash string
 	UserRole     UserRole
+}
+
+type UserList struct {
+	Users []User
+	Total int
 }

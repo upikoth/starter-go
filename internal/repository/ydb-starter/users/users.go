@@ -71,3 +71,49 @@ func (u *Users) Update(
 
 	return updatedUser, nil
 }
+
+func (u *Users) GetList(
+	inputCtx context.Context,
+	params models.UsersGetListParams,
+) (models.UserList, error) {
+	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.Users.GetList")
+	defer func() {
+		span.Finish()
+	}()
+	ctx := span.Context()
+
+	users := []ydbsmodels.User{}
+	total := int64(0)
+
+	res := u.db.
+		WithContext(ctx).
+		Model(ydbsmodels.User{}).
+		Count(&total)
+
+	if res.Error != nil {
+		sentry.CaptureException(res.Error)
+		return models.UserList{}, res.Error
+	}
+
+	res = u.db.
+		WithContext(ctx).
+		Limit(params.Limit).
+		Offset(params.Offset).
+		Find(&users)
+
+	if res.Error != nil {
+		sentry.CaptureException(res.Error)
+		return models.UserList{}, res.Error
+	}
+
+	resUsers := []models.User{}
+
+	for _, user := range users {
+		resUsers = append(resUsers, user.FromYdbsModel())
+	}
+
+	return models.UserList{
+		Users: resUsers,
+		Total: int(total),
+	}, nil
+}

@@ -34,6 +34,8 @@ const (
 	ErrorCodePasswordRecoveryRequestFindUserByEmail                  ErrorCode = "603"
 	ErrorCodePasswordRecoveryRequestCreateSession                    ErrorCode = "604"
 	ErrorCodePasswordRecoveryRequestUpdateUserPassword               ErrorCode = "605"
+
+	ErrorCodeUsersGetListForbidden ErrorCode = "700"
 )
 
 type Error struct {

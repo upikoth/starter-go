@@ -56,6 +56,12 @@ type Handler interface {
 	//
 	// DELETE /api/v1/sessions/{id}
 	V1DeleteSession(ctx context.Context, params V1DeleteSessionParams) (*SuccessResponse, error)
+	// V1GetUsers implements V1GetUsers operation.
+	//
+	// Получение информации обо всех пользователях.
+	//
+	// GET /api/v1/users
+	V1GetUsers(ctx context.Context, params V1GetUsersParams) (*V1UsersGetUsersResponse, error)
 	// NewError creates *ErrorResponseStatusCode from error returned by handler.
 	//
 	// Used for common default response.

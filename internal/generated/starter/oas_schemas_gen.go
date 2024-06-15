@@ -125,6 +125,89 @@ func (ErrorResponseSuccess) AllValues() []ErrorResponseSuccess {
 	}
 }
 
+// NewOptInt returns new OptInt with value set to v.
+func NewOptInt(v int) OptInt {
+	return OptInt{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptInt is optional int.
+type OptInt struct {
+	Value int
+	Set   bool
+}
+
+// IsSet returns true if OptInt was set.
+func (o OptInt) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptInt) Reset() {
+	var v int
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptInt) SetTo(v int) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptInt) Get() (v int, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptInt) Or(d int) int {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// Ref: #/components/schemas/Session
+type Session struct {
+	ID       string   `json:"id"`
+	Token    string   `json:"token"`
+	UserRole UserRole `json:"userRole"`
+}
+
+// GetID returns the value of ID.
+func (s *Session) GetID() string {
+	return s.ID
+}
+
+// GetToken returns the value of Token.
+func (s *Session) GetToken() string {
+	return s.Token
+}
+
+// GetUserRole returns the value of UserRole.
+func (s *Session) GetUserRole() UserRole {
+	return s.UserRole
+}
+
+// SetID sets the value of ID.
+func (s *Session) SetID(val string) {
+	s.ID = val
+}
+
+// SetToken sets the value of Token.
+func (s *Session) SetToken(val string) {
+	s.Token = val
+}
+
+// SetUserRole sets the value of UserRole.
+func (s *Session) SetUserRole(val UserRole) {
+	s.UserRole = val
+}
+
 // Ref: #/components/schemas/SuccessResponse
 type SuccessResponse struct {
 	Success SuccessResponseSuccess `json:"success"`
@@ -173,6 +256,43 @@ func (SuccessResponseSuccess) AllValues() []SuccessResponseSuccess {
 	return []SuccessResponseSuccess{
 		SuccessResponseSuccessTrue,
 	}
+}
+
+// Ref: #/components/schemas/User
+type User struct {
+	ID       string   `json:"id"`
+	Email    string   `json:"email"`
+	UserRole UserRole `json:"userRole"`
+}
+
+// GetID returns the value of ID.
+func (s *User) GetID() string {
+	return s.ID
+}
+
+// GetEmail returns the value of Email.
+func (s *User) GetEmail() string {
+	return s.Email
+}
+
+// GetUserRole returns the value of UserRole.
+func (s *User) GetUserRole() UserRole {
+	return s.UserRole
+}
+
+// SetID sets the value of ID.
+func (s *User) SetID(val string) {
+	s.ID = val
+}
+
+// SetEmail sets the value of Email.
+func (s *User) SetEmail(val string) {
+	s.Email = val
+}
+
+// SetUserRole sets the value of UserRole.
+func (s *User) SetUserRole(val UserRole) {
+	s.UserRole = val
 }
 
 type UserPassword string
@@ -272,53 +392,17 @@ func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponse) SetDa
 }
 
 type V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseData struct {
-	Session V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession `json:"session"`
+	Session Session `json:"session"`
 }
 
 // GetSession returns the value of Session.
-func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseData) GetSession() V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession {
+func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseData) GetSession() Session {
 	return s.Session
 }
 
 // SetSession sets the value of Session.
-func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseData) SetSession(val V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession) {
+func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseData) SetSession(val Session) {
 	s.Session = val
-}
-
-type V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession struct {
-	ID       string   `json:"id"`
-	Token    string   `json:"token"`
-	UserRole UserRole `json:"userRole"`
-}
-
-// GetID returns the value of ID.
-func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession) GetID() string {
-	return s.ID
-}
-
-// GetToken returns the value of Token.
-func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession) GetToken() string {
-	return s.Token
-}
-
-// GetUserRole returns the value of UserRole.
-func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession) GetUserRole() UserRole {
-	return s.UserRole
-}
-
-// SetID sets the value of ID.
-func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession) SetID(val string) {
-	s.ID = val
-}
-
-// SetToken sets the value of Token.
-func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession) SetToken(val string) {
-	s.Token = val
-}
-
-// SetUserRole sets the value of UserRole.
-func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession) SetUserRole(val UserRole) {
-	s.UserRole = val
 }
 
 type V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseSuccess bool
@@ -466,53 +550,17 @@ func (s *V1RegistrationsConfirmRegistrationResponse) SetData(val V1Registrations
 }
 
 type V1RegistrationsConfirmRegistrationResponseData struct {
-	Session V1RegistrationsConfirmRegistrationResponseDataSession `json:"session"`
+	Session Session `json:"session"`
 }
 
 // GetSession returns the value of Session.
-func (s *V1RegistrationsConfirmRegistrationResponseData) GetSession() V1RegistrationsConfirmRegistrationResponseDataSession {
+func (s *V1RegistrationsConfirmRegistrationResponseData) GetSession() Session {
 	return s.Session
 }
 
 // SetSession sets the value of Session.
-func (s *V1RegistrationsConfirmRegistrationResponseData) SetSession(val V1RegistrationsConfirmRegistrationResponseDataSession) {
+func (s *V1RegistrationsConfirmRegistrationResponseData) SetSession(val Session) {
 	s.Session = val
-}
-
-type V1RegistrationsConfirmRegistrationResponseDataSession struct {
-	ID       string   `json:"id"`
-	Token    string   `json:"token"`
-	UserRole UserRole `json:"userRole"`
-}
-
-// GetID returns the value of ID.
-func (s *V1RegistrationsConfirmRegistrationResponseDataSession) GetID() string {
-	return s.ID
-}
-
-// GetToken returns the value of Token.
-func (s *V1RegistrationsConfirmRegistrationResponseDataSession) GetToken() string {
-	return s.Token
-}
-
-// GetUserRole returns the value of UserRole.
-func (s *V1RegistrationsConfirmRegistrationResponseDataSession) GetUserRole() UserRole {
-	return s.UserRole
-}
-
-// SetID sets the value of ID.
-func (s *V1RegistrationsConfirmRegistrationResponseDataSession) SetID(val string) {
-	s.ID = val
-}
-
-// SetToken sets the value of Token.
-func (s *V1RegistrationsConfirmRegistrationResponseDataSession) SetToken(val string) {
-	s.Token = val
-}
-
-// SetUserRole sets the value of UserRole.
-func (s *V1RegistrationsConfirmRegistrationResponseDataSession) SetUserRole(val UserRole) {
-	s.UserRole = val
 }
 
 type V1RegistrationsConfirmRegistrationResponseSuccess bool
@@ -660,53 +708,17 @@ func (s *V1SessionsCreateSessionResponse) SetData(val V1SessionsCreateSessionRes
 }
 
 type V1SessionsCreateSessionResponseData struct {
-	Session V1SessionsCreateSessionResponseDataSession `json:"session"`
+	Session Session `json:"session"`
 }
 
 // GetSession returns the value of Session.
-func (s *V1SessionsCreateSessionResponseData) GetSession() V1SessionsCreateSessionResponseDataSession {
+func (s *V1SessionsCreateSessionResponseData) GetSession() Session {
 	return s.Session
 }
 
 // SetSession sets the value of Session.
-func (s *V1SessionsCreateSessionResponseData) SetSession(val V1SessionsCreateSessionResponseDataSession) {
+func (s *V1SessionsCreateSessionResponseData) SetSession(val Session) {
 	s.Session = val
-}
-
-type V1SessionsCreateSessionResponseDataSession struct {
-	ID       string   `json:"id"`
-	Token    string   `json:"token"`
-	UserRole UserRole `json:"userRole"`
-}
-
-// GetID returns the value of ID.
-func (s *V1SessionsCreateSessionResponseDataSession) GetID() string {
-	return s.ID
-}
-
-// GetToken returns the value of Token.
-func (s *V1SessionsCreateSessionResponseDataSession) GetToken() string {
-	return s.Token
-}
-
-// GetUserRole returns the value of UserRole.
-func (s *V1SessionsCreateSessionResponseDataSession) GetUserRole() UserRole {
-	return s.UserRole
-}
-
-// SetID sets the value of ID.
-func (s *V1SessionsCreateSessionResponseDataSession) SetID(val string) {
-	s.ID = val
-}
-
-// SetToken sets the value of Token.
-func (s *V1SessionsCreateSessionResponseDataSession) SetToken(val string) {
-	s.Token = val
-}
-
-// SetUserRole sets the value of UserRole.
-func (s *V1SessionsCreateSessionResponseDataSession) SetUserRole(val UserRole) {
-	s.UserRole = val
 }
 
 type V1SessionsCreateSessionResponseSuccess bool
@@ -719,5 +731,91 @@ const (
 func (V1SessionsCreateSessionResponseSuccess) AllValues() []V1SessionsCreateSessionResponseSuccess {
 	return []V1SessionsCreateSessionResponseSuccess{
 		V1SessionsCreateSessionResponseSuccessTrue,
+	}
+}
+
+// Ref: #/components/schemas/V1UsersGetUsersResponse
+type V1UsersGetUsersResponse struct {
+	Success V1UsersGetUsersResponseSuccess `json:"success"`
+	Data    V1UsersGetUsersResponseData    `json:"data"`
+}
+
+// GetSuccess returns the value of Success.
+func (s *V1UsersGetUsersResponse) GetSuccess() V1UsersGetUsersResponseSuccess {
+	return s.Success
+}
+
+// GetData returns the value of Data.
+func (s *V1UsersGetUsersResponse) GetData() V1UsersGetUsersResponseData {
+	return s.Data
+}
+
+// SetSuccess sets the value of Success.
+func (s *V1UsersGetUsersResponse) SetSuccess(val V1UsersGetUsersResponseSuccess) {
+	s.Success = val
+}
+
+// SetData sets the value of Data.
+func (s *V1UsersGetUsersResponse) SetData(val V1UsersGetUsersResponseData) {
+	s.Data = val
+}
+
+type V1UsersGetUsersResponseData struct {
+	Users  []User `json:"users"`
+	Limit  int    `json:"limit"`
+	Offset int    `json:"offset"`
+	Total  int    `json:"total"`
+}
+
+// GetUsers returns the value of Users.
+func (s *V1UsersGetUsersResponseData) GetUsers() []User {
+	return s.Users
+}
+
+// GetLimit returns the value of Limit.
+func (s *V1UsersGetUsersResponseData) GetLimit() int {
+	return s.Limit
+}
+
+// GetOffset returns the value of Offset.
+func (s *V1UsersGetUsersResponseData) GetOffset() int {
+	return s.Offset
+}
+
+// GetTotal returns the value of Total.
+func (s *V1UsersGetUsersResponseData) GetTotal() int {
+	return s.Total
+}
+
+// SetUsers sets the value of Users.
+func (s *V1UsersGetUsersResponseData) SetUsers(val []User) {
+	s.Users = val
+}
+
+// SetLimit sets the value of Limit.
+func (s *V1UsersGetUsersResponseData) SetLimit(val int) {
+	s.Limit = val
+}
+
+// SetOffset sets the value of Offset.
+func (s *V1UsersGetUsersResponseData) SetOffset(val int) {
+	s.Offset = val
+}
+
+// SetTotal sets the value of Total.
+func (s *V1UsersGetUsersResponseData) SetTotal(val int) {
+	s.Total = val
+}
+
+type V1UsersGetUsersResponseSuccess bool
+
+const (
+	V1UsersGetUsersResponseSuccessTrue V1UsersGetUsersResponseSuccess = true
+)
+
+// AllValues returns all V1UsersGetUsersResponseSuccess values.
+func (V1UsersGetUsersResponseSuccess) AllValues() []V1UsersGetUsersResponseSuccess {
+	return []V1UsersGetUsersResponseSuccess{
+		V1UsersGetUsersResponseSuccessTrue,
 	}
 }

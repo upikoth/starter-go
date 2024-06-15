@@ -85,6 +85,15 @@ func (UnimplementedHandler) V1DeleteSession(ctx context.Context, params V1Delete
 	return r, ht.ErrNotImplemented
 }
 
+// V1GetUsers implements V1GetUsers operation.
+//
+// Получение информации обо всех пользователях.
+//
+// GET /api/v1/users
+func (UnimplementedHandler) V1GetUsers(ctx context.Context, params V1GetUsersParams) (r *V1UsersGetUsersResponse, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // NewError creates *ErrorResponseStatusCode from error returned by handler.
 //
 // Used for common default response.

@@ -130,6 +130,24 @@ paths:
           description: Ошибка
           $ref: "#/components/responses/ErrorResponse"
 
+  /api/v1/users:
+    get:
+      tags:
+        - users
+      description: Получение информации обо всех пользователях
+      operationId: V1GetUsers
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationToken'
+        - $ref: '#/components/parameters/LimitParameter'
+        - $ref: '#/components/parameters/OffsetParameter'
+      responses:
+        200:
+          description: Список всех пользователей
+          $ref: '#/components/responses/V1UsersGetUsersResponse'
+        default:
+          description: Ошибка
+          $ref: "#/components/responses/ErrorResponse"
+
 components:
   parameters:
     AuthorizationToken:
@@ -138,6 +156,26 @@ components:
       required: true
       schema:
         type: string
+
+    LimitParameter:
+      description: Максимальное количество элементов в ответе
+      in: query
+      name: limit
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+        default: 10
+
+    OffsetParameter:
+      description: Отступ, начиная с которого нужно возвращать элементы
+      in: query
+      name: offset
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
 
   schemas:
     UserRole:
@@ -149,6 +187,35 @@ components:
     UserPassword:
       type: string
       minLength: 1
+
+    Session:
+      type: object
+      required:
+        - id
+        - token
+        - userRole
+      properties: 
+        id:
+          type: string
+        token:
+          type: string
+        userRole:
+          $ref: "#/components/schemas/UserRole"
+
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - userRole
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        userRole:
+          $ref: "#/components/schemas/UserRole"
 
     SuccessResponse:
       type: object
@@ -245,18 +312,7 @@ components:
             - session
           properties: 
             session:
-              type: object
-              required:
-                - id
-                - token
-                - userRole
-              properties: 
-                id:
-                  type: string
-                token:
-                  type: string
-                userRole:
-                  $ref: "#/components/schemas/UserRole"
+              $ref: "#/components/schemas/Session"
 
     V1SessionsCreateSessionRequestBody:
       type: object
@@ -286,18 +342,7 @@ components:
             - session
           properties: 
             session:
-              type: object
-              required:
-                - id
-                - token
-                - userRole
-              properties: 
-                id:
-                  type: string
-                token:
-                  type: string
-                userRole:
-                  $ref: "#/components/schemas/UserRole"
+              $ref: "#/components/schemas/Session"
 
     V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestRequestBody:
       type: object
@@ -357,18 +402,36 @@ components:
             - session
           properties: 
             session:
-              type: object
-              required:
-                - id
-                - token
-                - userRole
-              properties: 
-                id:
-                  type: string
-                token:
-                  type: string
-                userRole:
-                  $ref: "#/components/schemas/UserRole"
+              $ref: "#/components/schemas/Session"
+
+    V1UsersGetUsersResponse:
+      type: object
+      required:
+        - success
+        - data
+      properties: 
+        success:
+          type: boolean
+          enum:
+            - true
+        data:
+          type: object
+          required:
+            - users
+            - limit
+            - offset
+            - total
+          properties:
+            users:
+              type: array
+              items:
+                $ref: '#/components/schemas/User'
+            limit:
+              type: integer
+            offset:
+              type: integer
+            total:
+              type: integer
 
   requestBodies:
     V1RegistrationsCreateRegistrationRequestBody:
@@ -460,3 +523,10 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponse'
+
+    V1UsersGetUsersResponse:
+      description: Ответ при успешном получении списка пользователей
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/V1UsersGetUsersResponse'

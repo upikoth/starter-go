@@ -62,7 +62,7 @@ func (h *Handler) V1ConfirmRegistration(
 	return &starter.V1RegistrationsConfirmRegistrationResponse{
 		Success: true,
 		Data: starter.V1RegistrationsConfirmRegistrationResponseData{
-			Session: starter.V1RegistrationsConfirmRegistrationResponseDataSession{
+			Session: starter.Session{
 				ID:       session.ID,
 				Token:    session.Token,
 				UserRole: starter.UserRole(session.UserRole),

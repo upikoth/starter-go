@@ -62,7 +62,7 @@ func (h *Handler) V1ConfirmPasswordRecoveryRequest(
 	return &starter.V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponse{
 		Success: true,
 		Data: starter.V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseData{
-			Session: starter.V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseDataSession{
+			Session: starter.Session{
 				ID:       session.ID,
 				Token:    session.Token,
 				UserRole: starter.UserRole(session.UserRole),

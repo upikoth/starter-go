@@ -7,12 +7,14 @@ import (
 	passwordrecoveryrequests "github.com/upikoth/starter-go/internal/service/password-recovery-requests"
 	"github.com/upikoth/starter-go/internal/service/registrations"
 	"github.com/upikoth/starter-go/internal/service/sessions"
+	"github.com/upikoth/starter-go/internal/service/users"
 )
 
 type Service struct {
 	Registrations            *registrations.Registrations
 	Sessions                 *sessions.Sessions
 	PasswordRecoveryRequests *passwordrecoveryrequests.PasswordRecoveryRequests
+	Users                    *users.Users
 }
 
 func New(
@@ -33,6 +35,10 @@ func New(
 		PasswordRecoveryRequests: passwordrecoveryrequests.New(
 			logger,
 			&config.Service.PasswordRecoveryRequests,
+			repository,
+		),
+		Users: users.New(
+			logger,
 			repository,
 		),
 	}, nil

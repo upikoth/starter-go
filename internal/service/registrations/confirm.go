@@ -52,7 +52,7 @@ func (r *Registrations) Confirm(
 		ID:           uuid.New().String(),
 		Email:        registration.Email,
 		PasswordHash: string(passwordHash),
-		UserRole:     models.UserRoleUser,
+		Role:         models.UserRoleUser,
 	}
 
 	createdUser, err :=
@@ -69,7 +69,7 @@ func (r *Registrations) Confirm(
 	session := models.Session{
 		ID:       uuid.New().String(),
 		UserID:   createdUser.ID,
-		UserRole: createdUser.UserRole,
+		UserRole: createdUser.Role,
 		Token:    uuid.New().String(),
 	}
 

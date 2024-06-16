@@ -85,7 +85,7 @@ func (p *PasswordRecoveryRequests) Confirm(
 	session := models.Session{
 		ID:       uuid.New().String(),
 		UserID:   updatedUser.ID,
-		UserRole: updatedUser.UserRole,
+		UserRole: updatedUser.Role,
 		Token:    uuid.New().String(),
 	}
 

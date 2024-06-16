@@ -30,7 +30,7 @@ type User struct {
 	ID           string
 	Email        string
 	PasswordHash string
-	UserRole     UserRole
+	Role         UserRole
 }
 
 type UserList struct {

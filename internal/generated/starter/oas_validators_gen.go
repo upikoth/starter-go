@@ -146,13 +146,13 @@ func (s *User) Validate() error {
 		})
 	}
 	if err := func() error {
-		if err := s.UserRole.Validate(); err != nil {
+		if err := s.Role.Validate(); err != nil {
 			return err
 		}
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
-			Name:  "userRole",
+			Name:  "role",
 			Error: err,
 		})
 	}

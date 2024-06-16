@@ -684,15 +684,15 @@ func (s *User) encodeFields(e *jx.Encoder) {
 		e.Str(s.Email)
 	}
 	{
-		e.FieldStart("userRole")
-		s.UserRole.Encode(e)
+		e.FieldStart("role")
+		s.Role.Encode(e)
 	}
 }
 
 var jsonFieldsNameOfUser = [3]string{
 	0: "id",
 	1: "email",
-	2: "userRole",
+	2: "role",
 }
 
 // Decode decodes User from json.
@@ -728,15 +728,15 @@ func (s *User) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"email\"")
 			}
-		case "userRole":
+		case "role":
 			requiredBitSet[0] |= 1 << 2
 			if err := func() error {
-				if err := s.UserRole.Decode(d); err != nil {
+				if err := s.Role.Decode(d); err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"userRole\"")
+				return errors.Wrap(err, "decode field \"role\"")
 			}
 		default:
 			return d.Skip()

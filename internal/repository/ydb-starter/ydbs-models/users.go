@@ -6,7 +6,7 @@ type User struct {
 	ID           string `gorm:"primarykey"`
 	Email        string
 	PasswordHash string
-	UserRole     string
+	Role         string
 }
 
 func NewYdbsUserModel(user models.User) User {
@@ -14,7 +14,7 @@ func NewYdbsUserModel(user models.User) User {
 		ID:           user.ID,
 		Email:        user.Email,
 		PasswordHash: user.PasswordHash,
-		UserRole:     string(user.UserRole),
+		Role:         string(user.Role),
 	}
 }
 
@@ -23,6 +23,6 @@ func (u *User) FromYdbsModel() models.User {
 		ID:           u.ID,
 		Email:        u.Email,
 		PasswordHash: u.PasswordHash,
-		UserRole:     models.UserRole(u.UserRole),
+		Role:         models.UserRole(u.Role),
 	}
 }

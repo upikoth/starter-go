@@ -47,9 +47,9 @@ func (h *Handler) V1GetUsers(
 	usersResult := []starter.User{}
 	for _, user := range userList.Users {
 		usersResult = append(usersResult, starter.User{
-			ID:       user.ID,
-			Email:    user.Email,
-			UserRole: starter.UserRole(user.UserRole),
+			ID:    user.ID,
+			Email: user.Email,
+			Role:  starter.UserRole(user.Role),
 		})
 	}
 

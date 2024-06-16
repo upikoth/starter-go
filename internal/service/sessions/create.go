@@ -51,7 +51,7 @@ func (s *Sessions) Create(
 	sessionToCreate := models.Session{
 		ID:       uuid.New().String(),
 		UserID:   user.ID,
-		UserRole: user.UserRole,
+		UserRole: user.Role,
 		Token:    uuid.New().String(),
 	}
 

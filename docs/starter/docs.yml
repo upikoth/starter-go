@@ -207,14 +207,14 @@ components:
       required:
         - id
         - email
-        - userRole
+        - role
       properties:
         id:
           type: string
         email:
           type: string
           format: email
-        userRole:
+        role:
           $ref: "#/components/schemas/UserRole"
 
     SuccessResponse:

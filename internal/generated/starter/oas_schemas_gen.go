@@ -260,9 +260,9 @@ func (SuccessResponseSuccess) AllValues() []SuccessResponseSuccess {
 
 // Ref: #/components/schemas/User
 type User struct {
-	ID       string   `json:"id"`
-	Email    string   `json:"email"`
-	UserRole UserRole `json:"userRole"`
+	ID    string   `json:"id"`
+	Email string   `json:"email"`
+	Role  UserRole `json:"role"`
 }
 
 // GetID returns the value of ID.
@@ -275,9 +275,9 @@ func (s *User) GetEmail() string {
 	return s.Email
 }
 
-// GetUserRole returns the value of UserRole.
-func (s *User) GetUserRole() UserRole {
-	return s.UserRole
+// GetRole returns the value of Role.
+func (s *User) GetRole() UserRole {
+	return s.Role
 }
 
 // SetID sets the value of ID.
@@ -290,9 +290,9 @@ func (s *User) SetEmail(val string) {
 	s.Email = val
 }
 
-// SetUserRole sets the value of UserRole.
-func (s *User) SetUserRole(val UserRole) {
-	s.UserRole = val
+// SetRole sets the value of Role.
+func (s *User) SetRole(val UserRole) {
+	s.Role = val
 }
 
 type UserPassword string

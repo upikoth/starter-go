@@ -33,7 +33,7 @@ func (s *Sessions) Create(
 	if user.ID == "" {
 		return models.Session{}, &models.Error{
 			Code:        models.ErrorCodeSessionsCreateSessionWrongEmailOrPassword,
-			Description: "Неверные email или пароль",
+			Description: "Incorrect email or password",
 			StatusCode:  http.StatusBadRequest,
 		}
 	}
@@ -43,7 +43,7 @@ func (s *Sessions) Create(
 	if err != nil {
 		return models.Session{}, &models.Error{
 			Code:        models.ErrorCodeSessionsCreateSessionWrongEmailOrPassword,
-			Description: "Неверные email или пароль",
+			Description: "Incorrect email or password",
 			StatusCode:  http.StatusBadRequest,
 		}
 	}

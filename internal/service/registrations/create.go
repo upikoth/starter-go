@@ -93,7 +93,7 @@ func (r *Registrations) Create(
 	if existingUser.ID != "" {
 		return registration, &models.Error{
 			Code:        models.ErrorCodeRegistrationUserWithThisEmailAlreadyExist,
-			Description: "Пользователь с указанной почтой уже существует",
+			Description: "A user with the specified email already exists",
 			StatusCode:  http.StatusBadRequest,
 		}
 	}

@@ -33,7 +33,7 @@ func (r *Registrations) Confirm(
 	if registration.ID == "" {
 		return models.Session{}, &models.Error{
 			Code:        models.ErrorCodeRegistrationRegistrationNotFound,
-			Description: "Регистрация с переданным токеном не найдена",
+			Description: "Registration with transferred token not found",
 			StatusCode:  http.StatusBadRequest,
 		}
 	}

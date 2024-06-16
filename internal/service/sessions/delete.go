@@ -31,7 +31,7 @@ func (s *Sessions) DeleteByID(
 	if session.ID == "" {
 		return &models.Error{
 			Code:        models.ErrorCodeSessionsDeleteSessionNotFound,
-			Description: "Сессия с заданным id не найдена",
+			Description: "Session with the given id was not found",
 			StatusCode:  http.StatusBadRequest,
 		}
 	}

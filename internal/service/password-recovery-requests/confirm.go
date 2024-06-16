@@ -37,7 +37,7 @@ func (p *PasswordRecoveryRequests) Confirm(
 	if passwordRecoveryRequest.ID == "" {
 		return models.Session{}, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestPasswordRecoveryRequestNotFound,
-			Description: "Заявка на восстановление пароля с переданным токеном не найдена",
+			Description: "Password recovery request with transferred token not found",
 			StatusCode:  http.StatusBadRequest,
 		}
 	}

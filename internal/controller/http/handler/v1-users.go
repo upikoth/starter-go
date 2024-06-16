@@ -28,7 +28,7 @@ func (h *Handler) V1GetUsers(
 	if !session.UserRole.CheckAccessToAction(models.UserActionGetAnyUserInfo) {
 		return nil, &models.Error{
 			Code:        models.ErrorCodeUsersGetListForbidden,
-			Description: "Недостаточно прав",
+			Description: "Insufficient rights",
 			StatusCode:  http.StatusForbidden,
 		}
 	}

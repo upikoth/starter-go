@@ -32,7 +32,7 @@ func (s *Sessions) CheckToken(
 	if session.ID == "" {
 		return session, &models.Error{
 			Code:        models.ErrorCodeUserUnauthorized,
-			Description: "Сессия пользователя невалидна",
+			Description: "User session is invalid",
 			StatusCode:  http.StatusUnauthorized,
 		}
 	}

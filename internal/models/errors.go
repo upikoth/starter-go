@@ -18,10 +18,10 @@ const (
 	ErrorCodeRegistrationGeneratePasswordHash             ErrorCode = "202"
 	ErrorCodeRegistrationCreateSession                    ErrorCode = "203"
 
-	ErrorCodeSessionsCreateSessionDbError              ErrorCode = "300"
+	ErrorCodeSessionsCreateSessionDBError              ErrorCode = "300"
 	ErrorCodeSessionsCreateSessionWrongEmailOrPassword ErrorCode = "301"
 
-	ErrorCodeSessionsDeleteSessionDbError  ErrorCode = "400"
+	ErrorCodeSessionsDeleteSessionDBError  ErrorCode = "400"
 	ErrorCodeSessionsDeleteSessionNotFound ErrorCode = "401"
 
 	ErrorCodePasswordRecoveryRequestYdbStarterFindUser                      ErrorCode = "500"

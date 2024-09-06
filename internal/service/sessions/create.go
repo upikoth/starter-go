@@ -25,7 +25,7 @@ func (s *Sessions) Create(
 	if err != nil {
 		sentry.CaptureException(err)
 		return models.Session{}, &models.Error{
-			Code:        models.ErrorCodeSessionsCreateSessionDbError,
+			Code:        models.ErrorCodeSessionsCreateSessionDBError,
 			Description: err.Error(),
 		}
 	}

@@ -23,7 +23,7 @@ func (s *Sessions) DeleteByID(
 	if err != nil {
 		sentry.CaptureException(err)
 		return &models.Error{
-			Code:        models.ErrorCodeSessionsDeleteSessionDbError,
+			Code:        models.ErrorCodeSessionsDeleteSessionDBError,
 			Description: err.Error(),
 		}
 	}
@@ -41,7 +41,7 @@ func (s *Sessions) DeleteByID(
 	if err != nil {
 		sentry.CaptureException(err)
 		return &models.Error{
-			Code:        models.ErrorCodeSessionsDeleteSessionDbError,
+			Code:        models.ErrorCodeSessionsDeleteSessionDBError,
 			Description: err.Error(),
 		}
 	}

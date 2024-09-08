@@ -32,7 +32,7 @@ func (r *PasswordRecoveryRequestsAndUsers) DeletePasswordRecoveryRequestAndUpdat
 ) (models.User, error) {
 	span := sentry.StartSpan(
 		inputCtx,
-		"Repository: YdbStarter.PasswordRecoveryRequestsAndUsers.DeletePasswordRecoveryRequestAndUpdateUser",
+		"Repository: Ydb.PasswordRecoveryRequestsAndUsers.DeletePasswordRecoveryRequestAndUpdateUser",
 	)
 	defer func() {
 		span.Finish()

@@ -85,7 +85,7 @@ func (p *PasswordRecoveryRequests) Create(
 	if err != nil {
 		sentry.CaptureException(err)
 		return passwordRecoveryRequest, &models.Error{
-			Code:        models.ErrorCodePasswordRecoveryRequestYdbStarterFindUser,
+			Code:        models.ErrorCodePasswordRecoveryRequestYdbFindUser,
 			Description: err.Error(),
 		}
 	}
@@ -100,7 +100,7 @@ func (p *PasswordRecoveryRequests) Create(
 	if err != nil {
 		sentry.CaptureException(err)
 		return passwordRecoveryRequest, &models.Error{
-			Code:        models.ErrorCodePasswordRecoveryRequestYdbStarterCreatePasswordRecoveryRequest,
+			Code:        models.ErrorCodePasswordRecoveryRequestYdbCreatePasswordRecoveryRequest,
 			Description: err.Error(),
 		}
 	}
@@ -114,7 +114,7 @@ func (p *PasswordRecoveryRequests) Create(
 	if err != nil {
 		sentry.CaptureException(err)
 		return passwordRecoveryRequest, &models.Error{
-			Code:        models.ErrorCodePasswordRecoveryRequestYdbStarterCreatePasswordRecoveryRequest,
+			Code:        models.ErrorCodePasswordRecoveryRequestYdbCreatePasswordRecoveryRequest,
 			Description: err.Error(),
 		}
 	}

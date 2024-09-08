@@ -5,7 +5,7 @@ FROM golang:1.23.0-alpine as build
 RUN apk add --no-cache make \
 	&& rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 
-WORKDIR /starter-go
+WORKDIR /workdir
 
 COPY go.mod go.sum ./
 
@@ -19,8 +19,8 @@ RUN make build
 
 FROM alpine:3.20
 
-COPY --from=build /starter-go/app ./
-COPY --from=build /starter-go/docs ./docs
+COPY --from=build /workdir/app ./
+COPY --from=build /workdir/docs ./docs
 
 EXPOSE 8888
 

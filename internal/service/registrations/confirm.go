@@ -25,7 +25,7 @@ func (r *Registrations) Confirm(
 	if err != nil {
 		sentry.CaptureException(err)
 		return models.Session{}, &models.Error{
-			Code:        models.ErrorCodeRegistrationYdbStarterCheckConfirmationToken,
+			Code:        models.ErrorCodeRegistrationYdbCheckConfirmationToken,
 			Description: err.Error(),
 		}
 	}

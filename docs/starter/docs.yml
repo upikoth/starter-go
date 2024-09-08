@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
   version: 1.0.0
-  title: Starter schema
+  title: App schema
 paths:
   /api/v1/health:
     get:

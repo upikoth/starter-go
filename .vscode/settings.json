@@ -30,7 +30,6 @@
 		"tbody",
 		"ydbs",
 		"ydbsmodels",
-		"ydbstarter",
 		"zerolog"
 	],
 }

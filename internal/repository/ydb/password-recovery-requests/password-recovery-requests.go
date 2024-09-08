@@ -29,7 +29,7 @@ func (p *PasswordRecoveryRequests) Create(
 	inputCtx context.Context,
 	passwordRecoveryRequestToCreate models.PasswordRecoveryRequest,
 ) (models.PasswordRecoveryRequest, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.PasswordRecoveryRequests.Create")
+	span := sentry.StartSpan(inputCtx, "Repository: Ydb.PasswordRecoveryRequests.Create")
 	defer func() {
 		span.Finish()
 	}()
@@ -51,7 +51,7 @@ func (p *PasswordRecoveryRequests) Update(
 	inputCtx context.Context,
 	passwordRecoveryRequestToUpdate models.PasswordRecoveryRequest,
 ) (models.PasswordRecoveryRequest, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.PasswordRecoveryRequests.Update")
+	span := sentry.StartSpan(inputCtx, "Repository: Ydb.PasswordRecoveryRequests.Update")
 	defer func() {
 		span.Finish()
 	}()
@@ -73,7 +73,7 @@ func (p *PasswordRecoveryRequests) GetByEmail(
 	inputCtx context.Context,
 	email string,
 ) (models.PasswordRecoveryRequest, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.PasswordRecoveryRequests.GetByEmail")
+	span := sentry.StartSpan(inputCtx, "Repository: Ydb.PasswordRecoveryRequests.GetByEmail")
 	defer func() {
 		span.Finish()
 	}()
@@ -102,7 +102,7 @@ func (p *PasswordRecoveryRequests) GetByToken(
 	inputCtx context.Context,
 	confirmationToken string,
 ) (models.PasswordRecoveryRequest, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.PasswordRecoveryRequests.GetByToken")
+	span := sentry.StartSpan(inputCtx, "Repository: Ydb.PasswordRecoveryRequests.GetByToken")
 	defer func() {
 		span.Finish()
 	}()

@@ -85,7 +85,7 @@ func (r *Registrations) Create(
 	if err != nil {
 		sentry.CaptureException(err)
 		return registration, &models.Error{
-			Code:        models.ErrorCodeRegistrationYdbStarterFindUser,
+			Code:        models.ErrorCodeRegistrationYdbFindUser,
 			Description: err.Error(),
 		}
 	}
@@ -103,7 +103,7 @@ func (r *Registrations) Create(
 	if err != nil {
 		sentry.CaptureException(err)
 		return registration, &models.Error{
-			Code:        models.ErrorCodeRegistrationYdbStarterCreateRegistration,
+			Code:        models.ErrorCodeRegistrationYdbCreateRegistration,
 			Description: err.Error(),
 		}
 	}
@@ -117,7 +117,7 @@ func (r *Registrations) Create(
 	if err != nil {
 		sentry.CaptureException(err)
 		return registration, &models.Error{
-			Code:        models.ErrorCodeRegistrationYdbStarterCreateRegistration,
+			Code:        models.ErrorCodeRegistrationYdbCreateRegistration,
 			Description: err.Error(),
 		}
 	}

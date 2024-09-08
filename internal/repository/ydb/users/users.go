@@ -29,7 +29,7 @@ func (u *Users) GetByEmail(
 	inputCtx context.Context,
 	email string,
 ) (models.User, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.Users.GetByEmail")
+	span := sentry.StartSpan(inputCtx, "Repository: Ydb.Users.GetByEmail")
 	defer func() {
 		span.Finish()
 	}()
@@ -54,7 +54,7 @@ func (u *Users) Update(
 	inputCtx context.Context,
 	userToUpdate models.User,
 ) (models.User, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.Users.Update")
+	span := sentry.StartSpan(inputCtx, "Repository: Ydb.Users.Update")
 	defer func() {
 		span.Finish()
 	}()
@@ -76,7 +76,7 @@ func (u *Users) GetList(
 	inputCtx context.Context,
 	params models.UsersGetListParams,
 ) (models.UserList, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.Users.GetList")
+	span := sentry.StartSpan(inputCtx, "Repository: Ydb.Users.GetList")
 	defer func() {
 		span.Finish()
 	}()

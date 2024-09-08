@@ -30,7 +30,7 @@ func (r *RegistrationsAndUsers) DeleteRegistrationAndCreateUser(
 	registrationToDelete models.Registration,
 	userToCreate models.User,
 ) (models.User, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.RegistrationsAndUsers.DeleteRegistrationAndCreateUser")
+	span := sentry.StartSpan(inputCtx, "Repository: Ydb.RegistrationsAndUsers.DeleteRegistrationAndCreateUser")
 	defer func() {
 		span.Finish()
 	}()

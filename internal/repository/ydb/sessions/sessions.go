@@ -29,7 +29,7 @@ func (s *Sessions) Create(
 	inputCtx context.Context,
 	sessionToCreate models.Session,
 ) (models.Session, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.Sessions.Create")
+	span := sentry.StartSpan(inputCtx, "Repository: Ydb.Sessions.Create")
 	defer func() {
 		span.Finish()
 	}()
@@ -51,7 +51,7 @@ func (s *Sessions) GetByToken(
 	inputCtx context.Context,
 	token string,
 ) (models.Session, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.Sessions.GetByToken")
+	span := sentry.StartSpan(inputCtx, "Repository: Ydb.Sessions.GetByToken")
 	defer func() {
 		span.Finish()
 	}()
@@ -80,7 +80,7 @@ func (s *Sessions) GetByID(
 	inputCtx context.Context,
 	id string,
 ) (models.Session, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.Sessions.GetByID")
+	span := sentry.StartSpan(inputCtx, "Repository: Ydb.Sessions.GetByID")
 	defer func() {
 		span.Finish()
 	}()
@@ -109,7 +109,7 @@ func (s *Sessions) DeleteByID(
 	inputCtx context.Context,
 	id string,
 ) error {
-	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.Sessions.DeleteByID")
+	span := sentry.StartSpan(inputCtx, "Repository: Ydb.Sessions.DeleteByID")
 	defer func() {
 		span.Finish()
 	}()

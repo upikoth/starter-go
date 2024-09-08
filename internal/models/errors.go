@@ -9,14 +9,14 @@ const (
 	ErrorCodeUserUnauthorized    ErrorCode = "2"
 
 	ErrorCodeRegistrationSMTPSendEmail                 ErrorCode = "100"
-	ErrorCodeRegistrationYdbStarterCreateRegistration  ErrorCode = "101"
-	ErrorCodeRegistrationYdbStarterFindUser            ErrorCode = "102"
+	ErrorCodeRegistrationYdbCreateRegistration         ErrorCode = "101"
+	ErrorCodeRegistrationYdbFindUser                   ErrorCode = "102"
 	ErrorCodeRegistrationUserWithThisEmailAlreadyExist ErrorCode = "103"
 
-	ErrorCodeRegistrationYdbStarterCheckConfirmationToken ErrorCode = "200"
-	ErrorCodeRegistrationRegistrationNotFound             ErrorCode = "201"
-	ErrorCodeRegistrationGeneratePasswordHash             ErrorCode = "202"
-	ErrorCodeRegistrationCreateSession                    ErrorCode = "203"
+	ErrorCodeRegistrationYdbCheckConfirmationToken ErrorCode = "200"
+	ErrorCodeRegistrationRegistrationNotFound      ErrorCode = "201"
+	ErrorCodeRegistrationGeneratePasswordHash      ErrorCode = "202"
+	ErrorCodeRegistrationCreateSession             ErrorCode = "203"
 
 	ErrorCodeSessionsCreateSessionDBError              ErrorCode = "300"
 	ErrorCodeSessionsCreateSessionWrongEmailOrPassword ErrorCode = "301"
@@ -24,16 +24,16 @@ const (
 	ErrorCodeSessionsDeleteSessionDBError  ErrorCode = "400"
 	ErrorCodeSessionsDeleteSessionNotFound ErrorCode = "401"
 
-	ErrorCodePasswordRecoveryRequestYdbStarterFindUser                      ErrorCode = "500"
-	ErrorCodePasswordRecoveryRequestYdbStarterCreatePasswordRecoveryRequest ErrorCode = "501"
-	ErrorCodePasswordRecoveryRequestSMTPSendEmail                           ErrorCode = "502"
+	ErrorCodePasswordRecoveryRequestYdbFindUser                      ErrorCode = "500"
+	ErrorCodePasswordRecoveryRequestYdbCreatePasswordRecoveryRequest ErrorCode = "501"
+	ErrorCodePasswordRecoveryRequestSMTPSendEmail                    ErrorCode = "502"
 
-	ErrorCodePasswordRecoveryRequestYdbStarterCheckConfirmationToken ErrorCode = "600"
-	ErrorCodePasswordRecoveryRequestPasswordRecoveryRequestNotFound  ErrorCode = "601"
-	ErrorCodePasswordRecoveryRequestGeneratePasswordHash             ErrorCode = "602"
-	ErrorCodePasswordRecoveryRequestFindUserByEmail                  ErrorCode = "603"
-	ErrorCodePasswordRecoveryRequestCreateSession                    ErrorCode = "604"
-	ErrorCodePasswordRecoveryRequestUpdateUserPassword               ErrorCode = "605"
+	ErrorCodePasswordRecoveryRequestYdbCheckConfirmationToken       ErrorCode = "600"
+	ErrorCodePasswordRecoveryRequestPasswordRecoveryRequestNotFound ErrorCode = "601"
+	ErrorCodePasswordRecoveryRequestGeneratePasswordHash            ErrorCode = "602"
+	ErrorCodePasswordRecoveryRequestFindUserByEmail                 ErrorCode = "603"
+	ErrorCodePasswordRecoveryRequestCreateSession                   ErrorCode = "604"
+	ErrorCodePasswordRecoveryRequestUpdateUserPassword              ErrorCode = "605"
 
 	ErrorCodeUsersGetListForbidden ErrorCode = "700"
 )

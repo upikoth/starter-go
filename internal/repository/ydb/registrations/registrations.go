@@ -29,7 +29,7 @@ func (r *Registrations) Create(
 	inputCtx context.Context,
 	registrationToCreate models.Registration,
 ) (models.Registration, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.Registrations.Create")
+	span := sentry.StartSpan(inputCtx, "Repository: Ydb.Registrations.Create")
 	defer func() {
 		span.Finish()
 	}()
@@ -51,7 +51,7 @@ func (r *Registrations) Update(
 	inputCtx context.Context,
 	registrationToUpdate models.Registration,
 ) (models.Registration, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.Registrations.Update")
+	span := sentry.StartSpan(inputCtx, "Repository: Ydb.Registrations.Update")
 	defer func() {
 		span.Finish()
 	}()
@@ -73,7 +73,7 @@ func (r *Registrations) GetByEmail(
 	inputCtx context.Context,
 	email string,
 ) (models.Registration, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.Registrations.GetByEmail")
+	span := sentry.StartSpan(inputCtx, "Repository: Ydb.Registrations.GetByEmail")
 	defer func() {
 		span.Finish()
 	}()
@@ -102,7 +102,7 @@ func (r *Registrations) GetByToken(
 	inputCtx context.Context,
 	confirmationToken string,
 ) (models.Registration, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YdbStarter.Registrations.GetByToken")
+	span := sentry.StartSpan(inputCtx, "Repository: Ydb.Registrations.GetByToken")
 	defer func() {
 		span.Finish()
 	}()

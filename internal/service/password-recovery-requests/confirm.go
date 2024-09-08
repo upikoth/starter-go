@@ -29,7 +29,7 @@ func (p *PasswordRecoveryRequests) Confirm(
 	if err != nil {
 		sentry.CaptureException(err)
 		return models.Session{}, &models.Error{
-			Code:        models.ErrorCodePasswordRecoveryRequestYdbStarterCheckConfirmationToken,
+			Code:        models.ErrorCodePasswordRecoveryRequestYdbCheckConfirmationToken,
 			Description: err.Error(),
 		}
 	}

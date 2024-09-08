@@ -6,7 +6,7 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
-	ydbsmodels "github.com/upikoth/starter-go/internal/repository/ydb-starter/ydbs-models"
+	ydbsmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydbs-models"
 	"gorm.io/gorm"
 )
 

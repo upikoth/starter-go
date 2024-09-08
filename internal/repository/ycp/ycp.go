@@ -1,4 +1,4 @@
-package ycpstarter
+package ycp
 
 import (
 	"context"
@@ -10,16 +10,16 @@ import (
 	smtpclient "github.com/upikoth/starter-go/internal/pkg/smtp-client"
 )
 
-type YcpStarter struct {
+type Ycp struct {
 	logger logger.Logger
-	config *config.YcpStarter
+	config *config.Ycp
 	client *smtpclient.SMTPClient
 }
 
 func New(
 	logger logger.Logger,
-	config *config.YcpStarter,
-) (*YcpStarter, error) {
+	config *config.Ycp,
+) (*Ycp, error) {
 	client, err := smtpclient.New(
 		config.Host,
 		config.Port,
@@ -31,20 +31,20 @@ func New(
 		return nil, err
 	}
 
-	return &YcpStarter{
+	return &Ycp{
 		logger: logger,
 		config: config,
 		client: client,
 	}, nil
 }
 
-func (y *YcpStarter) SendEmail(
+func (y *Ycp) SendEmail(
 	inputCtx context.Context,
 	toEmail string,
 	title string,
 	body string,
 ) error {
-	span := sentry.StartSpan(inputCtx, "Repository: YcpStarter.SendEmail")
+	span := sentry.StartSpan(inputCtx, "Repository: Ycp.SendEmail")
 	defer func() {
 		span.Finish()
 	}()

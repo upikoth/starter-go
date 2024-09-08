@@ -80,7 +80,7 @@ func (p *PasswordRecoveryRequests) Create(
 		ConfirmationToken: uuid.New().String(),
 	}
 
-	existingUser, err := p.repository.YdbStarter.Users.GetByEmail(ctx, passwordRecoveryRequest.Email)
+	existingUser, err := p.repository.Ydb.Users.GetByEmail(ctx, passwordRecoveryRequest.Email)
 
 	if err != nil {
 		sentry.CaptureException(err)
@@ -95,7 +95,7 @@ func (p *PasswordRecoveryRequests) Create(
 	}
 
 	existingPasswordRecoveryRequest, err :=
-		p.repository.YdbStarter.PasswordRecoveryRequests.GetByEmail(ctx, passwordRecoveryRequest.Email)
+		p.repository.Ydb.PasswordRecoveryRequests.GetByEmail(ctx, passwordRecoveryRequest.Email)
 
 	if err != nil {
 		sentry.CaptureException(err)
@@ -108,7 +108,7 @@ func (p *PasswordRecoveryRequests) Create(
 	if existingPasswordRecoveryRequest.ID != "" {
 		passwordRecoveryRequest = existingPasswordRecoveryRequest
 	} else {
-		passwordRecoveryRequest, err = p.repository.YdbStarter.PasswordRecoveryRequests.Create(ctx, passwordRecoveryRequest)
+		passwordRecoveryRequest, err = p.repository.Ydb.PasswordRecoveryRequests.Create(ctx, passwordRecoveryRequest)
 	}
 
 	if err != nil {
@@ -126,7 +126,7 @@ func (p *PasswordRecoveryRequests) Create(
 		passwordRecoveryRequest.ConfirmationToken,
 	)
 
-	err = p.repository.YcpStarter.SendEmail(
+	err = p.repository.Ycp.SendEmail(
 		ctx,
 		passwordRecoveryRequest.Email,
 		"Восстановление пароля на "+p.config.FrontURL,

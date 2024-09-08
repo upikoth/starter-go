@@ -80,7 +80,7 @@ func (r *Registrations) Create(
 		ConfirmationToken: uuid.New().String(),
 	}
 
-	existingUser, err := r.repository.YdbStarter.Users.GetByEmail(ctx, registration.Email)
+	existingUser, err := r.repository.Ydb.Users.GetByEmail(ctx, registration.Email)
 
 	if err != nil {
 		sentry.CaptureException(err)
@@ -98,7 +98,7 @@ func (r *Registrations) Create(
 		}
 	}
 
-	existingRegistration, err := r.repository.YdbStarter.Registrations.GetByEmail(ctx, registration.Email)
+	existingRegistration, err := r.repository.Ydb.Registrations.GetByEmail(ctx, registration.Email)
 
 	if err != nil {
 		sentry.CaptureException(err)
@@ -111,7 +111,7 @@ func (r *Registrations) Create(
 	if existingRegistration.ID != "" {
 		registration = existingRegistration
 	} else {
-		registration, err = r.repository.YdbStarter.Registrations.Create(ctx, registration)
+		registration, err = r.repository.Ydb.Registrations.Create(ctx, registration)
 	}
 
 	if err != nil {
@@ -129,7 +129,7 @@ func (r *Registrations) Create(
 		registration.ConfirmationToken,
 	)
 
-	err = r.repository.YcpStarter.SendEmail(
+	err = r.repository.Ycp.SendEmail(
 		ctx,
 		registration.Email,
 		"Регистрация на "+r.config.FrontURL,

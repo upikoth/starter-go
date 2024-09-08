@@ -1,23 +1,23 @@
-package ydbstarter
+package ydb
 
 import (
 	"os"
 
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
-	passwordrecoveryrequests "github.com/upikoth/starter-go/internal/repository/ydb-starter/password-recovery-requests"
-	passwordrecoveryrequestsandusers "github.com/upikoth/starter-go/internal/repository/ydb-starter/password-recovery-requests-and-users"
-	"github.com/upikoth/starter-go/internal/repository/ydb-starter/registrations"
-	registrationsandusers "github.com/upikoth/starter-go/internal/repository/ydb-starter/registrations-and-users"
-	"github.com/upikoth/starter-go/internal/repository/ydb-starter/sessions"
-	"github.com/upikoth/starter-go/internal/repository/ydb-starter/users"
-	ydbsmodels "github.com/upikoth/starter-go/internal/repository/ydb-starter/ydbs-models"
+	passwordrecoveryrequests "github.com/upikoth/starter-go/internal/repository/ydb/password-recovery-requests"
+	passwordrecoveryrequestsandusers "github.com/upikoth/starter-go/internal/repository/ydb/password-recovery-requests-and-users"
+	"github.com/upikoth/starter-go/internal/repository/ydb/registrations"
+	registrationsandusers "github.com/upikoth/starter-go/internal/repository/ydb/registrations-and-users"
+	"github.com/upikoth/starter-go/internal/repository/ydb/sessions"
+	"github.com/upikoth/starter-go/internal/repository/ydb/users"
+	ydbsmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydbs-models"
 	ydb "github.com/ydb-platform/gorm-driver"
 	environ "github.com/ydb-platform/ydb-go-sdk-auth-environ"
 	"gorm.io/gorm"
 )
 
-type YdbStarter struct {
+type Ydb struct {
 	Registrations                    *registrations.Registrations
 	RegistrationsAndUsers            *registrationsandusers.RegistrationsAndUsers
 	Sessions                         *sessions.Sessions
@@ -25,16 +25,16 @@ type YdbStarter struct {
 	PasswordRecoveryRequests         *passwordrecoveryrequests.PasswordRecoveryRequests
 	PasswordRecoveryRequestsAndUsers *passwordrecoveryrequestsandusers.PasswordRecoveryRequestsAndUsers
 	db                               *gorm.DB
-	config                           *config.YdbStarter
+	config                           *config.Ydb
 }
 
 func New(
 	logger logger.Logger,
-	config *config.YdbStarter,
-) (*YdbStarter, error) {
+	config *config.Ydb,
+) (*Ydb, error) {
 	db := &gorm.DB{}
 
-	return &YdbStarter{
+	return &Ydb{
 		Registrations:                    registrations.New(db, logger),
 		RegistrationsAndUsers:            registrationsandusers.New(db, logger),
 		Sessions:                         sessions.New(db, logger),
@@ -46,7 +46,7 @@ func New(
 	}, nil
 }
 
-func (y *YdbStarter) Connect() error {
+func (y *Ydb) Connect() error {
 	filePath := y.config.AuthFileDirName + "/" + y.config.AuthFileName
 
 	if len(y.config.YcSaJSONCredentials) > 0 {
@@ -83,7 +83,7 @@ func (y *YdbStarter) Connect() error {
 	return err
 }
 
-func (y *YdbStarter) Disconnect() error {
+func (y *Ydb) Disconnect() error {
 	if y.db == nil {
 		return nil
 	}
@@ -97,7 +97,7 @@ func (y *YdbStarter) Disconnect() error {
 	return db.Close()
 }
 
-func (y *YdbStarter) AutoMigrate() error {
+func (y *Ydb) AutoMigrate() error {
 	return y.db.AutoMigrate(
 		&ydbsmodels.Registration{},
 		&ydbsmodels.User{},

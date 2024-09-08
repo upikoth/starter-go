@@ -17,5 +17,5 @@ func (u *Users) GetList(
 	}()
 	ctx := span.Context()
 
-	return u.repository.YdbStarter.Users.GetList(ctx, params)
+	return u.repository.Ydb.Users.GetList(ctx, params)
 }

@@ -3,39 +3,39 @@ package repository
 import (
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
-	ycpstarter "github.com/upikoth/starter-go/internal/repository/ycp-starter"
-	ydbstarter "github.com/upikoth/starter-go/internal/repository/ydb-starter"
+	"github.com/upikoth/starter-go/internal/repository/ycp"
+	"github.com/upikoth/starter-go/internal/repository/ydb"
 )
 
 type Repository struct {
-	YcpStarter *ycpstarter.YcpStarter
-	YdbStarter *ydbstarter.YdbStarter
+	Ycp *ycp.Ycp
+	Ydb *ydb.Ydb
 }
 
 func New(
 	logger logger.Logger,
 	config *config.Repository,
 ) (*Repository, error) {
-	ycpStarter, err := ycpstarter.New(logger, &config.YcpStarter)
+	ycp, err := ycp.New(logger, &config.Ycp)
 
 	if err != nil {
 		return nil, err
 	}
 
-	ydbStarter, err := ydbstarter.New(logger, &config.YdbStarter)
+	ydb, err := ydb.New(logger, &config.Ydb)
 
 	if err != nil {
 		return nil, err
 	}
 
 	return &Repository{
-		YcpStarter: ycpStarter,
-		YdbStarter: ydbStarter,
+		Ycp: ycp,
+		Ydb: ydb,
 	}, nil
 }
 
 func (r *Repository) Connect() error {
-	err := r.YdbStarter.Connect()
+	err := r.Ydb.Connect()
 
 	if err != nil {
 		return err
@@ -45,5 +45,5 @@ func (r *Repository) Connect() error {
 }
 
 func (r *Repository) Disconnect() error {
-	return r.YdbStarter.Disconnect()
+	return r.Ydb.Disconnect()
 }

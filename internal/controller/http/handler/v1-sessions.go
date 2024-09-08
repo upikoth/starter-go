@@ -4,14 +4,14 @@ import (
 	"context"
 
 	"github.com/getsentry/sentry-go"
-	starter "github.com/upikoth/starter-go/internal/generated/starter"
+	app "github.com/upikoth/starter-go/internal/generated/app"
 	"github.com/upikoth/starter-go/internal/models"
 )
 
 func (h *Handler) V1CheckCurrentSession(
 	inputCtx context.Context,
-	params starter.V1CheckCurrentSessionParams,
-) (*starter.SuccessResponse, error) {
+	params app.V1CheckCurrentSessionParams,
+) (*app.SuccessResponse, error) {
 	span := sentry.StartSpan(inputCtx, "Controller: V1GetCurrentSession")
 	defer func() {
 		span.Finish()
@@ -24,15 +24,15 @@ func (h *Handler) V1CheckCurrentSession(
 		return nil, err
 	}
 
-	return &starter.SuccessResponse{
-		Success: starter.SuccessResponseSuccessTrue,
+	return &app.SuccessResponse{
+		Success: app.SuccessResponseSuccessTrue,
 	}, nil
 }
 
 func (h *Handler) V1CreateSession(
 	inputCtx context.Context,
-	req *starter.V1SessionsCreateSessionRequestBody,
-) (*starter.V1SessionsCreateSessionResponse, error) {
+	req *app.V1SessionsCreateSessionRequestBody,
+) (*app.V1SessionsCreateSessionResponse, error) {
 	span := sentry.StartSpan(inputCtx, "Controller: V1CreateSession")
 	defer func() {
 		span.Finish()
@@ -50,13 +50,13 @@ func (h *Handler) V1CreateSession(
 		return nil, err
 	}
 
-	return &starter.V1SessionsCreateSessionResponse{
+	return &app.V1SessionsCreateSessionResponse{
 		Success: true,
-		Data: starter.V1SessionsCreateSessionResponseData{
-			Session: starter.Session{
+		Data: app.V1SessionsCreateSessionResponseData{
+			Session: app.Session{
 				ID:       session.ID,
 				Token:    session.Token,
-				UserRole: starter.UserRole(session.UserRole),
+				UserRole: app.UserRole(session.UserRole),
 			},
 		},
 	}, nil
@@ -64,8 +64,8 @@ func (h *Handler) V1CreateSession(
 
 func (h *Handler) V1DeleteSession(
 	inputCtx context.Context,
-	params starter.V1DeleteSessionParams,
-) (*starter.SuccessResponse, error) {
+	params app.V1DeleteSessionParams,
+) (*app.SuccessResponse, error) {
 	span := sentry.StartSpan(inputCtx, "Controller: V1DeleteSession")
 	defer func() {
 		span.Finish()
@@ -78,7 +78,7 @@ func (h *Handler) V1DeleteSession(
 		return nil, err
 	}
 
-	return &starter.SuccessResponse{
-		Success: starter.SuccessResponseSuccessTrue,
+	return &app.SuccessResponse{
+		Success: app.SuccessResponseSuccessTrue,
 	}, nil
 }

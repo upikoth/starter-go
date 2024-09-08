@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	"github.com/go-faster/errors"
-	"github.com/go-faster/jx"
 )
 
 func (s *ErrorResponseStatusCode) Error() string {
@@ -50,16 +49,7 @@ func (s *ErrorResponse) SetError(val ErrorResponseError) {
 	s.Error = val
 }
 
-type ErrorResponseData map[string]jx.Raw
-
-func (s *ErrorResponseData) init() ErrorResponseData {
-	m := *s
-	if m == nil {
-		m = map[string]jx.Raw{}
-		*s = m
-	}
-	return m
-}
+type ErrorResponseData struct{}
 
 type ErrorResponseError struct {
 	Code        string `json:"code"`
@@ -234,16 +224,7 @@ func (s *SuccessResponse) SetData(val SuccessResponseData) {
 	s.Data = val
 }
 
-type SuccessResponseData map[string]jx.Raw
-
-func (s *SuccessResponseData) init() SuccessResponseData {
-	m := *s
-	if m == nil {
-		m = map[string]jx.Raw{}
-		*s = m
-	}
-	return m
-}
+type SuccessResponseData struct{}
 
 type SuccessResponseSuccess bool
 

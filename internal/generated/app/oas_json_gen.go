@@ -137,43 +137,29 @@ func (s *ErrorResponse) UnmarshalJSON(data []byte) error {
 }
 
 // Encode implements json.Marshaler.
-func (s ErrorResponseData) Encode(e *jx.Encoder) {
+func (s *ErrorResponseData) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
-// encodeFields implements json.Marshaler.
-func (s ErrorResponseData) encodeFields(e *jx.Encoder) {
-	for k, elem := range s {
-		e.FieldStart(k)
-
-		if len(elem) != 0 {
-			e.Raw(elem)
-		}
-	}
+// encodeFields encodes fields.
+func (s *ErrorResponseData) encodeFields(e *jx.Encoder) {
 }
+
+var jsonFieldsNameOfErrorResponseData = [0]string{}
 
 // Decode decodes ErrorResponseData from json.
 func (s *ErrorResponseData) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode ErrorResponseData to nil")
 	}
-	m := s.init()
+
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		var elem jx.Raw
-		if err := func() error {
-			v, err := d.RawAppend(nil)
-			elem = jx.Raw(v)
-			if err != nil {
-				return err
-			}
-			return nil
-		}(); err != nil {
-			return errors.Wrapf(err, "decode field %q", k)
+		switch string(k) {
+		default:
+			return d.Skip()
 		}
-		m[string(k)] = elem
-		return nil
 	}); err != nil {
 		return errors.Wrap(err, "decode ErrorResponseData")
 	}
@@ -182,7 +168,7 @@ func (s *ErrorResponseData) Decode(d *jx.Decoder) error {
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s ErrorResponseData) MarshalJSON() ([]byte, error) {
+func (s *ErrorResponseData) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
@@ -577,43 +563,29 @@ func (s *SuccessResponse) UnmarshalJSON(data []byte) error {
 }
 
 // Encode implements json.Marshaler.
-func (s SuccessResponseData) Encode(e *jx.Encoder) {
+func (s *SuccessResponseData) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
-// encodeFields implements json.Marshaler.
-func (s SuccessResponseData) encodeFields(e *jx.Encoder) {
-	for k, elem := range s {
-		e.FieldStart(k)
-
-		if len(elem) != 0 {
-			e.Raw(elem)
-		}
-	}
+// encodeFields encodes fields.
+func (s *SuccessResponseData) encodeFields(e *jx.Encoder) {
 }
+
+var jsonFieldsNameOfSuccessResponseData = [0]string{}
 
 // Decode decodes SuccessResponseData from json.
 func (s *SuccessResponseData) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode SuccessResponseData to nil")
 	}
-	m := s.init()
+
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		var elem jx.Raw
-		if err := func() error {
-			v, err := d.RawAppend(nil)
-			elem = jx.Raw(v)
-			if err != nil {
-				return err
-			}
-			return nil
-		}(); err != nil {
-			return errors.Wrapf(err, "decode field %q", k)
+		switch string(k) {
+		default:
+			return d.Skip()
 		}
-		m[string(k)] = elem
-		return nil
 	}); err != nil {
 		return errors.Wrap(err, "decode SuccessResponseData")
 	}
@@ -622,7 +594,7 @@ func (s *SuccessResponseData) Decode(d *jx.Decoder) error {
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s SuccessResponseData) MarshalJSON() ([]byte, error) {
+func (s *SuccessResponseData) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil

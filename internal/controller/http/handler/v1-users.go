@@ -5,14 +5,14 @@ import (
 	"net/http"
 
 	"github.com/getsentry/sentry-go"
-	starter "github.com/upikoth/starter-go/internal/generated/starter"
+	app "github.com/upikoth/starter-go/internal/generated/app"
 	"github.com/upikoth/starter-go/internal/models"
 )
 
 func (h *Handler) V1GetUsers(
 	inputCtx context.Context,
-	params starter.V1GetUsersParams,
-) (*starter.V1UsersGetUsersResponse, error) {
+	params app.V1GetUsersParams,
+) (*app.V1UsersGetUsersResponse, error) {
 	span := sentry.StartSpan(inputCtx, "Controller: V1GetUsers")
 	defer func() {
 		span.Finish()
@@ -44,18 +44,18 @@ func (h *Handler) V1GetUsers(
 		return nil, err
 	}
 
-	usersResult := []starter.User{}
+	usersResult := []app.User{}
 	for _, user := range userList.Users {
-		usersResult = append(usersResult, starter.User{
+		usersResult = append(usersResult, app.User{
 			ID:    user.ID,
 			Email: user.Email,
-			Role:  starter.UserRole(user.Role),
+			Role:  app.UserRole(user.Role),
 		})
 	}
 
-	return &starter.V1UsersGetUsersResponse{
+	return &app.V1UsersGetUsersResponse{
 		Success: true,
-		Data: starter.V1UsersGetUsersResponseData{
+		Data: app.V1UsersGetUsersResponseData{
 			Users:  usersResult,
 			Limit:  usersGetListParams.Limit,
 			Offset: usersGetListParams.Offset,

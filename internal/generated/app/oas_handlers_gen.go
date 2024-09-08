@@ -11,7 +11,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/metric"
-	semconv "go.opentelemetry.io/otel/semconv/v1.19.0"
+	semconv "go.opentelemetry.io/otel/semconv/v1.26.0"
 	"go.opentelemetry.io/otel/trace"
 
 	ht "github.com/ogen-go/ogen/http"
@@ -28,7 +28,7 @@ import (
 func (s *Server) handleV1CheckCurrentSessionRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("V1CheckCurrentSession"),
-		semconv.HTTPMethodKey.String("GET"),
+		semconv.HTTPRequestMethodKey.String("GET"),
 		semconv.HTTPRouteKey.String("/api/v1/session"),
 	}
 
@@ -151,7 +151,7 @@ func (s *Server) handleV1CheckCurrentSessionRequest(args [0]string, argsEscaped 
 func (s *Server) handleV1CheckHealthRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("V1CheckHealth"),
-		semconv.HTTPMethodKey.String("GET"),
+		semconv.HTTPRequestMethodKey.String("GET"),
 		semconv.HTTPRouteKey.String("/api/v1/health"),
 	}
 
@@ -255,7 +255,7 @@ func (s *Server) handleV1CheckHealthRequest(args [0]string, argsEscaped bool, w 
 func (s *Server) handleV1ConfirmPasswordRecoveryRequestRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("V1ConfirmPasswordRecoveryRequest"),
-		semconv.HTTPMethodKey.String("PATCH"),
+		semconv.HTTPRequestMethodKey.String("PATCH"),
 		semconv.HTTPRouteKey.String("/api/v1/passwordRecoveryRequests"),
 	}
 
@@ -378,7 +378,7 @@ func (s *Server) handleV1ConfirmPasswordRecoveryRequestRequest(args [0]string, a
 func (s *Server) handleV1ConfirmRegistrationRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("V1ConfirmRegistration"),
-		semconv.HTTPMethodKey.String("PATCH"),
+		semconv.HTTPRequestMethodKey.String("PATCH"),
 		semconv.HTTPRouteKey.String("/api/v1/registrations"),
 	}
 
@@ -501,7 +501,7 @@ func (s *Server) handleV1ConfirmRegistrationRequest(args [0]string, argsEscaped 
 func (s *Server) handleV1CreatePasswordRecoveryRequestRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("V1CreatePasswordRecoveryRequest"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/api/v1/passwordRecoveryRequests"),
 	}
 
@@ -624,7 +624,7 @@ func (s *Server) handleV1CreatePasswordRecoveryRequestRequest(args [0]string, ar
 func (s *Server) handleV1CreateRegistrationRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("V1CreateRegistration"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/api/v1/registrations"),
 	}
 
@@ -747,7 +747,7 @@ func (s *Server) handleV1CreateRegistrationRequest(args [0]string, argsEscaped b
 func (s *Server) handleV1CreateSessionRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("V1CreateSession"),
-		semconv.HTTPMethodKey.String("POST"),
+		semconv.HTTPRequestMethodKey.String("POST"),
 		semconv.HTTPRouteKey.String("/api/v1/sessions"),
 	}
 
@@ -870,7 +870,7 @@ func (s *Server) handleV1CreateSessionRequest(args [0]string, argsEscaped bool, 
 func (s *Server) handleV1DeleteSessionRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("V1DeleteSession"),
-		semconv.HTTPMethodKey.String("DELETE"),
+		semconv.HTTPRequestMethodKey.String("DELETE"),
 		semconv.HTTPRouteKey.String("/api/v1/sessions/{id}"),
 	}
 
@@ -993,7 +993,7 @@ func (s *Server) handleV1DeleteSessionRequest(args [1]string, argsEscaped bool, 
 func (s *Server) handleV1GetUsersRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("V1GetUsers"),
-		semconv.HTTPMethodKey.String("GET"),
+		semconv.HTTPRequestMethodKey.String("GET"),
 		semconv.HTTPRouteKey.String("/api/v1/users"),
 	}
 

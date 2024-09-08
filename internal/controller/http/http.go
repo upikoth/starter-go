@@ -9,14 +9,14 @@ import (
 	"github.com/ogen-go/ogen/middleware"
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/controller/http/handler"
-	starter "github.com/upikoth/starter-go/internal/generated/starter"
+	app "github.com/upikoth/starter-go/internal/generated/app"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 	"github.com/upikoth/starter-go/internal/service"
 )
 
 type HTTP struct {
-	logger        logger.Logger
-	starterServer *http.Server
+	logger    logger.Logger
+	appServer *http.Server
 }
 
 func New(
@@ -26,10 +26,10 @@ func New(
 ) (*HTTP, error) {
 	handler := handler.New(loggerInstance, service)
 
-	srv, err := starter.NewServer(
+	srv, err := app.NewServer(
 		handler,
-		starter.WithErrorHandler(getStarterErrorHandler(handler)),
-		starter.WithMiddleware(
+		app.WithErrorHandler(getAppErrorHandler(handler)),
+		app.WithMiddleware(
 			httpSentryMiddleware,
 			logger.GetHTTPMiddleware(loggerInstance),
 		),
@@ -43,33 +43,33 @@ func New(
 
 	mux.Handle("/api/", corsMiddleware(srv))
 
-	starter := http.FileServer(http.Dir("docs/starter"))
-	mux.Handle("/api/docs/starter/", http.StripPrefix("/api/docs/starter/", starter))
+	app := http.FileServer(http.Dir("docs/app"))
+	mux.Handle("/api/docs/app/", http.StripPrefix("/api/docs/app/", app))
 
 	swaggerUI := http.FileServer(http.Dir("docs/swagger-ui"))
 	mux.Handle("/api/docs/swagger-ui/", http.StripPrefix("/api/docs/swagger-ui/", swaggerUI))
 
-	starterServer := &http.Server{
+	appServer := &http.Server{
 		Addr:              ":" + config.Port,
 		ReadHeaderTimeout: time.Minute,
 		Handler:           mux,
 	}
 
 	return &HTTP{
-		logger:        loggerInstance,
-		starterServer: starterServer,
+		logger:    loggerInstance,
+		appServer: appServer,
 	}, nil
 }
 
 func (h *HTTP) Start() error {
-	return h.starterServer.ListenAndServe()
+	return h.appServer.ListenAndServe()
 }
 
 func (h *HTTP) Stop(ctx context.Context) error {
-	return h.starterServer.Shutdown(ctx)
+	return h.appServer.Shutdown(ctx)
 }
 
-func getStarterErrorHandler(handler *handler.Handler) starter.ErrorHandler {
+func getAppErrorHandler(handler *handler.Handler) app.ErrorHandler {
 	return func(context context.Context, w http.ResponseWriter, _ *http.Request, err error) {
 		w.Header().Set("Content-Type", "application/json")
 

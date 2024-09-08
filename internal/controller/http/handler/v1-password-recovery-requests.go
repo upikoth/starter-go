@@ -5,14 +5,14 @@ import (
 	"context"
 
 	"github.com/getsentry/sentry-go"
-	starter "github.com/upikoth/starter-go/internal/generated/starter"
+	app "github.com/upikoth/starter-go/internal/generated/app"
 	"github.com/upikoth/starter-go/internal/models"
 )
 
 func (h *Handler) V1CreatePasswordRecoveryRequest(
 	inputCtx context.Context,
-	req *starter.V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestRequestBody,
-) (*starter.V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponse, error) {
+	req *app.V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestRequestBody,
+) (*app.V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponse, error) {
 	span := sentry.StartSpan(inputCtx, "Controller: V1CreatePasswordRecoveryRequest")
 	defer func() {
 		span.Finish()
@@ -29,9 +29,9 @@ func (h *Handler) V1CreatePasswordRecoveryRequest(
 		return nil, err
 	}
 
-	return &starter.V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponse{
+	return &app.V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponse{
 		Success: true,
-		Data: starter.V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponseData{
+		Data: app.V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponseData{
 			ID:    passwordRecoveryRequest.ID,
 			Email: passwordRecoveryRequest.Email,
 		},
@@ -40,8 +40,8 @@ func (h *Handler) V1CreatePasswordRecoveryRequest(
 
 func (h *Handler) V1ConfirmPasswordRecoveryRequest(
 	inputCtx context.Context,
-	req *starter.V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody,
-) (*starter.V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponse, error) {
+	req *app.V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody,
+) (*app.V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponse, error) {
 	span := sentry.StartSpan(inputCtx, "Controller: V1ConfirmPasswordRecoveryRequest")
 	defer func() {
 		span.Finish()
@@ -59,13 +59,13 @@ func (h *Handler) V1ConfirmPasswordRecoveryRequest(
 		return nil, err
 	}
 
-	return &starter.V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponse{
+	return &app.V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponse{
 		Success: true,
-		Data: starter.V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseData{
-			Session: starter.Session{
+		Data: app.V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseData{
+			Session: app.Session{
 				ID:       session.ID,
 				Token:    session.Token,
-				UserRole: starter.UserRole(session.UserRole),
+				UserRole: app.UserRole(session.UserRole),
 			},
 		},
 	}, nil

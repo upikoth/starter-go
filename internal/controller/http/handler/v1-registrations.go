@@ -5,14 +5,14 @@ import (
 	"context"
 
 	"github.com/getsentry/sentry-go"
-	starter "github.com/upikoth/starter-go/internal/generated/starter"
+	app "github.com/upikoth/starter-go/internal/generated/app"
 	"github.com/upikoth/starter-go/internal/models"
 )
 
 func (h *Handler) V1CreateRegistration(
 	inputCtx context.Context,
-	req *starter.V1RegistrationsCreateRegistrationRequestBody,
-) (*starter.V1RegistrationsCreateRegistrationResponse, error) {
+	req *app.V1RegistrationsCreateRegistrationRequestBody,
+) (*app.V1RegistrationsCreateRegistrationResponse, error) {
 	span := sentry.StartSpan(inputCtx, "Controller: V1CreateRegistration")
 	defer func() {
 		span.Finish()
@@ -29,9 +29,9 @@ func (h *Handler) V1CreateRegistration(
 		return nil, err
 	}
 
-	return &starter.V1RegistrationsCreateRegistrationResponse{
+	return &app.V1RegistrationsCreateRegistrationResponse{
 		Success: true,
-		Data: starter.V1RegistrationsCreateRegistrationResponseData{
+		Data: app.V1RegistrationsCreateRegistrationResponseData{
 			ID:    registration.ID,
 			Email: registration.Email,
 		},
@@ -40,8 +40,8 @@ func (h *Handler) V1CreateRegistration(
 
 func (h *Handler) V1ConfirmRegistration(
 	inputCtx context.Context,
-	req *starter.V1RegistrationsConfirmRegistrationRequestBody,
-) (*starter.V1RegistrationsConfirmRegistrationResponse, error) {
+	req *app.V1RegistrationsConfirmRegistrationRequestBody,
+) (*app.V1RegistrationsConfirmRegistrationResponse, error) {
 	span := sentry.StartSpan(inputCtx, "Controller: V1ConfirmRegistration")
 	defer func() {
 		span.Finish()
@@ -59,13 +59,13 @@ func (h *Handler) V1ConfirmRegistration(
 		return nil, err
 	}
 
-	return &starter.V1RegistrationsConfirmRegistrationResponse{
+	return &app.V1RegistrationsConfirmRegistrationResponse{
 		Success: true,
-		Data: starter.V1RegistrationsConfirmRegistrationResponseData{
-			Session: starter.Session{
+		Data: app.V1RegistrationsConfirmRegistrationResponseData{
+			Session: app.Session{
 				ID:       session.ID,
 				Token:    session.Token,
-				UserRole: starter.UserRole(session.UserRole),
+				UserRole: app.UserRole(session.UserRole),
 			},
 		},
 	}, nil

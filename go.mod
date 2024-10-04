@@ -11,14 +11,14 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/ogen-go/ogen v1.4.0
 	github.com/rs/zerolog v1.33.0
-	github.com/ydb-platform/gorm-driver v0.1.3
+	github.com/ydb-platform/gorm-driver v0.2.0
 	github.com/ydb-platform/ydb-go-sdk-auth-environ v0.5.0
 	go.opentelemetry.io/otel v1.29.0
 	go.opentelemetry.io/otel/metric v1.29.0
 	go.opentelemetry.io/otel/trace v1.29.0
 	go.uber.org/multierr v1.11.0
 	golang.org/x/crypto v0.27.0
-	gorm.io/gorm v1.25.11
+	gorm.io/gorm v1.25.12
 )
 
 require (
@@ -36,8 +36,8 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
 	github.com/yandex-cloud/go-genproto v0.0.0-20211115083454-9ca41db5ed9e // indirect
-	github.com/ydb-platform/ydb-go-genproto v0.0.0-20240528144234-5d5a685e41f7 // indirect
-	github.com/ydb-platform/ydb-go-sdk/v3 v3.75.2 // indirect
+	github.com/ydb-platform/ydb-go-genproto v0.0.0-20241002120727-5acc94bcb119 // indirect
+	github.com/ydb-platform/ydb-go-sdk/v3 v3.81.4 // indirect
 	github.com/ydb-platform/ydb-go-yc v0.12.1 // indirect
 	github.com/ydb-platform/ydb-go-yc-metadata v0.6.1 // indirect
 	go.uber.org/zap v1.27.0 // indirect
@@ -48,7 +48,7 @@ require (
 	golang.org/x/text v0.18.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240521202816-d264139d666e // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240515191416-fc5f0ca64291 // indirect
-	google.golang.org/grpc v1.64.0 // indirect
+	google.golang.org/grpc v1.64.1 // indirect
 	google.golang.org/protobuf v1.34.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )

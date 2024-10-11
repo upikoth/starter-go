@@ -13,9 +13,9 @@ require (
 	github.com/rs/zerolog v1.33.0
 	github.com/ydb-platform/gorm-driver v0.1.3
 	github.com/ydb-platform/ydb-go-sdk-auth-environ v0.5.0
-	go.opentelemetry.io/otel v1.29.0
-	go.opentelemetry.io/otel/metric v1.29.0
-	go.opentelemetry.io/otel/trace v1.29.0
+	go.opentelemetry.io/otel v1.31.0
+	go.opentelemetry.io/otel/metric v1.31.0
+	go.opentelemetry.io/otel/trace v1.31.0
 	go.uber.org/multierr v1.11.0
 	golang.org/x/crypto v0.27.0
 	gorm.io/gorm v1.25.11

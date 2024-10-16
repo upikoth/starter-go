@@ -20,14 +20,14 @@ func New(
 	logger logger.Logger,
 	service *service.Service,
 ) (*Controller, error) {
-	http, err := http.New(&config.Controller.HTTP, logger, service)
+	httpInstance, err := http.New(&config.Controller.HTTP, logger, service)
 
 	if err != nil {
 		return nil, err
 	}
 
 	return &Controller{
-		http:   http,
+		http:   httpInstance,
 		logger: logger,
 		config: &config.Controller,
 	}, nil

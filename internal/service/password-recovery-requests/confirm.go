@@ -22,7 +22,7 @@ func (p *PasswordRecoveryRequests) Confirm(
 
 	passwordRecoveryRequest, err := p.
 		repository.
-		Ydb.
+		YDB.
 		PasswordRecoveryRequests.
 		GetByToken(ctx, params.ConfirmationToken)
 
@@ -52,7 +52,7 @@ func (p *PasswordRecoveryRequests) Confirm(
 		}
 	}
 
-	user, err := p.repository.Ydb.Users.GetByEmail(ctx, passwordRecoveryRequest.Email)
+	user, err := p.repository.YDB.Users.GetByEmail(ctx, passwordRecoveryRequest.Email)
 
 	if err != nil {
 		sentry.CaptureException(err)
@@ -66,7 +66,7 @@ func (p *PasswordRecoveryRequests) Confirm(
 
 	updatedUser, err := p.
 		repository.
-		Ydb.
+		YDB.
 		PasswordRecoveryRequestsAndUsers.
 		DeletePasswordRecoveryRequestAndUpdateUser(
 			ctx,
@@ -89,7 +89,7 @@ func (p *PasswordRecoveryRequests) Confirm(
 		Token:    uuid.New().String(),
 	}
 
-	createdSession, err := p.repository.Ydb.Sessions.Create(ctx, session)
+	createdSession, err := p.repository.YDB.Sessions.Create(ctx, session)
 
 	if err != nil {
 		sentry.CaptureException(err)

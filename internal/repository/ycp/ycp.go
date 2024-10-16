@@ -7,7 +7,7 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
-	smtpclient "github.com/upikoth/starter-go/internal/pkg/smtp-client"
+	"github.com/upikoth/starter-go/internal/pkg/smtp-client"
 )
 
 type Ycp struct {
@@ -44,7 +44,7 @@ func (y *Ycp) SendEmail(
 	title string,
 	body string,
 ) error {
-	span := sentry.StartSpan(inputCtx, "Repository: Ycp.SendEmail")
+	span := sentry.StartSpan(inputCtx, "Repository: YCP.SendEmail")
 	defer func() {
 		span.Finish()
 	}()

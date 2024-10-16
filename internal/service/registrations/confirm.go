@@ -20,7 +20,7 @@ func (r *Registrations) Confirm(
 	}()
 	ctx := span.Context()
 
-	registration, err := r.repository.Ydb.Registrations.GetByToken(ctx, params.ConfirmationToken)
+	registration, err := r.repository.YDB.Registrations.GetByToken(ctx, params.ConfirmationToken)
 
 	if err != nil {
 		sentry.CaptureException(err)
@@ -56,7 +56,7 @@ func (r *Registrations) Confirm(
 	}
 
 	createdUser, err :=
-		r.repository.Ydb.RegistrationsAndUsers.DeleteRegistrationAndCreateUser(ctx, registration, newUser)
+		r.repository.YDB.RegistrationsAndUsers.DeleteRegistrationAndCreateUser(ctx, registration, newUser)
 
 	if err != nil {
 		sentry.CaptureException(err)
@@ -73,7 +73,7 @@ func (r *Registrations) Confirm(
 		Token:    uuid.New().String(),
 	}
 
-	createdSession, err := r.repository.Ydb.Sessions.Create(ctx, session)
+	createdSession, err := r.repository.YDB.Sessions.Create(ctx, session)
 
 	if err != nil {
 		sentry.CaptureException(err)

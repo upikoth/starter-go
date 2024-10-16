@@ -8,34 +8,34 @@ import (
 )
 
 type Repository struct {
-	Ycp *ycp.Ycp
-	Ydb *ydb.Ydb
+	YCP *ycp.Ycp
+	YDB *ydb.YDB
 }
 
 func New(
 	logger logger.Logger,
 	config *config.Repository,
 ) (*Repository, error) {
-	ycp, err := ycp.New(logger, &config.Ycp)
+	ycpInstance, err := ycp.New(logger, &config.Ycp)
 
 	if err != nil {
 		return nil, err
 	}
 
-	ydb, err := ydb.New(logger, &config.Ydb)
+	ydbInstance, err := ydb.New(logger, &config.Ydb)
 
 	if err != nil {
 		return nil, err
 	}
 
 	return &Repository{
-		Ycp: ycp,
-		Ydb: ydb,
+		YCP: ycpInstance,
+		YDB: ydbInstance,
 	}, nil
 }
 
 func (r *Repository) Connect() error {
-	err := r.Ydb.Connect()
+	err := r.YDB.Connect()
 
 	if err != nil {
 		return err
@@ -45,5 +45,5 @@ func (r *Repository) Connect() error {
 }
 
 func (r *Repository) Disconnect() error {
-	return r.Ydb.Disconnect()
+	return r.YDB.Disconnect()
 }

@@ -18,7 +18,7 @@ func (s *Sessions) DeleteByID(
 	}()
 	ctx := span.Context()
 
-	session, err := s.repository.Ydb.Sessions.GetByID(ctx, id)
+	session, err := s.repository.YDB.Sessions.GetByID(ctx, id)
 
 	if err != nil {
 		sentry.CaptureException(err)
@@ -36,7 +36,7 @@ func (s *Sessions) DeleteByID(
 		}
 	}
 
-	err = s.repository.Ydb.Sessions.DeleteByID(ctx, id)
+	err = s.repository.YDB.Sessions.DeleteByID(ctx, id)
 
 	if err != nil {
 		sentry.CaptureException(err)

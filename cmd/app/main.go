@@ -24,21 +24,27 @@ func main() {
 	_ = godotenv.Load()
 	loggerInstance := logger.New()
 
-	config, err := config.New()
+	cfg, err := config.New()
 	if err != nil {
 		loggerInstance.Fatal(err.Error())
+		return
 	}
 
-	if config.Environment == "development" {
+	if cfg == nil {
+		loggerInstance.Fatal("Некорректная инициализация конфига приложения")
+		return
+	}
+
+	if cfg.Environment == "development" {
 		loggerInstance.SetPrettyOutputToConsole()
 	}
 
 	initSentry(
-		&config.Controller.HTTP,
+		&cfg.Controller.HTTP,
 		loggerInstance,
 	)
 
-	app, err := app.New(config, loggerInstance)
+	appInstance, err := app.New(cfg, loggerInstance)
 	if err != nil {
 		loggerInstance.Fatal(err.Error())
 	}
@@ -46,7 +52,7 @@ func main() {
 	go func() {
 		loggerInstance.Info("Запуск приложения")
 
-		if appErr := app.Start(); !errors.Is(appErr, http.ErrServerClosed) {
+		if appErr := appInstance.Start(); !errors.Is(appErr, http.ErrServerClosed) {
 			loggerInstance.Fatal(appErr.Error())
 		}
 
@@ -64,7 +70,7 @@ func main() {
 	)
 	defer shutdownRelease()
 
-	if stopErr := app.Stop(shutdownCtx); stopErr != nil {
+	if stopErr := appInstance.Stop(shutdownCtx); stopErr != nil {
 		loggerInstance.Fatal(fmt.Sprintf("Не удалось корректно остановить сервер, ошибка: %v", stopErr))
 	}
 

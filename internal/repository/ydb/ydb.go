@@ -5,19 +5,19 @@ import (
 
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
-	passwordrecoveryrequests "github.com/upikoth/starter-go/internal/repository/ydb/password-recovery-requests"
-	passwordrecoveryrequestsandusers "github.com/upikoth/starter-go/internal/repository/ydb/password-recovery-requests-and-users"
+	"github.com/upikoth/starter-go/internal/repository/ydb/password-recovery-requests"
+	"github.com/upikoth/starter-go/internal/repository/ydb/password-recovery-requests-and-users"
 	"github.com/upikoth/starter-go/internal/repository/ydb/registrations"
-	registrationsandusers "github.com/upikoth/starter-go/internal/repository/ydb/registrations-and-users"
+	"github.com/upikoth/starter-go/internal/repository/ydb/registrations-and-users"
 	"github.com/upikoth/starter-go/internal/repository/ydb/sessions"
 	"github.com/upikoth/starter-go/internal/repository/ydb/users"
-	ydbsmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydbs-models"
-	ydb "github.com/ydb-platform/gorm-driver"
-	environ "github.com/ydb-platform/ydb-go-sdk-auth-environ"
+	"github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
+	"github.com/ydb-platform/gorm-driver"
+	"github.com/ydb-platform/ydb-go-sdk-auth-environ"
 	"gorm.io/gorm"
 )
 
-type Ydb struct {
+type YDB struct {
 	Registrations                    *registrations.Registrations
 	RegistrationsAndUsers            *registrationsandusers.RegistrationsAndUsers
 	Sessions                         *sessions.Sessions
@@ -31,10 +31,10 @@ type Ydb struct {
 func New(
 	logger logger.Logger,
 	config *config.Ydb,
-) (*Ydb, error) {
+) (*YDB, error) {
 	db := &gorm.DB{}
 
-	return &Ydb{
+	return &YDB{
 		Registrations:                    registrations.New(db, logger),
 		RegistrationsAndUsers:            registrationsandusers.New(db, logger),
 		Sessions:                         sessions.New(db, logger),
@@ -46,7 +46,7 @@ func New(
 	}, nil
 }
 
-func (y *Ydb) Connect() error {
+func (y *YDB) Connect() error {
 	filePath := y.config.AuthFileDirName + "/" + y.config.AuthFileName
 
 	if len(y.config.YcSaJSONCredentials) > 0 {
@@ -67,7 +67,11 @@ func (y *Ydb) Connect() error {
 		}
 	}
 
-	os.Setenv("YDB_SERVICE_ACCOUNT_KEY_FILE_CREDENTIALS", filePath)
+	err := os.Setenv("YDB_SERVICE_ACCOUNT_KEY_FILE_CREDENTIALS", filePath)
+
+	if err != nil {
+		return err
+	}
 
 	db, err := gorm.Open(
 		ydb.Open(y.config.Dsn, ydb.With(environ.WithEnvironCredentials())),
@@ -83,7 +87,7 @@ func (y *Ydb) Connect() error {
 	return err
 }
 
-func (y *Ydb) Disconnect() error {
+func (y *YDB) Disconnect() error {
 	if y.db == nil {
 		return nil
 	}
@@ -97,11 +101,11 @@ func (y *Ydb) Disconnect() error {
 	return db.Close()
 }
 
-func (y *Ydb) AutoMigrate() error {
+func (y *YDB) AutoMigrate() error {
 	return y.db.AutoMigrate(
-		&ydbsmodels.Registration{},
-		&ydbsmodels.User{},
-		&ydbsmodels.Session{},
-		&ydbsmodels.PasswordRecoveryRequest{},
+		&ydbmodels.Registration{},
+		&ydbmodels.User{},
+		&ydbmodels.Session{},
+		&ydbmodels.PasswordRecoveryRequest{},
 	)
 }

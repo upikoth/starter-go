@@ -1,4 +1,4 @@
-package ydbsmodels
+package ydbmodels
 
 import "github.com/upikoth/starter-go/internal/models"
 
@@ -9,7 +9,7 @@ type User struct {
 	Role         string
 }
 
-func NewYdbsUserModel(user models.User) User {
+func NewYDBUserModel(user models.User) User {
 	return User{
 		ID:           user.ID,
 		Email:        user.Email,
@@ -18,7 +18,7 @@ func NewYdbsUserModel(user models.User) User {
 	}
 }
 
-func (u *User) FromYdbsModel() models.User {
+func (u *User) FromYDBModel() models.User {
 	return models.User{
 		ID:           u.ID,
 		Email:        u.Email,

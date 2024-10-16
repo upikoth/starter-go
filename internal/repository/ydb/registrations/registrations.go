@@ -6,7 +6,7 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
-	ydbsmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydbs-models"
+	"github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
 	"gorm.io/gorm"
 )
 
@@ -29,15 +29,15 @@ func (r *Registrations) Create(
 	inputCtx context.Context,
 	registrationToCreate models.Registration,
 ) (models.Registration, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: Ydb.Registrations.Create")
+	span := sentry.StartSpan(inputCtx, "Repository: YDB.Registrations.Create")
 	defer func() {
 		span.Finish()
 	}()
 	ctx := span.Context()
 
-	registration := ydbsmodels.NewYdbsRegistrationModel(registrationToCreate)
+	registration := ydbmodels.NewYDBRegistrationModel(registrationToCreate)
 	res := r.db.WithContext(ctx).Create(&registration)
-	createdRegistration := registration.FromYdbsModel()
+	createdRegistration := registration.FromYDBModel()
 
 	if res.Error != nil {
 		sentry.CaptureException(res.Error)
@@ -51,15 +51,15 @@ func (r *Registrations) Update(
 	inputCtx context.Context,
 	registrationToUpdate models.Registration,
 ) (models.Registration, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: Ydb.Registrations.Update")
+	span := sentry.StartSpan(inputCtx, "Repository: YDB.Registrations.Update")
 	defer func() {
 		span.Finish()
 	}()
 	ctx := span.Context()
 
-	registration := ydbsmodels.NewYdbsRegistrationModel(registrationToUpdate)
+	registration := ydbmodels.NewYDBRegistrationModel(registrationToUpdate)
 	res := r.db.WithContext(ctx).Updates(&registration)
-	updatedRegistration := registration.FromYdbsModel()
+	updatedRegistration := registration.FromYDBModel()
 
 	if res.Error != nil {
 		sentry.CaptureException(res.Error)
@@ -73,22 +73,22 @@ func (r *Registrations) GetByEmail(
 	inputCtx context.Context,
 	email string,
 ) (models.Registration, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: Ydb.Registrations.GetByEmail")
+	span := sentry.StartSpan(inputCtx, "Repository: YDB.Registrations.GetByEmail")
 	defer func() {
 		span.Finish()
 	}()
 	ctx := span.Context()
 
-	registration := ydbsmodels.Registration{}
+	registration := ydbmodels.Registration{}
 	res := r.db.
 		WithContext(ctx).
-		Where(ydbsmodels.Registration{Email: email}).
+		Where(ydbmodels.Registration{Email: email}).
 		FirstOrInit(&registration)
 
 	if res.RowsAffected == 0 {
-		registration = ydbsmodels.Registration{}
+		registration = ydbmodels.Registration{}
 	}
-	foundRegistration := registration.FromYdbsModel()
+	foundRegistration := registration.FromYDBModel()
 
 	if res.Error != nil {
 		sentry.CaptureException(res.Error)
@@ -102,22 +102,22 @@ func (r *Registrations) GetByToken(
 	inputCtx context.Context,
 	confirmationToken string,
 ) (models.Registration, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: Ydb.Registrations.GetByToken")
+	span := sentry.StartSpan(inputCtx, "Repository: YDB.Registrations.GetByToken")
 	defer func() {
 		span.Finish()
 	}()
 	ctx := span.Context()
 
-	registration := ydbsmodels.Registration{}
+	registration := ydbmodels.Registration{}
 	res := r.db.
 		WithContext(ctx).
-		Where(ydbsmodels.Registration{ConfirmationToken: confirmationToken}).
+		Where(ydbmodels.Registration{ConfirmationToken: confirmationToken}).
 		FirstOrInit(&registration)
 
 	if res.RowsAffected == 0 {
-		registration = ydbsmodels.Registration{}
+		registration = ydbmodels.Registration{}
 	}
-	foundRegistration := registration.FromYdbsModel()
+	foundRegistration := registration.FromYDBModel()
 
 	if res.Error != nil {
 		sentry.CaptureException(res.Error)

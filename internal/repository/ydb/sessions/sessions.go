@@ -6,7 +6,7 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
-	ydbsmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydbs-models"
+	"github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
 	"gorm.io/gorm"
 )
 
@@ -29,15 +29,15 @@ func (s *Sessions) Create(
 	inputCtx context.Context,
 	sessionToCreate models.Session,
 ) (models.Session, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: Ydb.Sessions.Create")
+	span := sentry.StartSpan(inputCtx, "Repository: YDB.Sessions.Create")
 	defer func() {
 		span.Finish()
 	}()
 	ctx := span.Context()
 
-	session := ydbsmodels.NewYdbsSessionModel(sessionToCreate)
+	session := ydbmodels.NewYDBSessionModel(sessionToCreate)
 	res := s.db.WithContext(ctx).Create(&session)
-	createdSession := session.FromYdbsModel()
+	createdSession := session.FromYDBModel()
 
 	if res.Error != nil {
 		sentry.CaptureException(res.Error)
@@ -51,22 +51,22 @@ func (s *Sessions) GetByToken(
 	inputCtx context.Context,
 	token string,
 ) (models.Session, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: Ydb.Sessions.GetByToken")
+	span := sentry.StartSpan(inputCtx, "Repository: YDB.Sessions.GetByToken")
 	defer func() {
 		span.Finish()
 	}()
 	ctx := span.Context()
 
-	session := ydbsmodels.Session{}
+	session := ydbmodels.Session{}
 	res := s.db.
 		WithContext(ctx).
-		Where(ydbsmodels.Session{Token: token}).
+		Where(ydbmodels.Session{Token: token}).
 		FirstOrInit(&session)
 
 	if res.RowsAffected == 0 {
-		session = ydbsmodels.Session{}
+		session = ydbmodels.Session{}
 	}
-	foundSession := session.FromYdbsModel()
+	foundSession := session.FromYDBModel()
 
 	if res.Error != nil {
 		sentry.CaptureException(res.Error)
@@ -80,22 +80,22 @@ func (s *Sessions) GetByID(
 	inputCtx context.Context,
 	id string,
 ) (models.Session, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: Ydb.Sessions.GetByID")
+	span := sentry.StartSpan(inputCtx, "Repository: YDB.Sessions.GetByID")
 	defer func() {
 		span.Finish()
 	}()
 	ctx := span.Context()
 
-	session := ydbsmodels.Session{}
+	session := ydbmodels.Session{}
 	res := s.db.
 		WithContext(ctx).
-		Where(ydbsmodels.Session{ID: id}).
+		Where(ydbmodels.Session{ID: id}).
 		FirstOrInit(&session)
 
 	if res.RowsAffected == 0 {
-		session = ydbsmodels.Session{}
+		session = ydbmodels.Session{}
 	}
-	foundSession := session.FromYdbsModel()
+	foundSession := session.FromYDBModel()
 
 	if res.Error != nil {
 		sentry.CaptureException(res.Error)
@@ -109,7 +109,7 @@ func (s *Sessions) DeleteByID(
 	inputCtx context.Context,
 	id string,
 ) error {
-	span := sentry.StartSpan(inputCtx, "Repository: Ydb.Sessions.DeleteByID")
+	span := sentry.StartSpan(inputCtx, "Repository: YDB.Sessions.DeleteByID")
 	defer func() {
 		span.Finish()
 	}()
@@ -117,7 +117,7 @@ func (s *Sessions) DeleteByID(
 
 	res := s.db.
 		WithContext(ctx).
-		Delete(ydbsmodels.Session{ID: id})
+		Delete(ydbmodels.Session{ID: id})
 
 	if res.Error != nil {
 		sentry.CaptureException(res.Error)

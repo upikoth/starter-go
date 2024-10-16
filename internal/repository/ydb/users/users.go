@@ -6,7 +6,7 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
-	ydbsmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydbs-models"
+	"github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
 	"gorm.io/gorm"
 )
 
@@ -29,18 +29,18 @@ func (u *Users) GetByEmail(
 	inputCtx context.Context,
 	email string,
 ) (models.User, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: Ydb.Users.GetByEmail")
+	span := sentry.StartSpan(inputCtx, "Repository: YDB.Users.GetByEmail")
 	defer func() {
 		span.Finish()
 	}()
 	ctx := span.Context()
 
-	user := ydbsmodels.User{}
+	user := ydbmodels.User{}
 	res := u.db.
 		WithContext(ctx).
-		Where(ydbsmodels.User{Email: email}).
+		Where(ydbmodels.User{Email: email}).
 		FirstOrInit(&user)
-	foundUser := user.FromYdbsModel()
+	foundUser := user.FromYDBModel()
 
 	if res.Error != nil {
 		sentry.CaptureException(res.Error)
@@ -54,15 +54,15 @@ func (u *Users) Update(
 	inputCtx context.Context,
 	userToUpdate models.User,
 ) (models.User, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: Ydb.Users.Update")
+	span := sentry.StartSpan(inputCtx, "Repository: YDB.Users.Update")
 	defer func() {
 		span.Finish()
 	}()
 	ctx := span.Context()
 
-	user := ydbsmodels.NewYdbsUserModel(userToUpdate)
+	user := ydbmodels.NewYDBUserModel(userToUpdate)
 	res := u.db.WithContext(ctx).Updates(&user)
-	updatedUser := user.FromYdbsModel()
+	updatedUser := user.FromYDBModel()
 
 	if res.Error != nil {
 		sentry.CaptureException(res.Error)
@@ -76,18 +76,18 @@ func (u *Users) GetList(
 	inputCtx context.Context,
 	params models.UsersGetListParams,
 ) (models.UserList, error) {
-	span := sentry.StartSpan(inputCtx, "Repository: Ydb.Users.GetList")
+	span := sentry.StartSpan(inputCtx, "Repository: YDB.Users.GetList")
 	defer func() {
 		span.Finish()
 	}()
 	ctx := span.Context()
 
-	users := []ydbsmodels.User{}
+	var users []ydbmodels.User
 	total := int64(0)
 
 	res := u.db.
 		WithContext(ctx).
-		Model(ydbsmodels.User{}).
+		Model(ydbmodels.User{}).
 		Count(&total)
 
 	if res.Error != nil {
@@ -106,10 +106,9 @@ func (u *Users) GetList(
 		return models.UserList{}, res.Error
 	}
 
-	resUsers := []models.User{}
-
+	var resUsers []models.User
 	for _, user := range users {
-		resUsers = append(resUsers, user.FromYdbsModel())
+		resUsers = append(resUsers, user.FromYDBModel())
 	}
 
 	return models.UserList{

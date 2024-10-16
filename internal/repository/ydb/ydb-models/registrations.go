@@ -1,4 +1,4 @@
-package ydbsmodels
+package ydbmodels
 
 import "github.com/upikoth/starter-go/internal/models"
 
@@ -8,7 +8,7 @@ type Registration struct {
 	ConfirmationToken string
 }
 
-func NewYdbsRegistrationModel(registration models.Registration) Registration {
+func NewYDBRegistrationModel(registration models.Registration) Registration {
 	return Registration{
 		ID:                registration.ID,
 		Email:             registration.Email,
@@ -16,7 +16,7 @@ func NewYdbsRegistrationModel(registration models.Registration) Registration {
 	}
 }
 
-func (r *Registration) FromYdbsModel() models.Registration {
+func (r *Registration) FromYDBModel() models.Registration {
 	return models.Registration{
 		ID:                r.ID,
 		Email:             r.Email,

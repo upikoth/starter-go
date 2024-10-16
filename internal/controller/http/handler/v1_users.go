@@ -44,7 +44,7 @@ func (h *Handler) V1GetUsers(
 		return nil, err
 	}
 
-	usersResult := []app.User{}
+	var usersResult []app.User
 	for _, user := range userList.Users {
 		usersResult = append(usersResult, app.User{
 			ID:    user.ID,

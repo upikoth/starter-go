@@ -24,11 +24,11 @@ func New(
 	loggerInstance logger.Logger,
 	service *service.Service,
 ) (*HTTP, error) {
-	handler := handler.New(loggerInstance, service)
+	handlerInstance := handler.New(loggerInstance, service)
 
 	srv, err := app.NewServer(
-		handler,
-		app.WithErrorHandler(getAppErrorHandler(handler)),
+		handlerInstance,
+		app.WithErrorHandler(getAppErrorHandler(handlerInstance)),
 		app.WithMiddleware(
 			httpSentryMiddleware,
 			logger.GetHTTPMiddleware(loggerInstance),
@@ -43,8 +43,8 @@ func New(
 
 	mux.Handle("/api/", corsMiddleware(srv))
 
-	app := http.FileServer(http.Dir("docs/app"))
-	mux.Handle("/api/docs/app/", http.StripPrefix("/api/docs/app/", app))
+	appInstance := http.FileServer(http.Dir("docs/app"))
+	mux.Handle("/api/docs/app/", http.StripPrefix("/api/docs/app/", appInstance))
 
 	swaggerUI := http.FileServer(http.Dir("docs/swagger-ui"))
 	mux.Handle("/api/docs/swagger-ui/", http.StripPrefix("/api/docs/swagger-ui/", swaggerUI))

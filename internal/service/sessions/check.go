@@ -18,7 +18,7 @@ func (s *Sessions) CheckToken(
 	}()
 	ctx := span.Context()
 
-	session, err := s.repository.Ydb.Sessions.GetByToken(ctx, token)
+	session, err := s.repository.YDB.Sessions.GetByToken(ctx, token)
 
 	if err != nil {
 		sentry.CaptureException(err)

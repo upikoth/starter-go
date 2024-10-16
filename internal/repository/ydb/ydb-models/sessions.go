@@ -1,4 +1,4 @@
-package ydbsmodels
+package ydbmodels
 
 import "github.com/upikoth/starter-go/internal/models"
 
@@ -9,7 +9,7 @@ type Session struct {
 	Token    string
 }
 
-func NewYdbsSessionModel(session models.Session) Session {
+func NewYDBSessionModel(session models.Session) Session {
 	return Session{
 		ID:       session.ID,
 		UserID:   session.UserID,
@@ -18,7 +18,7 @@ func NewYdbsSessionModel(session models.Session) Session {
 	}
 }
 
-func (u *Session) FromYdbsModel() models.Session {
+func (u *Session) FromYDBModel() models.Session {
 	return models.Session{
 		ID:       u.ID,
 		UserID:   u.UserID,

@@ -1,4 +1,6 @@
 /*! For license information please see swagger-ui-bundle.js.LICENSE.txt */
+// noinspection NonAsciiCharacters,HttpUrlsUsage
+
 !(function webpackUniversalModuleDefinition(s, i) {
   'object' == typeof exports && 'object' == typeof module
     ? (module.exports = i())

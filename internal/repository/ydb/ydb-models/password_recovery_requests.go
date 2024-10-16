@@ -1,4 +1,4 @@
-package ydbsmodels
+package ydbmodels
 
 import "github.com/upikoth/starter-go/internal/models"
 
@@ -8,7 +8,7 @@ type PasswordRecoveryRequest struct {
 	ConfirmationToken string
 }
 
-func NewYdbsPasswordRecoveryRequestModel(registration models.PasswordRecoveryRequest) PasswordRecoveryRequest {
+func NewYDBPasswordRecoveryRequestModel(registration models.PasswordRecoveryRequest) PasswordRecoveryRequest {
 	return PasswordRecoveryRequest{
 		ID:                registration.ID,
 		Email:             registration.Email,
@@ -16,7 +16,7 @@ func NewYdbsPasswordRecoveryRequestModel(registration models.PasswordRecoveryReq
 	}
 }
 
-func (r *PasswordRecoveryRequest) FromYdbsModel() models.PasswordRecoveryRequest {
+func (r *PasswordRecoveryRequest) FromYDBModel() models.PasswordRecoveryRequest {
 	return models.PasswordRecoveryRequest{
 		ID:                r.ID,
 		Email:             r.Email,

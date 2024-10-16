@@ -20,7 +20,7 @@ func (s *Sessions) Create(
 	}()
 	ctx := span.Context()
 
-	user, err := s.repository.Ydb.Users.GetByEmail(ctx, params.Email)
+	user, err := s.repository.YDB.Users.GetByEmail(ctx, params.Email)
 
 	if err != nil {
 		sentry.CaptureException(err)
@@ -55,7 +55,7 @@ func (s *Sessions) Create(
 		Token:    uuid.New().String(),
 	}
 
-	session, err := s.repository.Ydb.Sessions.Create(ctx, sessionToCreate)
+	session, err := s.repository.YDB.Sessions.Create(ctx, sessionToCreate)
 
 	return session, err
 }

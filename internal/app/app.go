@@ -20,21 +20,21 @@ type App struct {
 }
 
 func New(config *config.Config, logger logger.Logger) (*App, error) {
-	repository, err := repository.New(logger, &config.Repository)
+	repositoryInstance, err := repository.New(logger, &config.Repository)
 
 	if err != nil {
 		logger.Error(fmt.Sprintf("Ошибка при инициализации repository: %s", err))
 		return nil, err
 	}
 
-	service, err := service.New(logger, config, repository)
+	serviceInstance, err := service.New(logger, config, repositoryInstance)
 
 	if err != nil {
 		logger.Error(fmt.Sprintf("Ошибка при инициализации service: %s", err))
 		return nil, err
 	}
 
-	controller, err := controller.New(config, logger, service)
+	controllerInstance, err := controller.New(config, logger, serviceInstance)
 
 	if err != nil {
 		logger.Error(fmt.Sprintf("Ошибка при инициализации controller: %s", err))
@@ -44,9 +44,9 @@ func New(config *config.Config, logger logger.Logger) (*App, error) {
 	return &App{
 		config:     config,
 		logger:     logger,
-		repository: repository,
-		service:    service,
-		controller: controller,
+		repository: repositoryInstance,
+		service:    serviceInstance,
+		controller: controllerInstance,
 	}, nil
 }
 

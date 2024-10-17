@@ -4,7 +4,7 @@ import (
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 	"github.com/upikoth/starter-go/internal/repository"
-	"github.com/upikoth/starter-go/internal/service/password-recovery-requests"
+	passwordrecoveryrequests "github.com/upikoth/starter-go/internal/service/password-recovery-requests"
 	"github.com/upikoth/starter-go/internal/service/registrations"
 	"github.com/upikoth/starter-go/internal/service/sessions"
 	"github.com/upikoth/starter-go/internal/service/users"

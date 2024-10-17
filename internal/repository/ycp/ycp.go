@@ -7,7 +7,7 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
-	"github.com/upikoth/starter-go/internal/pkg/smtp-client"
+	smtpclient "github.com/upikoth/starter-go/internal/pkg/smtp-client"
 )
 
 type Ycp struct {

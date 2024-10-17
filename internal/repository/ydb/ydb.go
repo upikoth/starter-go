@@ -5,15 +5,15 @@ import (
 
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
-	"github.com/upikoth/starter-go/internal/repository/ydb/password-recovery-requests"
-	"github.com/upikoth/starter-go/internal/repository/ydb/password-recovery-requests-and-users"
+	passwordrecoveryrequests "github.com/upikoth/starter-go/internal/repository/ydb/password-recovery-requests"
+	passwordrecoveryrequestsandusers "github.com/upikoth/starter-go/internal/repository/ydb/password-recovery-requests-and-users"
 	"github.com/upikoth/starter-go/internal/repository/ydb/registrations"
-	"github.com/upikoth/starter-go/internal/repository/ydb/registrations-and-users"
+	registrationsandusers "github.com/upikoth/starter-go/internal/repository/ydb/registrations-and-users"
 	"github.com/upikoth/starter-go/internal/repository/ydb/sessions"
 	"github.com/upikoth/starter-go/internal/repository/ydb/users"
-	"github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
-	"github.com/ydb-platform/gorm-driver"
-	"github.com/ydb-platform/ydb-go-sdk-auth-environ"
+	ydbmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
+	ydb "github.com/ydb-platform/gorm-driver"
+	environ "github.com/ydb-platform/ydb-go-sdk-auth-environ"
 	"gorm.io/gorm"
 )
 

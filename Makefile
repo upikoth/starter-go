@@ -2,9 +2,6 @@ ifneq ("$(wildcard '.env')","")
 include .env
 endif
 
-dev:
-	sh scripts/dev.sh
-
 build:
 	sh scripts/build.sh
 

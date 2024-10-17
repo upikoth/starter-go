@@ -98,7 +98,13 @@ func (y *YDB) Disconnect() error {
 		return err
 	}
 
-	return db.Close()
+	err = db.Close()
+
+	if err != nil {
+		return err
+	}
+
+	return os.RemoveAll(y.config.AuthFileDirName)
 }
 
 func (y *YDB) AutoMigrate() error {

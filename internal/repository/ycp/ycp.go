@@ -2,10 +2,10 @@ package ycp
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"net/mail"
 
 	"github.com/getsentry/sentry-go"
+	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 	smtpclient "github.com/upikoth/starter-go/internal/pkg/smtp-client"

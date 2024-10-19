@@ -100,12 +100,11 @@ func corsMiddleware(next http.Handler) http.Handler {
 func httpSentryMiddleware(req middleware.Request, next middleware.Next) (middleware.Response, error) {
 	transaction := sentry.StartTransaction(
 		req.Context,
-		req.Raw.RequestURI,
+		req.Raw.URL.Path,
 		sentry.ContinueFromRequest(req.Raw),
 	)
 	defer transaction.Finish()
 
-	transaction.SetData("Request", req)
 	ctx := transaction.Context()
 	req.SetContext(ctx)
 
@@ -117,8 +116,6 @@ func httpSentryMiddleware(req middleware.Request, next middleware.Next) (middlew
 			Message: errorResponse.Error(),
 		})
 	}
-
-	transaction.SetData("Response", res)
 
 	return res, errorResponse
 }

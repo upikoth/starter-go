@@ -13,7 +13,7 @@ import (
 func (s *Sessions) Create(
 	inputCtx context.Context,
 	params models.SessionCreateParams,
-) (models.Session, error) {
+) (*models.Session, error) {
 	span := sentry.StartSpan(inputCtx, "Service: Sessions.Create")
 	defer func() {
 		span.Finish()
@@ -24,14 +24,14 @@ func (s *Sessions) Create(
 
 	if err != nil {
 		sentry.CaptureException(err)
-		return models.Session{}, &models.Error{
+		return nil, &models.Error{
 			Code:        models.ErrorCodeSessionsCreateSessionDBError,
 			Description: err.Error(),
 		}
 	}
 
 	if user.ID == "" {
-		return models.Session{}, &models.Error{
+		return nil, &models.Error{
 			Code:        models.ErrorCodeSessionsCreateSessionWrongEmailOrPassword,
 			Description: "Incorrect email or password",
 			StatusCode:  http.StatusBadRequest,
@@ -41,7 +41,7 @@ func (s *Sessions) Create(
 	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(params.Password))
 
 	if err != nil {
-		return models.Session{}, &models.Error{
+		return &models.Session{}, &models.Error{
 			Code:        models.ErrorCodeSessionsCreateSessionWrongEmailOrPassword,
 			Description: "Incorrect email or password",
 			StatusCode:  http.StatusBadRequest,
@@ -56,6 +56,14 @@ func (s *Sessions) Create(
 	}
 
 	session, err := s.repository.YDB.Sessions.Create(ctx, sessionToCreate)
+
+	if err != nil {
+		sentry.CaptureException(err)
+		return nil, &models.Error{
+			Code:        models.ErrorCodeSessionsCreateSessionDBError,
+			Description: err.Error(),
+		}
+	}
 
 	return session, err
 }

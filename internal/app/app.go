@@ -54,7 +54,6 @@ func (s *App) Start() error {
 	err := s.repository.Connect()
 
 	if err != nil {
-		s.logger.Error(fmt.Sprintf("Ошибка при подключении к repository: %s", err))
 		return err
 	}
 
@@ -67,7 +66,6 @@ func (s *App) Stop(ctx context.Context) error {
 	err := s.repository.Disconnect()
 
 	if err != nil {
-		s.logger.Error(fmt.Sprintf("Ошибка при отключении от repository: %s", err))
 		return err
 	}
 

@@ -11,7 +11,7 @@ import (
 func (s *Sessions) CheckToken(
 	inputCtx context.Context,
 	token string,
-) (models.Session, error) {
+) (*models.Session, error) {
 	span := sentry.StartSpan(inputCtx, "Service: Sessions.CheckSessionToken")
 	defer func() {
 		span.Finish()
@@ -22,15 +22,14 @@ func (s *Sessions) CheckToken(
 
 	if err != nil {
 		sentry.CaptureException(err)
-		return session, &models.Error{
-			Code:        models.ErrorCodeUserUnauthorized,
+		return nil, &models.Error{
+			Code:        models.ErrorCodeSessionsCheckTokenDBError,
 			Description: err.Error(),
-			StatusCode:  http.StatusUnauthorized,
 		}
 	}
 
 	if session.ID == "" {
-		return session, &models.Error{
+		return nil, &models.Error{
 			Code:        models.ErrorCodeUserUnauthorized,
 			Description: "User session is invalid",
 			StatusCode:  http.StatusUnauthorized,

@@ -28,6 +28,10 @@ func GetHTTPMiddleware(logger Logger) func(req middleware.Request, next middlewa
 
 		res, errorResponse := next(req)
 
+		if errorResponse != nil {
+			logger.Info(errorResponse.Error())
+		}
+
 		resBody, _ := json.Marshal(res.Type)
 		logger.Debug(fmt.Sprintf("Response: %s: %s", req.Raw.URL, string(resBody)))
 

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/getsentry/sentry-go"
+	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 	ydbmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
@@ -27,102 +28,110 @@ func New(
 
 func (r *Registrations) Create(
 	inputCtx context.Context,
-	registrationToCreate models.Registration,
-) (models.Registration, error) {
+	registrationToCreate *models.Registration,
+) (res *models.Registration, err error) {
 	span := sentry.StartSpan(inputCtx, "Repository: YDB.Registrations.Create")
 	defer func() {
+		if err != nil {
+			sentry.CaptureException(err)
+		}
 		span.Finish()
 	}()
 	ctx := span.Context()
 
-	registration := ydbmodels.NewYDBRegistrationModel(registrationToCreate)
-	res := r.db.WithContext(ctx).Create(&registration)
+	registration := ydbmodels.NewYDBRegistrationModel(*registrationToCreate)
+	dbRes := r.db.WithContext(ctx).Create(&registration)
 	createdRegistration := registration.FromYDBModel()
 
-	if res.Error != nil {
-		sentry.CaptureException(res.Error)
-		return createdRegistration, res.Error
+	if dbRes.Error != nil {
+		return nil, errors.WithStack(dbRes.Error)
 	}
 
-	return createdRegistration, nil
+	return &createdRegistration, nil
 }
 
 func (r *Registrations) Update(
 	inputCtx context.Context,
 	registrationToUpdate models.Registration,
-) (models.Registration, error) {
+) (res *models.Registration, err error) {
 	span := sentry.StartSpan(inputCtx, "Repository: YDB.Registrations.Update")
 	defer func() {
+		if err != nil {
+			sentry.CaptureException(err)
+		}
 		span.Finish()
 	}()
 	ctx := span.Context()
 
 	registration := ydbmodels.NewYDBRegistrationModel(registrationToUpdate)
-	res := r.db.WithContext(ctx).Updates(&registration)
+	dbRes := r.db.WithContext(ctx).Updates(&registration)
 	updatedRegistration := registration.FromYDBModel()
 
-	if res.Error != nil {
-		sentry.CaptureException(res.Error)
-		return updatedRegistration, res.Error
+	if dbRes.Error != nil {
+		return nil, errors.WithStack(dbRes.Error)
 	}
 
-	return updatedRegistration, nil
+	return &updatedRegistration, nil
 }
 
 func (r *Registrations) GetByEmail(
 	inputCtx context.Context,
 	email string,
-) (models.Registration, error) {
+) (res *models.Registration, err error) {
 	span := sentry.StartSpan(inputCtx, "Repository: YDB.Registrations.GetByEmail")
 	defer func() {
+		if err != nil {
+			sentry.CaptureException(err)
+		}
 		span.Finish()
 	}()
 	ctx := span.Context()
 
 	registration := ydbmodels.Registration{}
-	res := r.db.
+	dbRes := r.db.
 		WithContext(ctx).
 		Where(ydbmodels.Registration{Email: email}).
 		FirstOrInit(&registration)
 
-	if res.RowsAffected == 0 {
+	if dbRes.Error != nil {
+		return nil, errors.WithStack(dbRes.Error)
+	}
+
+	if dbRes.RowsAffected == 0 {
 		registration = ydbmodels.Registration{}
 	}
 	foundRegistration := registration.FromYDBModel()
 
-	if res.Error != nil {
-		sentry.CaptureException(res.Error)
-		return foundRegistration, res.Error
-	}
-
-	return foundRegistration, nil
+	return &foundRegistration, nil
 }
 
 func (r *Registrations) GetByToken(
 	inputCtx context.Context,
 	confirmationToken string,
-) (models.Registration, error) {
+) (res *models.Registration, err error) {
 	span := sentry.StartSpan(inputCtx, "Repository: YDB.Registrations.GetByToken")
 	defer func() {
+		if err != nil {
+			sentry.CaptureException(err)
+		}
 		span.Finish()
 	}()
 	ctx := span.Context()
 
 	registration := ydbmodels.Registration{}
-	res := r.db.
+	dbRes := r.db.
 		WithContext(ctx).
 		Where(ydbmodels.Registration{ConfirmationToken: confirmationToken}).
 		FirstOrInit(&registration)
 
-	if res.RowsAffected == 0 {
+	if dbRes.Error != nil {
+		return nil, errors.WithStack(dbRes.Error)
+	}
+
+	if dbRes.RowsAffected == 0 {
 		registration = ydbmodels.Registration{}
 	}
 	foundRegistration := registration.FromYDBModel()
 
-	if res.Error != nil {
-		sentry.CaptureException(res.Error)
-		return foundRegistration, res.Error
-	}
-
-	return foundRegistration, nil
+	return &foundRegistration, nil
 }

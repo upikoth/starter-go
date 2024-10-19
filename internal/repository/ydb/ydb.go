@@ -3,6 +3,7 @@ package ydb
 import (
 	"os"
 
+	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 	passwordrecoveryrequests "github.com/upikoth/starter-go/internal/repository/ydb/password-recovery-requests"
@@ -56,21 +57,21 @@ func (y *YDB) Connect() error {
 			mkdirErr := os.Mkdir(y.config.AuthFileDirName, 0777)
 
 			if mkdirErr != nil {
-				return mkdirErr
+				return errors.WithStack(mkdirErr)
 			}
 		}
 
 		err = os.WriteFile(filePath, y.config.YcSaJSONCredentials, 0600)
 
 		if err != nil {
-			return err
+			return errors.WithStack(err)
 		}
 	}
 
 	err := os.Setenv("YDB_SERVICE_ACCOUNT_KEY_FILE_CREDENTIALS", filePath)
 
 	if err != nil {
-		return err
+		return errors.WithStack(err)
 	}
 
 	db, err := gorm.Open(
@@ -78,13 +79,12 @@ func (y *YDB) Connect() error {
 	)
 
 	if err != nil {
-		return err
+		return errors.WithStack(err)
 	}
 
 	*y.db = *db
 
-	err = y.AutoMigrate()
-	return err
+	return y.AutoMigrate()
 }
 
 func (y *YDB) Disconnect() error {
@@ -95,23 +95,27 @@ func (y *YDB) Disconnect() error {
 	db, err := y.db.DB()
 
 	if err != nil {
-		return err
+		return errors.WithStack(err)
 	}
 
 	err = db.Close()
 
 	if err != nil {
-		return err
+		return errors.WithStack(err)
 	}
 
-	return os.RemoveAll(y.config.AuthFileDirName)
+	err = os.RemoveAll(y.config.AuthFileDirName)
+
+	return errors.WithStack(err)
 }
 
 func (y *YDB) AutoMigrate() error {
-	return y.db.AutoMigrate(
+	err := y.db.AutoMigrate(
 		&ydbmodels.Registration{},
 		&ydbmodels.User{},
 		&ydbmodels.Session{},
 		&ydbmodels.PasswordRecoveryRequest{},
 	)
+
+	return errors.WithStack(err)
 }

@@ -67,14 +67,14 @@ var RegistrationEmailTemplate = `
 func (r *Registrations) Create(
 	inputCtx context.Context,
 	params models.RegistrationCreateParams,
-) (models.Registration, error) {
+) (*models.Registration, error) {
 	span := sentry.StartSpan(inputCtx, "Service: Registrations.Create")
 	defer func() {
 		span.Finish()
 	}()
 	ctx := span.Context()
 
-	registration := models.Registration{
+	registration := &models.Registration{
 		ID:                uuid.New().String(),
 		Email:             params.Email,
 		ConfirmationToken: uuid.New().String(),
@@ -84,14 +84,14 @@ func (r *Registrations) Create(
 
 	if err != nil {
 		sentry.CaptureException(err)
-		return registration, &models.Error{
+		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationYdbFindUser,
 			Description: err.Error(),
 		}
 	}
 
 	if existingUser.ID != "" {
-		return registration, &models.Error{
+		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationUserWithThisEmailAlreadyExist,
 			Description: "A user with the specified email already exists",
 			StatusCode:  http.StatusBadRequest,
@@ -102,7 +102,7 @@ func (r *Registrations) Create(
 
 	if err != nil {
 		sentry.CaptureException(err)
-		return registration, &models.Error{
+		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationYdbCreateRegistration,
 			Description: err.Error(),
 		}
@@ -116,7 +116,7 @@ func (r *Registrations) Create(
 
 	if err != nil {
 		sentry.CaptureException(err)
-		return registration, &models.Error{
+		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationYdbCreateRegistration,
 			Description: err.Error(),
 		}
@@ -138,7 +138,7 @@ func (r *Registrations) Create(
 
 	if err != nil {
 		sentry.CaptureException(err)
-		return registration, &models.Error{
+		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationSMTPSendEmail,
 			Description: err.Error(),
 		}

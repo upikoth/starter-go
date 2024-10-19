@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/getsentry/sentry-go"
+	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 	ydbmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
@@ -29,9 +30,12 @@ func (r *RegistrationsAndUsers) DeleteRegistrationAndCreateUser(
 	inputCtx context.Context,
 	registrationToDelete models.Registration,
 	userToCreate models.User,
-) (models.User, error) {
+) (res *models.User, err error) {
 	span := sentry.StartSpan(inputCtx, "Repository: YDB.RegistrationsAndUsers.DeleteRegistrationAndCreateUser")
 	defer func() {
+		if err != nil {
+			sentry.CaptureException(err)
+		}
 		span.Finish()
 	}()
 	ctx := span.Context()
@@ -39,13 +43,13 @@ func (r *RegistrationsAndUsers) DeleteRegistrationAndCreateUser(
 	registration := ydbmodels.NewYDBRegistrationModel(registrationToDelete)
 	user := ydbmodels.NewYDBUserModel(userToCreate)
 
-	err := r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		if err := tx.Delete(&registration).Error; err != nil {
-			return err
+	err = r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		if errD := tx.Delete(&registration).Error; errD != nil {
+			return errors.WithStack(errD)
 		}
 
-		if err := tx.Create(&user).Error; err != nil {
-			return err
+		if errC := tx.Create(&user).Error; errC != nil {
+			return errors.WithStack(errC)
 		}
 
 		return nil
@@ -54,9 +58,8 @@ func (r *RegistrationsAndUsers) DeleteRegistrationAndCreateUser(
 	createdUser := user.FromYDBModel()
 
 	if err != nil {
-		sentry.CaptureException(err)
-		return createdUser, err
+		return nil, err
 	}
 
-	return createdUser, nil
+	return &createdUser, nil
 }

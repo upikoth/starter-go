@@ -67,14 +67,14 @@ var PasswordRecoveryRequestEmailTemplate = `
 func (p *PasswordRecoveryRequests) Create(
 	inputCtx context.Context,
 	params models.PasswordRecoveryRequestCreateParams,
-) (models.PasswordRecoveryRequest, error) {
+) (*models.PasswordRecoveryRequest, error) {
 	span := sentry.StartSpan(inputCtx, "Service: PasswordRecoveryRequests.Create")
 	defer func() {
 		span.Finish()
 	}()
 	ctx := span.Context()
 
-	passwordRecoveryRequest := models.PasswordRecoveryRequest{
+	passwordRecoveryRequest := &models.PasswordRecoveryRequest{
 		ID:                uuid.New().String(),
 		Email:             params.Email,
 		ConfirmationToken: uuid.New().String(),
@@ -84,7 +84,7 @@ func (p *PasswordRecoveryRequests) Create(
 
 	if err != nil {
 		sentry.CaptureException(err)
-		return passwordRecoveryRequest, &models.Error{
+		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestYdbFindUser,
 			Description: err.Error(),
 		}
@@ -99,7 +99,7 @@ func (p *PasswordRecoveryRequests) Create(
 
 	if err != nil {
 		sentry.CaptureException(err)
-		return passwordRecoveryRequest, &models.Error{
+		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestYdbCreatePasswordRecoveryRequest,
 			Description: err.Error(),
 		}
@@ -108,12 +108,12 @@ func (p *PasswordRecoveryRequests) Create(
 	if existingPasswordRecoveryRequest.ID != "" {
 		passwordRecoveryRequest = existingPasswordRecoveryRequest
 	} else {
-		passwordRecoveryRequest, err = p.repository.YDB.PasswordRecoveryRequests.Create(ctx, passwordRecoveryRequest)
+		passwordRecoveryRequest, err = p.repository.YDB.PasswordRecoveryRequests.Create(ctx, *passwordRecoveryRequest)
 	}
 
 	if err != nil {
 		sentry.CaptureException(err)
-		return passwordRecoveryRequest, &models.Error{
+		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestYdbCreatePasswordRecoveryRequest,
 			Description: err.Error(),
 		}
@@ -135,7 +135,7 @@ func (p *PasswordRecoveryRequests) Create(
 
 	if err != nil {
 		sentry.CaptureException(err)
-		return passwordRecoveryRequest, &models.Error{
+		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestSMTPSendEmail,
 			Description: err.Error(),
 		}

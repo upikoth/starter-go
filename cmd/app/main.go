@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net/http"
 	"os"
@@ -12,6 +11,7 @@ import (
 
 	"github.com/getsentry/sentry-go"
 	"github.com/joho/godotenv"
+	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/app"
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
@@ -31,7 +31,7 @@ func main() {
 	}
 
 	if cfg == nil {
-		loggerInstance.Fatal("Некорректная инициализация конфига приложения")
+		loggerInstance.Fatal(errors.New("Некорректная инициализация конфига приложения").Error())
 		return
 	}
 
@@ -92,7 +92,7 @@ func initSentry(
 	})
 
 	if err != nil {
-		logger.Error(fmt.Sprintf("Не удалось инициализировать Sentry: %v\n", err))
+		logger.Error(fmt.Sprintf("Не удалось инициализировать Sentry: %v\n", errors.WithStack(err)))
 	} else {
 		logger.Debug("Sentry успешно инициализирована")
 	}

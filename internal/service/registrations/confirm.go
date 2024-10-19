@@ -13,7 +13,7 @@ import (
 func (r *Registrations) Confirm(
 	inputCtx context.Context,
 	params models.RegistrationConfirmParams,
-) (models.Session, error) {
+) (*models.Session, error) {
 	span := sentry.StartSpan(inputCtx, "Service: Registrations.Confirm")
 	defer func() {
 		span.Finish()
@@ -24,14 +24,14 @@ func (r *Registrations) Confirm(
 
 	if err != nil {
 		sentry.CaptureException(err)
-		return models.Session{}, &models.Error{
+		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationYdbCheckConfirmationToken,
 			Description: err.Error(),
 		}
 	}
 
 	if registration.ID == "" {
-		return models.Session{}, &models.Error{
+		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationRegistrationNotFound,
 			Description: "Registration with transferred token not found",
 			StatusCode:  http.StatusBadRequest,
@@ -42,7 +42,7 @@ func (r *Registrations) Confirm(
 
 	if err != nil {
 		sentry.CaptureException(err)
-		return models.Session{}, &models.Error{
+		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationGeneratePasswordHash,
 			Description: err.Error(),
 		}
@@ -56,11 +56,11 @@ func (r *Registrations) Confirm(
 	}
 
 	createdUser, err :=
-		r.repository.YDB.RegistrationsAndUsers.DeleteRegistrationAndCreateUser(ctx, registration, newUser)
+		r.repository.YDB.RegistrationsAndUsers.DeleteRegistrationAndCreateUser(ctx, *registration, newUser)
 
 	if err != nil {
 		sentry.CaptureException(err)
-		return models.Session{}, &models.Error{
+		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationGeneratePasswordHash,
 			Description: err.Error(),
 		}
@@ -77,7 +77,7 @@ func (r *Registrations) Confirm(
 
 	if err != nil {
 		sentry.CaptureException(err)
-		return models.Session{}, &models.Error{
+		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationCreateSession,
 			Description: err.Error(),
 		}

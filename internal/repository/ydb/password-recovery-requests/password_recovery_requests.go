@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/getsentry/sentry-go"
+	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 	ydbmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
@@ -28,101 +29,109 @@ func New(
 func (p *PasswordRecoveryRequests) Create(
 	inputCtx context.Context,
 	passwordRecoveryRequestToCreate models.PasswordRecoveryRequest,
-) (models.PasswordRecoveryRequest, error) {
+) (res *models.PasswordRecoveryRequest, err error) {
 	span := sentry.StartSpan(inputCtx, "Repository: YDB.PasswordRecoveryRequests.Create")
 	defer func() {
+		if err != nil {
+			sentry.CaptureException(err)
+		}
 		span.Finish()
 	}()
 	ctx := span.Context()
 
 	passwordRecoveryRequest := ydbmodels.NewYDBPasswordRecoveryRequestModel(passwordRecoveryRequestToCreate)
-	res := p.db.WithContext(ctx).Create(&passwordRecoveryRequest)
+	dbRes := p.db.WithContext(ctx).Create(&passwordRecoveryRequest)
 	createdPasswordRecoveryRequest := passwordRecoveryRequest.FromYDBModel()
 
-	if res.Error != nil {
-		sentry.CaptureException(res.Error)
-		return createdPasswordRecoveryRequest, res.Error
+	if dbRes.Error != nil {
+		return nil, errors.WithStack(dbRes.Error)
 	}
 
-	return createdPasswordRecoveryRequest, nil
+	return &createdPasswordRecoveryRequest, nil
 }
 
 func (p *PasswordRecoveryRequests) Update(
 	inputCtx context.Context,
 	passwordRecoveryRequestToUpdate models.PasswordRecoveryRequest,
-) (models.PasswordRecoveryRequest, error) {
+) (res *models.PasswordRecoveryRequest, err error) {
 	span := sentry.StartSpan(inputCtx, "Repository: YDB.PasswordRecoveryRequests.Update")
 	defer func() {
+		if err != nil {
+			sentry.CaptureException(err)
+		}
 		span.Finish()
 	}()
 	ctx := span.Context()
 
 	passwordRecoveryRequest := ydbmodels.NewYDBPasswordRecoveryRequestModel(passwordRecoveryRequestToUpdate)
-	res := p.db.WithContext(ctx).Updates(&passwordRecoveryRequest)
+	dbRes := p.db.WithContext(ctx).Updates(&passwordRecoveryRequest)
 	updatedPasswordRecoveryRequest := passwordRecoveryRequest.FromYDBModel()
 
-	if res.Error != nil {
-		sentry.CaptureException(res.Error)
-		return updatedPasswordRecoveryRequest, res.Error
+	if dbRes.Error != nil {
+		return nil, errors.WithStack(dbRes.Error)
 	}
 
-	return updatedPasswordRecoveryRequest, nil
+	return &updatedPasswordRecoveryRequest, nil
 }
 
 func (p *PasswordRecoveryRequests) GetByEmail(
 	inputCtx context.Context,
 	email string,
-) (models.PasswordRecoveryRequest, error) {
+) (res *models.PasswordRecoveryRequest, err error) {
 	span := sentry.StartSpan(inputCtx, "Repository: YDB.PasswordRecoveryRequests.GetByEmail")
 	defer func() {
+		if err != nil {
+			sentry.CaptureException(err)
+		}
 		span.Finish()
 	}()
 	ctx := span.Context()
 
 	passwordRecoveryRequest := ydbmodels.PasswordRecoveryRequest{}
-	res := p.db.
+	dbRes := p.db.
 		WithContext(ctx).
 		Where(ydbmodels.PasswordRecoveryRequest{Email: email}).
 		FirstOrInit(&passwordRecoveryRequest)
 
-	if res.RowsAffected == 0 {
+	if dbRes.Error != nil {
+		return nil, errors.WithStack(dbRes.Error)
+	}
+
+	if dbRes.RowsAffected == 0 {
 		passwordRecoveryRequest = ydbmodels.PasswordRecoveryRequest{}
 	}
 	foundPasswordRecoveryRequest := passwordRecoveryRequest.FromYDBModel()
 
-	if res.Error != nil {
-		sentry.CaptureException(res.Error)
-		return foundPasswordRecoveryRequest, res.Error
-	}
-
-	return foundPasswordRecoveryRequest, nil
+	return &foundPasswordRecoveryRequest, nil
 }
 
 func (p *PasswordRecoveryRequests) GetByToken(
 	inputCtx context.Context,
 	confirmationToken string,
-) (models.PasswordRecoveryRequest, error) {
+) (res *models.PasswordRecoveryRequest, err error) {
 	span := sentry.StartSpan(inputCtx, "Repository: YDB.PasswordRecoveryRequests.GetByToken")
 	defer func() {
+		if err != nil {
+			sentry.CaptureException(err)
+		}
 		span.Finish()
 	}()
 	ctx := span.Context()
 
 	passwordRecoveryRequest := ydbmodels.PasswordRecoveryRequest{}
-	res := p.db.
+	dbRes := p.db.
 		WithContext(ctx).
 		Where(ydbmodels.PasswordRecoveryRequest{ConfirmationToken: confirmationToken}).
 		FirstOrInit(&passwordRecoveryRequest)
 
-	if res.RowsAffected == 0 {
+	if dbRes.Error != nil {
+		return nil, errors.WithStack(dbRes.Error)
+	}
+
+	if dbRes.RowsAffected == 0 {
 		passwordRecoveryRequest = ydbmodels.PasswordRecoveryRequest{}
 	}
 	foundPasswordRecoveryRequest := passwordRecoveryRequest.FromYDBModel()
 
-	if res.Error != nil {
-		sentry.CaptureException(res.Error)
-		return foundPasswordRecoveryRequest, res.Error
-	}
-
-	return foundPasswordRecoveryRequest, nil
+	return &foundPasswordRecoveryRequest, nil
 }

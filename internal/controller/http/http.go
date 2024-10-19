@@ -7,6 +7,7 @@ import (
 
 	"github.com/getsentry/sentry-go"
 	"github.com/ogen-go/ogen/middleware"
+	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/controller/http/handler"
 	app "github.com/upikoth/starter-go/internal/generated/app"
@@ -36,7 +37,7 @@ func New(
 	)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	mux := http.NewServeMux()
@@ -62,11 +63,11 @@ func New(
 }
 
 func (h *HTTP) Start() error {
-	return h.appServer.ListenAndServe()
+	return errors.WithStack(h.appServer.ListenAndServe())
 }
 
 func (h *HTTP) Stop(ctx context.Context) error {
-	return h.appServer.Shutdown(ctx)
+	return errors.WithStack(h.appServer.Shutdown(ctx))
 }
 
 func getAppErrorHandler(handler *handler.Handler) app.ErrorHandler {
@@ -102,7 +103,9 @@ func httpSentryMiddleware(req middleware.Request, next middleware.Next) (middlew
 		req.Raw.RequestURI,
 		sentry.ContinueFromRequest(req.Raw),
 	)
+	defer transaction.Finish()
 
+	transaction.SetData("Request", req)
 	ctx := transaction.Context()
 	req.SetContext(ctx)
 
@@ -115,7 +118,7 @@ func httpSentryMiddleware(req middleware.Request, next middleware.Next) (middlew
 		})
 	}
 
-	transaction.Finish()
+	transaction.SetData("Response", res)
 
 	return res, errorResponse
 }

@@ -36,6 +36,9 @@ const (
 	ErrorCodePasswordRecoveryRequestUpdateUserPassword              ErrorCode = "605"
 
 	ErrorCodeUsersGetListForbidden ErrorCode = "700"
+	ErrorCodeUsersGetListDBError   ErrorCode = "701"
+
+	ErrorCodeSessionsCheckTokenDBError ErrorCode = "702"
 )
 
 type Error struct {

@@ -2,6 +2,7 @@ package ycp
 
 import (
 	"context"
+	"github.com/pkg/errors"
 	"net/mail"
 
 	"github.com/getsentry/sentry-go"
@@ -28,7 +29,7 @@ func New(
 	)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	return &Ycp{
@@ -43,17 +44,19 @@ func (y *Ycp) SendEmail(
 	toEmail string,
 	title string,
 	body string,
-) error {
+) (err error) {
 	span := sentry.StartSpan(inputCtx, "Repository: YCP.SendEmail")
 	defer func() {
+		if err != nil {
+			sentry.CaptureException(err)
+		}
 		span.Finish()
 	}()
 
-	err := y.client.Connect()
+	err = y.client.Connect()
 
 	if err != nil {
-		sentry.CaptureException(err)
-		return err
+		return errors.WithStack(err)
 	}
 
 	defer func() {
@@ -76,5 +79,5 @@ func (y *Ycp) SendEmail(
 	message := y.client.CreateMessage(from, to, title, body)
 	err = y.client.SendEmail(from, to, message)
 
-	return err
+	return errors.WithStack(err)
 }

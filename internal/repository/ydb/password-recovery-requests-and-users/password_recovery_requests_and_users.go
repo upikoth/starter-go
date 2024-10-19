@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/getsentry/sentry-go"
+	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 	ydbmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
@@ -29,12 +30,15 @@ func (r *PasswordRecoveryRequestsAndUsers) DeletePasswordRecoveryRequestAndUpdat
 	inputCtx context.Context,
 	passwordRecoveryRequestToDelete models.PasswordRecoveryRequest,
 	userToUpdate models.User,
-) (models.User, error) {
+) (res *models.User, err error) {
 	span := sentry.StartSpan(
 		inputCtx,
 		"Repository: YDB.PasswordRecoveryRequestsAndUsers.DeletePasswordRecoveryRequestAndUpdateUser",
 	)
 	defer func() {
+		if err != nil {
+			sentry.CaptureException(err)
+		}
 		span.Finish()
 	}()
 	ctx := span.Context()
@@ -42,24 +46,23 @@ func (r *PasswordRecoveryRequestsAndUsers) DeletePasswordRecoveryRequestAndUpdat
 	passwordRecoveryRequest := ydbmodels.NewYDBPasswordRecoveryRequestModel(passwordRecoveryRequestToDelete)
 	user := ydbmodels.NewYDBUserModel(userToUpdate)
 
-	err := r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		if err := tx.Delete(&passwordRecoveryRequest).Error; err != nil {
-			return err
+	err = r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		if errD := tx.Delete(&passwordRecoveryRequest).Error; errD != nil {
+			return errors.WithStack(errD)
 		}
 
-		if err := tx.Updates(&user).Error; err != nil {
-			return err
+		if errU := tx.Updates(&user).Error; errU != nil {
+			return errors.WithStack(errU)
 		}
 
 		return nil
 	})
 
-	updatedUser := user.FromYDBModel()
-
 	if err != nil {
-		sentry.CaptureException(err)
-		return updatedUser, err
+		return nil, err
 	}
 
-	return updatedUser, nil
+	updatedUser := user.FromYDBModel()
+
+	return &updatedUser, nil
 }

@@ -13,7 +13,7 @@ import (
 func (p *PasswordRecoveryRequests) Confirm(
 	inputCtx context.Context,
 	params models.PasswordRecoveryRequestConfirmParams,
-) (models.Session, error) {
+) (*models.Session, error) {
 	span := sentry.StartSpan(inputCtx, "Service: PasswordRecoveryRequests.Confirm")
 	defer func() {
 		span.Finish()
@@ -28,14 +28,14 @@ func (p *PasswordRecoveryRequests) Confirm(
 
 	if err != nil {
 		sentry.CaptureException(err)
-		return models.Session{}, &models.Error{
+		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestYdbCheckConfirmationToken,
 			Description: err.Error(),
 		}
 	}
 
 	if passwordRecoveryRequest.ID == "" {
-		return models.Session{}, &models.Error{
+		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestPasswordRecoveryRequestNotFound,
 			Description: "Password recovery request with transferred token not found",
 			StatusCode:  http.StatusBadRequest,
@@ -46,7 +46,7 @@ func (p *PasswordRecoveryRequests) Confirm(
 
 	if err != nil {
 		sentry.CaptureException(err)
-		return models.Session{}, &models.Error{
+		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestGeneratePasswordHash,
 			Description: err.Error(),
 		}
@@ -56,7 +56,7 @@ func (p *PasswordRecoveryRequests) Confirm(
 
 	if err != nil {
 		sentry.CaptureException(err)
-		return models.Session{}, &models.Error{
+		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestFindUserByEmail,
 			Description: err.Error(),
 		}
@@ -70,13 +70,13 @@ func (p *PasswordRecoveryRequests) Confirm(
 		PasswordRecoveryRequestsAndUsers.
 		DeletePasswordRecoveryRequestAndUpdateUser(
 			ctx,
-			passwordRecoveryRequest,
-			user,
+			*passwordRecoveryRequest,
+			*user,
 		)
 
 	if err != nil {
 		sentry.CaptureException(err)
-		return models.Session{}, &models.Error{
+		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestUpdateUserPassword,
 			Description: err.Error(),
 		}
@@ -93,7 +93,7 @@ func (p *PasswordRecoveryRequests) Confirm(
 
 	if err != nil {
 		sentry.CaptureException(err)
-		return models.Session{}, &models.Error{
+		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestCreateSession,
 			Description: err.Error(),
 		}

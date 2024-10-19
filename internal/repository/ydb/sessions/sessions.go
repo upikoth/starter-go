@@ -1,7 +1,9 @@
+//nolint:dupl // тут нужно дублировать
 package sessions
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
@@ -34,6 +36,9 @@ func (s *Sessions) Create(
 	defer func() {
 		if err != nil {
 			sentry.CaptureException(err)
+		} else {
+			bytes, _ := json.Marshal(res)
+			span.SetData("Result", string(bytes))
 		}
 		span.Finish()
 	}()
@@ -58,6 +63,9 @@ func (s *Sessions) GetByToken(
 	defer func() {
 		if err != nil {
 			sentry.CaptureException(err)
+		} else {
+			bytes, _ := json.Marshal(res)
+			span.SetData("Result", string(bytes))
 		}
 		span.Finish()
 	}()
@@ -89,6 +97,9 @@ func (s *Sessions) GetByID(
 	defer func() {
 		if err != nil {
 			sentry.CaptureException(err)
+		} else {
+			bytes, _ := json.Marshal(res)
+			span.SetData("Result", string(bytes))
 		}
 		span.Finish()
 	}()

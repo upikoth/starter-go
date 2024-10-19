@@ -2,6 +2,7 @@ package passwordrecoveryrequests
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
@@ -34,6 +35,9 @@ func (p *PasswordRecoveryRequests) Create(
 	defer func() {
 		if err != nil {
 			sentry.CaptureException(err)
+		} else {
+			bytes, _ := json.Marshal(res)
+			span.SetData("Result", string(bytes))
 		}
 		span.Finish()
 	}()
@@ -58,6 +62,9 @@ func (p *PasswordRecoveryRequests) Update(
 	defer func() {
 		if err != nil {
 			sentry.CaptureException(err)
+		} else {
+			bytes, _ := json.Marshal(res)
+			span.SetData("Result", string(bytes))
 		}
 		span.Finish()
 	}()
@@ -82,6 +89,9 @@ func (p *PasswordRecoveryRequests) GetByEmail(
 	defer func() {
 		if err != nil {
 			sentry.CaptureException(err)
+		} else {
+			bytes, _ := json.Marshal(res)
+			span.SetData("Result", string(bytes))
 		}
 		span.Finish()
 	}()
@@ -113,6 +123,9 @@ func (p *PasswordRecoveryRequests) GetByToken(
 	defer func() {
 		if err != nil {
 			sentry.CaptureException(err)
+		} else {
+			bytes, _ := json.Marshal(res)
+			span.SetData("Result", string(bytes))
 		}
 		span.Finish()
 	}()

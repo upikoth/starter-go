@@ -2,7 +2,10 @@ package http
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/getsentry/sentry-go"
@@ -100,10 +103,14 @@ func corsMiddleware(next http.Handler) http.Handler {
 func httpSentryMiddleware(req middleware.Request, next middleware.Next) (middleware.Response, error) {
 	transaction := sentry.StartTransaction(
 		req.Context,
-		req.Raw.URL.Path,
+		fmt.Sprintf("%s: %s", req.Raw.Method, req.Raw.URL.Path),
 		sentry.ContinueFromRequest(req.Raw),
 	)
 	defer transaction.Finish()
+
+	setParamsToTransactionData(transaction, req.Params)
+	bytes, _ := json.Marshal(req.Body)
+	transaction.SetData("Request.Body", string(bytes))
 
 	ctx := transaction.Context()
 	req.SetContext(ctx)
@@ -117,5 +124,34 @@ func httpSentryMiddleware(req middleware.Request, next middleware.Next) (middlew
 		})
 	}
 
+	if errorResponse == nil {
+		bytes, _ = json.Marshal(res.Type)
+		transaction.SetData("Response.Body", string(bytes))
+	} else {
+		transaction.SetData("Response.Error", errorResponse.Error())
+	}
+
 	return res, errorResponse
+}
+
+func setParamsToTransactionData(transaction *sentry.Span, params middleware.Parameters) string {
+	res := ""
+
+	for k, v := range params {
+		var val string
+
+		switch vt := v.(type) {
+		case app.OptInt:
+			val = strconv.Itoa(vt.Value)
+		default:
+			val = fmt.Sprintf("%v", vt)
+		}
+
+		transaction.SetData(
+			fmt.Sprintf("Request.Params.%s", k.Name),
+			val,
+		)
+	}
+
+	return res
 }

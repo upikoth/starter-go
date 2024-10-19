@@ -1,7 +1,9 @@
+//nolint:dupl // тут нужно дублировать
 package registrations
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
@@ -34,6 +36,9 @@ func (r *Registrations) Create(
 	defer func() {
 		if err != nil {
 			sentry.CaptureException(err)
+		} else {
+			bytes, _ := json.Marshal(res)
+			span.SetData("Result", string(bytes))
 		}
 		span.Finish()
 	}()
@@ -58,6 +63,9 @@ func (r *Registrations) Update(
 	defer func() {
 		if err != nil {
 			sentry.CaptureException(err)
+		} else {
+			bytes, _ := json.Marshal(res)
+			span.SetData("Result", string(bytes))
 		}
 		span.Finish()
 	}()
@@ -82,6 +90,9 @@ func (r *Registrations) GetByEmail(
 	defer func() {
 		if err != nil {
 			sentry.CaptureException(err)
+		} else {
+			bytes, _ := json.Marshal(res)
+			span.SetData("Result", string(bytes))
 		}
 		span.Finish()
 	}()
@@ -113,6 +124,9 @@ func (r *Registrations) GetByToken(
 	defer func() {
 		if err != nil {
 			sentry.CaptureException(err)
+		} else {
+			bytes, _ := json.Marshal(res)
+			span.SetData("Result", string(bytes))
 		}
 		span.Finish()
 	}()

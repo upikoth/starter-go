@@ -7,25 +7,9 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/models"
-	"github.com/upikoth/starter-go/internal/pkg/logger"
 	ydbmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
 	"gorm.io/gorm"
 )
-
-type RegistrationsAndUsers struct {
-	db     *gorm.DB
-	logger logger.Logger
-}
-
-func New(
-	db *gorm.DB,
-	logger logger.Logger,
-) *RegistrationsAndUsers {
-	return &RegistrationsAndUsers{
-		db:     db,
-		logger: logger,
-	}
-}
 
 func (r *RegistrationsAndUsers) DeleteRegistrationAndCreateUser(
 	inputCtx context.Context,

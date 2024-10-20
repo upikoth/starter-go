@@ -2,42 +2,12 @@ package ycp
 
 import (
 	"context"
-	"net/mail"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
-	"github.com/upikoth/starter-go/internal/config"
-	"github.com/upikoth/starter-go/internal/pkg/logger"
-	smtpclient "github.com/upikoth/starter-go/internal/pkg/smtp-client"
+
+	"net/mail"
 )
-
-type Ycp struct {
-	logger logger.Logger
-	config *config.Ycp
-	client *smtpclient.SMTPClient
-}
-
-func New(
-	logger logger.Logger,
-	config *config.Ycp,
-) (*Ycp, error) {
-	client, err := smtpclient.New(
-		config.Host,
-		config.Port,
-		config.Username,
-		config.Password,
-	)
-
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-
-	return &Ycp{
-		logger: logger,
-		config: config,
-		client: client,
-	}, nil
-}
 
 func (y *Ycp) SendEmail(
 	inputCtx context.Context,

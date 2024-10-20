@@ -68,7 +68,7 @@ func (p *PasswordRecoveryRequests) Confirm(
 		repository.
 		YDB.
 		PasswordRecoveryRequestsAndUsers.
-		DeletePasswordRecoveryRequestAndUpdateUser(
+		Delete(
 			ctx,
 			*passwordRecoveryRequest,
 			*user,

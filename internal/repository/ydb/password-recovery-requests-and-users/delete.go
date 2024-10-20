@@ -7,34 +7,19 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/models"
-	"github.com/upikoth/starter-go/internal/pkg/logger"
 	ydbmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
+
 	"gorm.io/gorm"
 )
 
-type PasswordRecoveryRequestsAndUsers struct {
-	db     *gorm.DB
-	logger logger.Logger
-}
-
-func New(
-	db *gorm.DB,
-	logger logger.Logger,
-) *PasswordRecoveryRequestsAndUsers {
-	return &PasswordRecoveryRequestsAndUsers{
-		db:     db,
-		logger: logger,
-	}
-}
-
-func (r *PasswordRecoveryRequestsAndUsers) DeletePasswordRecoveryRequestAndUpdateUser(
+func (r *PasswordRecoveryRequestsAndUsers) Delete(
 	inputCtx context.Context,
 	passwordRecoveryRequestToDelete models.PasswordRecoveryRequest,
 	userToUpdate models.User,
 ) (res *models.User, err error) {
 	span := sentry.StartSpan(
 		inputCtx,
-		"Repository: YDB.PasswordRecoveryRequestsAndUsers.DeletePasswordRecoveryRequestAndUpdateUser",
+		"Repository: YDB.PasswordRecoveryRequestsAndUsers.Delete",
 	)
 	defer func() {
 		if err != nil {

@@ -3,12 +3,13 @@ package users
 import (
 	"context"
 	"encoding/json"
-	"golang.org/x/sync/errgroup"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/models"
 	ydbmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
+
+	"golang.org/x/sync/errgroup"
 )
 
 func (u *Users) GetList(

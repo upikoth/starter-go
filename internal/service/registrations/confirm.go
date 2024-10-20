@@ -2,12 +2,13 @@ package registrations
 
 import (
 	"context"
-	"github.com/upikoth/starter-go/internal/repository/ydb"
 	"net/http"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
 	"github.com/upikoth/starter-go/internal/models"
+	"github.com/upikoth/starter-go/internal/repository/ydb"
+
 	"golang.org/x/crypto/bcrypt"
 )
 

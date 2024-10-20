@@ -2,6 +2,7 @@ package users
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 
 	"github.com/getsentry/sentry-go"
@@ -9,7 +10,7 @@ import (
 	"github.com/upikoth/starter-go/internal/models"
 	ydbmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
 
-	"golang.org/x/sync/errgroup"
+	"gorm.io/gorm"
 )
 
 func (u *Users) GetList(
@@ -31,11 +32,9 @@ func (u *Users) GetList(
 	var users []ydbmodels.User
 	total := int64(0)
 
-	eg, newCtx := errgroup.WithContext(ctx)
-
-	eg.Go(func() error {
-		dbRes := u.db.
-			WithContext(newCtx).
+	err = u.db.Transaction(func(tx *gorm.DB) error {
+		dbRes := tx.
+			WithContext(ctx).
 			Model(ydbmodels.User{}).
 			Count(&total)
 
@@ -43,11 +42,7 @@ func (u *Users) GetList(
 			return errors.WithStack(dbRes.Error)
 		}
 
-		return nil
-	})
-
-	eg.Go(func() error {
-		dbRes := u.db.
+		dbRes = tx.
 			WithContext(ctx).
 			Limit(params.Limit).
 			Offset(params.Offset).
@@ -58,9 +53,10 @@ func (u *Users) GetList(
 		}
 
 		return nil
+	}, &sql.TxOptions{
+		Isolation: sql.LevelSnapshot,
+		ReadOnly:  true,
 	})
-
-	err = eg.Wait()
 
 	if err != nil {
 		return nil, err

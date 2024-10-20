@@ -1,6 +1,7 @@
 package ydb
 
 import (
+	"database/sql"
 	"os"
 
 	"github.com/pkg/errors"
@@ -113,10 +114,10 @@ func (y *YDB) AutoMigrate() error {
 	return errors.WithStack(err)
 }
 
-func (y *YDB) Transaction(fn func(ydb *YDB) error) (err error) {
+func (y *YDB) Transaction(fn func(ydb *YDB) error, opts ...*sql.TxOptions) (err error) {
 	return y.db.Transaction(func(tx *gorm.DB) error {
 		return fn(y.WithTx(tx))
-	})
+	}, opts...)
 }
 
 func (y *YDB) WithTx(tx *gorm.DB) *YDB {

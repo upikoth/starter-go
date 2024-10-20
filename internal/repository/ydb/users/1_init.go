@@ -19,3 +19,10 @@ func New(
 		logger: logger,
 	}
 }
+
+func (u *Users) WithTx(tx *gorm.DB) *Users {
+	return &Users{
+		db:     tx,
+		logger: u.logger,
+	}
+}

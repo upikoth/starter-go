@@ -7,9 +7,7 @@ import (
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 	passwordrecoveryrequests "github.com/upikoth/starter-go/internal/repository/ydb/password-recovery-requests"
-	passwordrecoveryrequestsandusers "github.com/upikoth/starter-go/internal/repository/ydb/password-recovery-requests-and-users"
 	"github.com/upikoth/starter-go/internal/repository/ydb/registrations"
-	registrationsandusers "github.com/upikoth/starter-go/internal/repository/ydb/registrations-and-users"
 	"github.com/upikoth/starter-go/internal/repository/ydb/sessions"
 	"github.com/upikoth/starter-go/internal/repository/ydb/users"
 	ydbmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
@@ -19,14 +17,12 @@ import (
 )
 
 type YDB struct {
-	Registrations                    *registrations.Registrations
-	RegistrationsAndUsers            *registrationsandusers.RegistrationsAndUsers
-	Sessions                         *sessions.Sessions
-	Users                            *users.Users
-	PasswordRecoveryRequests         *passwordrecoveryrequests.PasswordRecoveryRequests
-	PasswordRecoveryRequestsAndUsers *passwordrecoveryrequestsandusers.PasswordRecoveryRequestsAndUsers
-	db                               *gorm.DB
-	config                           *config.Ydb
+	Users                    *users.Users
+	Sessions                 *sessions.Sessions
+	Registrations            *registrations.Registrations
+	PasswordRecoveryRequests *passwordrecoveryrequests.PasswordRecoveryRequests
+	db                       *gorm.DB
+	config                   *config.Ydb
 }
 
 func New(
@@ -36,14 +32,12 @@ func New(
 	db := &gorm.DB{}
 
 	return &YDB{
-		Registrations:                    registrations.New(db, logger),
-		RegistrationsAndUsers:            registrationsandusers.New(db, logger),
-		Sessions:                         sessions.New(db, logger),
-		Users:                            users.New(db, logger),
-		PasswordRecoveryRequests:         passwordrecoveryrequests.New(db, logger),
-		PasswordRecoveryRequestsAndUsers: passwordrecoveryrequestsandusers.New(db, logger),
-		db:                               db,
-		config:                           config,
+		Users:                    users.New(db, logger),
+		Sessions:                 sessions.New(db, logger),
+		Registrations:            registrations.New(db, logger),
+		PasswordRecoveryRequests: passwordrecoveryrequests.New(db, logger),
+		db:                       db,
+		config:                   config,
 	}, nil
 }
 
@@ -104,9 +98,7 @@ func (y *YDB) Disconnect() error {
 		return errors.WithStack(err)
 	}
 
-	err = os.RemoveAll(y.config.AuthFileDirName)
-
-	return errors.WithStack(err)
+	return nil
 }
 
 func (y *YDB) AutoMigrate() error {
@@ -118,4 +110,21 @@ func (y *YDB) AutoMigrate() error {
 	)
 
 	return errors.WithStack(err)
+}
+
+func (y *YDB) Transaction(fn func(ydb *YDB) error) (err error) {
+	return y.db.Transaction(func(tx *gorm.DB) error {
+		return fn(y.WithTx(tx))
+	})
+}
+
+func (y *YDB) WithTx(tx *gorm.DB) *YDB {
+	return &YDB{
+		Users:                    y.Users.WithTx(tx),
+		Sessions:                 y.Sessions.WithTx(tx),
+		Registrations:            y.Registrations.WithTx(tx),
+		PasswordRecoveryRequests: y.PasswordRecoveryRequests.WithTx(tx),
+		db:                       tx,
+		config:                   y.config,
+	}
 }

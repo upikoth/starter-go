@@ -2,6 +2,7 @@ package registrations
 
 import (
 	"context"
+	"github.com/upikoth/starter-go/internal/repository/ydb"
 	"net/http"
 
 	"github.com/getsentry/sentry-go"
@@ -55,13 +56,28 @@ func (r *Registrations) Confirm(
 		Role:         models.UserRoleUser,
 	}
 
-	createdUser, err :=
-		r.repository.YDB.RegistrationsAndUsers.DeleteRegistrationAndCreateUser(ctx, *registration, newUser)
+	var createdUser *models.User
+	err = r.repository.YDB.Transaction(func(ydbTx *ydb.YDB) error {
+		dbErr := ydbTx.Registrations.Delete(ctx, registration.ID)
+
+		if dbErr != nil {
+			return dbErr
+		}
+
+		dbRes, dbErr := ydbTx.Users.Create(ctx, &newUser)
+		createdUser = dbRes
+
+		if dbErr != nil {
+			return dbErr
+		}
+
+		return nil
+	})
 
 	if err != nil {
 		sentry.CaptureException(err)
 		return nil, &models.Error{
-			Code:        models.ErrorCodeRegistrationGeneratePasswordHash,
+			Code:        models.ErrorCodeRegistrationDBError,
 			Description: err.Error(),
 		}
 	}

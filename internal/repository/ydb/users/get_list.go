@@ -3,6 +3,7 @@ package users
 import (
 	"context"
 	"encoding/json"
+	"golang.org/x/sync/errgroup"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
@@ -29,23 +30,39 @@ func (u *Users) GetList(
 	var users []ydbmodels.User
 	total := int64(0)
 
-	dbRes := u.db.
-		WithContext(ctx).
-		Model(ydbmodels.User{}).
-		Count(&total)
+	eg, newCtx := errgroup.WithContext(ctx)
 
-	if dbRes.Error != nil {
-		return nil, errors.WithStack(dbRes.Error)
-	}
+	eg.Go(func() error {
+		dbRes := u.db.
+			WithContext(newCtx).
+			Model(ydbmodels.User{}).
+			Count(&total)
 
-	dbRes = u.db.
-		WithContext(ctx).
-		Limit(params.Limit).
-		Offset(params.Offset).
-		Find(&users)
+		if dbRes.Error != nil {
+			return errors.WithStack(dbRes.Error)
+		}
 
-	if dbRes.Error != nil {
-		return nil, errors.WithStack(dbRes.Error)
+		return nil
+	})
+
+	eg.Go(func() error {
+		dbRes := u.db.
+			WithContext(ctx).
+			Limit(params.Limit).
+			Offset(params.Offset).
+			Find(&users)
+
+		if dbRes.Error != nil {
+			return errors.WithStack(dbRes.Error)
+		}
+
+		return nil
+	})
+
+	err = eg.Wait()
+
+	if err != nil {
+		return nil, err
 	}
 
 	var resUsers []models.User

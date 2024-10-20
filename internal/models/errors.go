@@ -17,6 +17,7 @@ const (
 	ErrorCodeRegistrationRegistrationNotFound      ErrorCode = "201"
 	ErrorCodeRegistrationGeneratePasswordHash      ErrorCode = "202"
 	ErrorCodeRegistrationCreateSession             ErrorCode = "203"
+	ErrorCodeRegistrationDBError                   ErrorCode = "204"
 
 	ErrorCodeSessionsCreateSessionDBError              ErrorCode = "300"
 	ErrorCodeSessionsCreateSessionWrongEmailOrPassword ErrorCode = "301"

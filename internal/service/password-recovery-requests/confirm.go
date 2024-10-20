@@ -7,6 +7,7 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
 	"github.com/upikoth/starter-go/internal/models"
+	"github.com/upikoth/starter-go/internal/repository/ydb"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -64,15 +65,17 @@ func (p *PasswordRecoveryRequests) Confirm(
 
 	user.PasswordHash = string(passwordHash)
 
-	updatedUser, err := p.
-		repository.
-		YDB.
-		PasswordRecoveryRequestsAndUsers.
-		Delete(
-			ctx,
-			*passwordRecoveryRequest,
-			*user,
-		)
+	var updatedUser *models.User
+	err = p.repository.YDB.Transaction(func(ydbTx *ydb.YDB) error {
+		dbUpdatedUser, dbErr := ydbTx.Users.Update(ctx, *user)
+		updatedUser = dbUpdatedUser
+
+		if dbErr != nil {
+			return dbErr
+		}
+
+		return ydbTx.PasswordRecoveryRequests.Delete(ctx, passwordRecoveryRequest.ID)
+	})
 
 	if err != nil {
 		sentry.CaptureException(err)

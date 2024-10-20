@@ -19,3 +19,10 @@ func New(
 		logger: logger,
 	}
 }
+
+func (p *PasswordRecoveryRequests) WithTx(tx *gorm.DB) *PasswordRecoveryRequests {
+	return &PasswordRecoveryRequests{
+		db:     tx,
+		logger: p.logger,
+	}
+}

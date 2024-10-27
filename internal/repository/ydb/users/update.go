@@ -8,11 +8,13 @@ import (
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/models"
 	ydbmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
+	"github.com/ydb-platform/ydb-go-sdk/v3"
+	"github.com/ydb-platform/ydb-go-sdk/v3/query"
 )
 
 func (u *Users) Update(
 	inputCtx context.Context,
-	userToUpdate models.User,
+	userToUpdate *models.User,
 ) (res *models.User, err error) {
 	span := sentry.StartSpan(inputCtx, "Repository: YDB.Users.Update")
 	defer func() {
@@ -26,13 +28,74 @@ func (u *Users) Update(
 	}()
 	ctx := span.Context()
 
-	user := ydbmodels.NewYDBUserModel(userToUpdate)
-	dbRes := u.db.WithContext(ctx).Updates(&user)
-	updatedUser := user.FromYDBModel()
-
-	if dbRes.Error != nil {
-		return nil, errors.WithStack(dbRes.Error)
+	if userToUpdate == nil || userToUpdate.ID == "" {
+		return nil, errors.New("не задан id пользователя")
 	}
 
-	return &updatedUser, nil
+	var dbUpdatedUser ydbmodels.User
+	dbUserToUpdate := ydbmodels.NewYDBUserModel(userToUpdate)
+
+	err = u.executeInQueryTransaction(ctx, func(qCtx context.Context, tx query.Transaction) error {
+		qRes, qErr := tx.QueryResultSet(
+			qCtx,
+			`declare $id as text;
+				declare $email as text;
+				declare $role as text;
+				declare $password_hash as text;
+	
+				update users
+				set
+					email = $email,
+					role = $role,
+					password_hash = $password_hash
+				where id = $id;
+	
+				select
+					id,
+					email,
+					role,
+					password_hash,
+				from users
+				where users.id = $id;`,
+			query.WithParameters(
+				ydb.ParamsBuilder().
+					Param("$id").Text(dbUserToUpdate.ID).
+					Param("$email").Text(dbUserToUpdate.Email).
+					Param("$role").Text(dbUserToUpdate.Role).
+					Param("$password_hash").Text(dbUserToUpdate.PasswordHash).
+					Build(),
+			),
+		)
+
+		if qErr != nil {
+			return errors.WithStack(qErr)
+		}
+
+		defer func() { _ = qRes.Close(qCtx) }()
+
+		for row, rErr := range qRes.Rows(qCtx) {
+			if rErr != nil {
+				return errors.WithStack(rErr)
+			}
+
+			sErr := row.ScanNamed(
+				query.Named("id", &dbUpdatedUser.ID),
+				query.Named("email", &dbUpdatedUser.Email),
+				query.Named("role", &dbUpdatedUser.Role),
+				query.Named("password_hash", &dbUpdatedUser.PasswordHash),
+			)
+
+			if sErr != nil {
+				return errors.WithStack(sErr)
+			}
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return dbUpdatedUser.FromYDBModel(), nil
 }

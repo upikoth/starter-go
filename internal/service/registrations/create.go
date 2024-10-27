@@ -7,6 +7,8 @@ import (
 
 	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
+	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"
 )
 
@@ -82,7 +84,8 @@ func (r *Registrations) Create(
 
 	existingUser, err := r.repository.YDB.Users.GetByEmail(ctx, registration.Email)
 
-	if err != nil {
+	// Если есть ошибка, которая отличается от того что пользователь не найден.
+	if err != nil && !errors.Is(err, constants.ErrDBEntityNotFound) {
 		sentry.CaptureException(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationYdbFindUser,
@@ -90,7 +93,8 @@ func (r *Registrations) Create(
 		}
 	}
 
-	if existingUser.ID != "" {
+	// Если пользователь найден.
+	if err != nil && existingUser != nil {
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationUserWithThisEmailAlreadyExist,
 			Description: "A user with the specified email already exists",
@@ -100,7 +104,7 @@ func (r *Registrations) Create(
 
 	existingRegistration, err := r.repository.YDB.Registrations.GetByEmail(ctx, registration.Email)
 
-	if err != nil {
+	if err != nil && !errors.Is(err, constants.ErrDBEntityNotFound) {
 		sentry.CaptureException(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationYdbCreateRegistration,
@@ -108,10 +112,10 @@ func (r *Registrations) Create(
 		}
 	}
 
-	if existingRegistration.ID != "" {
-		registration = existingRegistration
-	} else {
+	if err != nil && errors.Is(err, constants.ErrDBEntityNotFound) {
 		registration, err = r.repository.YDB.Registrations.Create(ctx, registration)
+	} else {
+		registration = existingRegistration
 	}
 
 	if err != nil {

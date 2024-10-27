@@ -5,6 +5,8 @@ import (
 	"net/http"
 
 	"github.com/getsentry/sentry-go"
+	"github.com/pkg/errors"
+	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"
 )
 
@@ -12,23 +14,15 @@ func (s *Sessions) DeleteByID(
 	inputCtx context.Context,
 	id string,
 ) error {
-	span := sentry.StartSpan(inputCtx, "Service: Sessions.Delete")
+	span := sentry.StartSpan(inputCtx, "Service: Sessions.DeleteByID")
 	defer func() {
 		span.Finish()
 	}()
 	ctx := span.Context()
 
-	session, err := s.repository.YDB.Sessions.GetByID(ctx, id)
+	err := s.repository.YDB.Sessions.DeleteByID(ctx, id)
 
-	if err != nil {
-		sentry.CaptureException(err)
-		return &models.Error{
-			Code:        models.ErrorCodeSessionsDeleteSessionDBError,
-			Description: err.Error(),
-		}
-	}
-
-	if session.ID == "" {
+	if errors.Is(err, constants.ErrDBEntityNotFound) {
 		return &models.Error{
 			Code:        models.ErrorCodeSessionsDeleteSessionNotFound,
 			Description: "Session with the given id was not found",
@@ -36,8 +30,6 @@ func (s *Sessions) DeleteByID(
 		}
 	}
 
-	err = s.repository.YDB.Sessions.Delete(ctx, id)
-
 	if err != nil {
 		sentry.CaptureException(err)
 		return &models.Error{
@@ -46,5 +38,5 @@ func (s *Sessions) DeleteByID(
 		}
 	}
 
-	return err
+	return nil
 }

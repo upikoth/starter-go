@@ -6,6 +6,8 @@ import (
 
 	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
+	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/repository/ydb"
 	"golang.org/x/crypto/bcrypt"
@@ -14,7 +16,7 @@ import (
 func (p *PasswordRecoveryRequests) Confirm(
 	inputCtx context.Context,
 	params models.PasswordRecoveryRequestConfirmParams,
-) (*models.Session, error) {
+) (*models.SessionWithUserRole, error) {
 	span := sentry.StartSpan(inputCtx, "Service: PasswordRecoveryRequests.Confirm")
 	defer func() {
 		span.Finish()
@@ -27,19 +29,19 @@ func (p *PasswordRecoveryRequests) Confirm(
 		PasswordRecoveryRequests.
 		GetByToken(ctx, params.ConfirmationToken)
 
+	if errors.Is(err, constants.ErrDBEntityNotFound) {
+		return nil, &models.Error{
+			Code:        models.ErrorCodePasswordRecoveryRequestPasswordRecoveryRequestNotFound,
+			Description: "Password recovery request with transferred token not found",
+			StatusCode:  http.StatusBadRequest,
+		}
+	}
+
 	if err != nil {
 		sentry.CaptureException(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestYdbCheckConfirmationToken,
 			Description: err.Error(),
-		}
-	}
-
-	if passwordRecoveryRequest.ID == "" {
-		return nil, &models.Error{
-			Code:        models.ErrorCodePasswordRecoveryRequestPasswordRecoveryRequestNotFound,
-			Description: "Password recovery request with transferred token not found",
-			StatusCode:  http.StatusBadRequest,
 		}
 	}
 
@@ -53,29 +55,29 @@ func (p *PasswordRecoveryRequests) Confirm(
 		}
 	}
 
-	user, err := p.repository.YDB.Users.GetByEmail(ctx, passwordRecoveryRequest.Email)
-
-	if err != nil {
-		sentry.CaptureException(err)
-		return nil, &models.Error{
-			Code:        models.ErrorCodePasswordRecoveryRequestFindUserByEmail,
-			Description: err.Error(),
-		}
-	}
-
-	user.PasswordHash = string(passwordHash)
-
 	var updatedUser *models.User
-	err = p.repository.YDB.Transaction(func(ydbTx *ydb.YDB) error {
-		dbUpdatedUser, dbErr := ydbTx.Users.Update(ctx, *user)
-		updatedUser = dbUpdatedUser
+	err = p.repository.YDB.Transaction(
+		ctx,
+		func(ctxTx context.Context, ydbTx *ydb.YDB) error {
+			user, dbErr := ydbTx.Users.GetByEmail(ctxTx, passwordRecoveryRequest.Email)
 
-		if dbErr != nil {
-			return dbErr
-		}
+			if dbErr != nil {
+				return dbErr
+			}
 
-		return ydbTx.PasswordRecoveryRequests.Delete(ctx, passwordRecoveryRequest.ID)
-	})
+			user.PasswordHash = string(passwordHash)
+
+			dbUpdatedUser, dbErr := ydbTx.Users.Update(ctxTx, user)
+			updatedUser = dbUpdatedUser
+
+			if dbErr != nil {
+				return dbErr
+			}
+
+			return ydbTx.PasswordRecoveryRequests.DeleteByID(ctxTx, passwordRecoveryRequest.ID)
+		},
+		p.repository.YDB.TransactionWithSerializeLevel(),
+	)
 
 	if err != nil {
 		sentry.CaptureException(err)
@@ -85,11 +87,10 @@ func (p *PasswordRecoveryRequests) Confirm(
 		}
 	}
 
-	session := models.Session{
-		ID:       uuid.New().String(),
-		UserID:   updatedUser.ID,
-		UserRole: updatedUser.Role,
-		Token:    uuid.New().String(),
+	session := &models.Session{
+		ID:     uuid.New().String(),
+		Token:  uuid.New().String(),
+		UserID: updatedUser.ID,
 	}
 
 	createdSession, err := p.repository.YDB.Sessions.Create(ctx, session)

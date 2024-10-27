@@ -34,6 +34,6 @@ type User struct {
 }
 
 type UserList struct {
-	Users []User
+	Users []*User
 	Total int
 }

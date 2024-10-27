@@ -6,6 +6,8 @@ import (
 
 	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
+	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/repository/ydb"
 
@@ -15,7 +17,7 @@ import (
 func (r *Registrations) Confirm(
 	inputCtx context.Context,
 	params models.RegistrationConfirmParams,
-) (*models.Session, error) {
+) (*models.SessionWithUserRole, error) {
 	span := sentry.StartSpan(inputCtx, "Service: Registrations.Confirm")
 	defer func() {
 		span.Finish()
@@ -24,19 +26,19 @@ func (r *Registrations) Confirm(
 
 	registration, err := r.repository.YDB.Registrations.GetByToken(ctx, params.ConfirmationToken)
 
+	if errors.Is(err, constants.ErrDBEntityNotFound) {
+		return nil, &models.Error{
+			Code:        models.ErrorCodeRegistrationRegistrationNotFound,
+			Description: "Registration with transferred token not found",
+			StatusCode:  http.StatusBadRequest,
+		}
+	}
+
 	if err != nil {
 		sentry.CaptureException(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationYdbCheckConfirmationToken,
 			Description: err.Error(),
-		}
-	}
-
-	if registration.ID == "" {
-		return nil, &models.Error{
-			Code:        models.ErrorCodeRegistrationRegistrationNotFound,
-			Description: "Registration with transferred token not found",
-			StatusCode:  http.StatusBadRequest,
 		}
 	}
 
@@ -58,22 +60,25 @@ func (r *Registrations) Confirm(
 	}
 
 	var createdUser *models.User
-	err = r.repository.YDB.Transaction(func(ydbTx *ydb.YDB) error {
-		dbErr := ydbTx.Registrations.Delete(ctx, registration.ID)
+	err = r.repository.YDB.Transaction(
+		ctx,
+		func(ctxTx context.Context, ydbTx *ydb.YDB) error {
+			dbErr := ydbTx.Registrations.DeleteByID(ctxTx, registration.ID)
 
-		if dbErr != nil {
-			return dbErr
-		}
+			if dbErr != nil {
+				return dbErr
+			}
 
-		dbRes, dbErr := ydbTx.Users.Create(ctx, &newUser)
-		createdUser = dbRes
+			createdUser, dbErr = ydbTx.Users.Create(ctxTx, &newUser)
 
-		if dbErr != nil {
-			return dbErr
-		}
+			if dbErr != nil {
+				return dbErr
+			}
 
-		return nil
-	})
+			return nil
+		},
+		r.repository.YDB.TransactionWithSerializeLevel(),
+	)
 
 	if err != nil {
 		sentry.CaptureException(err)
@@ -83,11 +88,10 @@ func (r *Registrations) Confirm(
 		}
 	}
 
-	session := models.Session{
-		ID:       uuid.New().String(),
-		UserID:   createdUser.ID,
-		UserRole: createdUser.Role,
-		Token:    uuid.New().String(),
+	session := &models.Session{
+		ID:     uuid.New().String(),
+		Token:  uuid.New().String(),
+		UserID: createdUser.ID,
 	}
 
 	createdSession, err := r.repository.YDB.Sessions.Create(ctx, session)

@@ -3,22 +3,32 @@ package users
 import (
 	"context"
 	"encoding/json"
+	"fmt"
+	"reflect"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
+	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"
 	ydbmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
 	"github.com/ydb-platform/ydb-go-sdk/v3"
 	"github.com/ydb-platform/ydb-go-sdk/v3/query"
 )
 
-func (u *Users) Create(
+type fieldNameGetBy string
+
+var (
+	fieldNameGetByEmail fieldNameGetBy = "email"
+)
+
+func (u *Users) getBy(
 	inputCtx context.Context,
-	userToCreate *models.User,
+	fieldName fieldNameGetBy,
+	fieldValue string,
 ) (res *models.User, err error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YDB.Users.Create")
+	span := sentry.StartSpan(inputCtx, "Repository: YDB.Users.getBy")
 	defer func() {
-		if err != nil {
+		if err != nil && !errors.Is(err, constants.ErrDBEntityNotFound) {
 			sentry.CaptureException(err)
 		} else {
 			bytes, _ := json.Marshal(res)
@@ -28,35 +38,24 @@ func (u *Users) Create(
 	}()
 	ctx := span.Context()
 
-	var dbCreatedUser ydbmodels.User
-	dbUserToCreate := ydbmodels.NewYDBUserModel(userToCreate)
+	var user ydbmodels.User
 
 	err = u.executeInQueryTransaction(ctx, func(qCtx context.Context, tx query.Transaction) error {
 		qRes, qErr := tx.QueryResultSet(
 			qCtx,
-			`declare $id as text;
-				declare $email as text;
-				declare $role as text;
-				declare $password_hash as text;
-	
-				insert into users
-				(id, email, role, password_hash)
-				values ($id, $email, $role, $password_hash);
-	
-				select
-					id,
-					email,
-					role,
-					password_hash,
-				from users
-				where users.id = $id;`,
+			fmt.Sprintf(
+				`declare $filterValue as text;
+					select
+						id,
+						email,
+						role,
+						password_hash,
+					from users
+					where %s = $filterValue;`,
+				fieldName,
+			),
 			query.WithParameters(
-				ydb.ParamsBuilder().
-					Param("$id").Text(dbUserToCreate.ID).
-					Param("$email").Text(dbUserToCreate.Email).
-					Param("$role").Text(dbUserToCreate.Role).
-					Param("$password_hash").Text(dbUserToCreate.PasswordHash).
-					Build(),
+				ydb.ParamsBuilder().Param("$filterValue").Text(fieldValue).Build(),
 			),
 		)
 
@@ -72,10 +71,10 @@ func (u *Users) Create(
 			}
 
 			sErr := row.ScanNamed(
-				query.Named("id", &dbCreatedUser.ID),
-				query.Named("email", &dbCreatedUser.Email),
-				query.Named("role", &dbCreatedUser.Role),
-				query.Named("password_hash", &dbCreatedUser.PasswordHash),
+				query.Named("id", &user.ID),
+				query.Named("email", &user.Email),
+				query.Named("role", &user.Role),
+				query.Named("password_hash", &user.PasswordHash),
 			)
 
 			if sErr != nil {
@@ -90,5 +89,9 @@ func (u *Users) Create(
 		return nil, err
 	}
 
-	return dbCreatedUser.FromYDBModel(), nil
+	if reflect.ValueOf(user).IsZero() {
+		return nil, errors.WithStack(constants.ErrDBEntityNotFound)
+	}
+
+	return user.FromYDBModel(), nil
 }

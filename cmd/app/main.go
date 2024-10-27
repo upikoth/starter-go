@@ -14,10 +14,12 @@ import (
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/app"
 	"github.com/upikoth/starter-go/internal/config"
+	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 )
 
 func main() {
+	initCtx := context.Background()
 	// Чтение .env файла нужно только при локальной разработке.
 	// В других случаях значения переменных окружения уже должны быть установлены.
 	// Поэтому ошибку загрузки файла обрабатывать не нужно.
@@ -35,7 +37,7 @@ func main() {
 		return
 	}
 
-	if cfg.Environment == "development" {
+	if cfg.Environment == constants.EnvironmentDevelopment {
 		loggerInstance.SetPrettyOutputToConsole()
 	}
 
@@ -52,7 +54,7 @@ func main() {
 	go func() {
 		loggerInstance.Info("Запуск приложения")
 
-		if appErr := appInstance.Start(); !errors.Is(appErr, http.ErrServerClosed) {
+		if appErr := appInstance.Start(initCtx); !errors.Is(appErr, http.ErrServerClosed) {
 			loggerInstance.Fatal(appErr.Error())
 		}
 

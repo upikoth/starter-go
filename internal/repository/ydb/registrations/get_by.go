@@ -3,22 +3,33 @@ package registrations
 import (
 	"context"
 	"encoding/json"
+	"fmt"
+	"reflect"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
+	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"
 	ydbmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
 	"github.com/ydb-platform/ydb-go-sdk/v3"
 	"github.com/ydb-platform/ydb-go-sdk/v3/query"
 )
 
-func (r *Registrations) Create(
+type fieldNameGetBy string
+
+var (
+	fieldNameGetByConfrimationToken fieldNameGetBy = "confirmation_token"
+	fieldNameGetByEmail             fieldNameGetBy = "email"
+)
+
+func (r *Registrations) getBy(
 	inputCtx context.Context,
-	registrationToCreate *models.Registration,
+	fieldName fieldNameGetBy,
+	fieldValue string,
 ) (res *models.Registration, err error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YDB.Registrations.Create")
+	span := sentry.StartSpan(inputCtx, "Repository: YDB.Registrations.getBy")
 	defer func() {
-		if err != nil {
+		if err != nil && !errors.Is(err, constants.ErrDBEntityNotFound) {
 			sentry.CaptureException(err)
 		} else {
 			bytes, _ := json.Marshal(res)
@@ -28,32 +39,23 @@ func (r *Registrations) Create(
 	}()
 	ctx := span.Context()
 
-	var dbCreatedRegistration ydbmodels.Registration
-	dbRegistrationToCreate := ydbmodels.NewYDBRegistrationModel(registrationToCreate)
+	var registration ydbmodels.Registration
 
 	err = r.executeInQueryTransaction(ctx, func(qCtx context.Context, tx query.Transaction) error {
 		qRes, qErr := tx.QueryResultSet(
 			qCtx,
-			`declare $id as text;
-				declare $email as text;
-				declare $confirmation_token as text;
-				
-				insert into registrations
-				(id, email, confirmation_token)
-				values ($id, $email, $confirmation_token);
-
-				select
-					id,
-					email,
-					confirmation_token,
-				from registrations
-				where registrations.id = $id;`,
+			fmt.Sprintf(
+				`declare $filterValue as text;
+					select
+						id,
+						email,
+						confirmation_token,
+					from registrations
+					where %s = $filterValue;`,
+				fieldName,
+			),
 			query.WithParameters(
-				ydb.ParamsBuilder().
-					Param("$id").Text(dbRegistrationToCreate.ID).
-					Param("$email").Text(dbRegistrationToCreate.Email).
-					Param("$confirmation_token").Text(dbRegistrationToCreate.ConfirmationToken).
-					Build(),
+				ydb.ParamsBuilder().Param("$filterValue").Text(fieldValue).Build(),
 			),
 		)
 
@@ -69,9 +71,9 @@ func (r *Registrations) Create(
 			}
 
 			sErr := row.ScanNamed(
-				query.Named("id", &dbCreatedRegistration.ID),
-				query.Named("email", &dbCreatedRegistration.Email),
-				query.Named("confirmation_token", &dbCreatedRegistration.ConfirmationToken),
+				query.Named("id", &registration.ID),
+				query.Named("email", &registration.Email),
+				query.Named("confirmation_token", &registration.ConfirmationToken),
 			)
 
 			if sErr != nil {
@@ -86,5 +88,9 @@ func (r *Registrations) Create(
 		return nil, err
 	}
 
-	return dbCreatedRegistration.FromYDBModel(), nil
+	if reflect.ValueOf(registration).IsZero() {
+		return nil, errors.WithStack(constants.ErrDBEntityNotFound)
+	}
+
+	return registration.FromYDBModel(), nil
 }

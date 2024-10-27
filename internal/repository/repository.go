@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"context"
+
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 	"github.com/upikoth/starter-go/internal/repository/ycp"
@@ -34,16 +36,10 @@ func New(
 	}, nil
 }
 
-func (r *Repository) Connect() error {
-	err := r.YDB.Connect()
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+func (r *Repository) Connect(ctx context.Context) error {
+	return r.YDB.Connect(ctx)
 }
 
-func (r *Repository) Disconnect() error {
-	return r.YDB.Disconnect()
+func (r *Repository) Disconnect(ctx context.Context) error {
+	return r.YDB.Disconnect(ctx)
 }

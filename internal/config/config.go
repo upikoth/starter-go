@@ -56,6 +56,7 @@ type Ydb struct {
 	AuthFileDirName     string `envconfig:"YDB_AUTH_FILE_DIR_NAME" required:"true"`
 	AuthFileName        string `envconfig:"YDB_AUTH_FILE_NAME" required:"true"`
 	YcSaJSONCredentials []byte `envconfig:"YC_SA_JSON_CREDENTIALS"`
+	Environment         string `envconfig:"ENVIRONMENT" required:"true"`
 }
 
 func New() (*Config, error) {

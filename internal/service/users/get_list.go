@@ -9,7 +9,7 @@ import (
 
 func (u *Users) GetList(
 	inputCtx context.Context,
-	params models.UsersGetListParams,
+	params *models.UsersGetListParams,
 ) (*models.UserList, error) {
 	span := sentry.StartSpan(inputCtx, "Service: Users.GetList")
 	defer func() {

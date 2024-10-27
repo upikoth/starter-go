@@ -2,20 +2,20 @@ package users
 
 import (
 	"context"
-	"database/sql"
 	"encoding/json"
+	"strconv"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/models"
 	ydbmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
-
-	"gorm.io/gorm"
+	"github.com/ydb-platform/ydb-go-sdk/v3"
+	"github.com/ydb-platform/ydb-go-sdk/v3/query"
 )
 
 func (u *Users) GetList(
 	inputCtx context.Context,
-	params models.UsersGetListParams,
+	params *models.UsersGetListParams,
 ) (res *models.UserList, err error) {
 	span := sentry.StartSpan(inputCtx, "Repository: YDB.Users.GetList")
 	defer func() {
@@ -29,46 +29,116 @@ func (u *Users) GetList(
 	}()
 	ctx := span.Context()
 
-	var users []ydbmodels.User
-	total := int64(0)
+	var resUsers []*models.User
+	var total int
 
-	err = u.db.Transaction(func(tx *gorm.DB) error {
-		dbRes := tx.
-			WithContext(ctx).
-			Model(ydbmodels.User{}).
-			Count(&total)
-
-		if dbRes.Error != nil {
-			return errors.WithStack(dbRes.Error)
+	err = u.executeInQueryTransaction(ctx, func(qCtx context.Context, tx query.Transaction) error {
+		qUsers, qErr := queryUsers(qCtx, tx, params)
+		if qErr != nil {
+			return qErr
 		}
+		resUsers = qUsers
 
-		dbRes = tx.
-			WithContext(ctx).
-			Limit(params.Limit).
-			Offset(params.Offset).
-			Find(&users)
-
-		if dbRes.Error != nil {
-			return errors.WithStack(dbRes.Error)
+		qTotal, qErr := queryUsersTotal(qCtx, tx)
+		if qErr != nil {
+			return qErr
 		}
+		total = qTotal
 
 		return nil
-	}, &sql.TxOptions{
-		Isolation: sql.LevelSnapshot,
-		ReadOnly:  true,
 	})
 
 	if err != nil {
 		return nil, err
 	}
 
-	var resUsers []models.User
-	for _, user := range users {
+	return &models.UserList{
+		Users: resUsers,
+		Total: total,
+	}, nil
+}
+
+func queryUsers(qCtx context.Context, tx query.Transaction, params *models.UsersGetListParams) ([]*models.User, error) {
+	var resUsers []*models.User
+
+	qRes, qErr := tx.QueryResultSet(
+		qCtx,
+		`declare $limit as Uint64;
+				declare $offset as Uint64;
+
+				select
+					id,
+					email,
+					password_hash,
+					role,
+				from users
+				limit $limit
+				offset $offset`,
+		query.WithParameters(
+			ydb.ParamsBuilder().
+				Param("$limit").Uint64(uint64(params.Limit)).
+				Param("$offset").Uint64(uint64(params.Offset)).
+				Build(),
+		),
+	)
+
+	if qErr != nil {
+		return resUsers, errors.WithStack(qErr)
+	}
+
+	defer func() { _ = qRes.Close(qCtx) }()
+
+	for row, rErr := range qRes.Rows(qCtx) {
+		if rErr != nil {
+			return resUsers, errors.WithStack(rErr)
+		}
+
+		var user ydbmodels.User
+
+		sErr := row.ScanNamed(
+			query.Named("id", &user.ID),
+			query.Named("email", &user.Email),
+			query.Named("role", &user.Role),
+			query.Named("password_hash", &user.PasswordHash),
+		)
+
+		if sErr != nil {
+			return resUsers, errors.WithStack(sErr)
+		}
+
 		resUsers = append(resUsers, user.FromYDBModel())
 	}
 
-	return &models.UserList{
-		Users: resUsers,
-		Total: int(total),
-	}, nil
+	return resUsers, nil
+}
+
+func queryUsersTotal(qCtx context.Context, tx query.Transaction) (int, error) {
+	var total int
+	qRes, qErr := tx.QueryResultSet(
+		qCtx,
+		`select count(*) as total from users`,
+	)
+
+	if qErr != nil {
+		return total, errors.WithStack(qErr)
+	}
+
+	for row, rErr := range qRes.Rows(qCtx) {
+		if rErr != nil {
+			return total, errors.WithStack(rErr)
+		}
+
+		var qTotal uint64
+		sErr := row.ScanNamed(
+			query.Named("total", &qTotal),
+		)
+
+		if sErr != nil {
+			return total, errors.WithStack(sErr)
+		}
+
+		total, _ = strconv.Atoi(strconv.FormatUint(qTotal, 10))
+	}
+
+	return total, nil
 }

@@ -32,7 +32,6 @@ const (
 	ErrorCodePasswordRecoveryRequestYdbCheckConfirmationToken       ErrorCode = "600"
 	ErrorCodePasswordRecoveryRequestPasswordRecoveryRequestNotFound ErrorCode = "601"
 	ErrorCodePasswordRecoveryRequestGeneratePasswordHash            ErrorCode = "602"
-	ErrorCodePasswordRecoveryRequestFindUserByEmail                 ErrorCode = "603"
 	ErrorCodePasswordRecoveryRequestCreateSession                   ErrorCode = "604"
 	ErrorCodePasswordRecoveryRequestUpdateUserPassword              ErrorCode = "605"
 

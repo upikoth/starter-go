@@ -3,26 +3,27 @@ package ydbmodels
 import "github.com/upikoth/starter-go/internal/models"
 
 type Session struct {
-	ID       string `gorm:"primarykey"`
+	ID       string
+	Token    string
 	UserID   string
 	UserRole string
-	Token    string
 }
 
-func NewYDBSessionModel(session models.Session) Session {
-	return Session{
-		ID:       session.ID,
-		UserID:   session.UserID,
-		UserRole: string(session.UserRole),
-		Token:    session.Token,
+func NewYDBSessionModel(session *models.Session) *Session {
+	return &Session{
+		ID:     session.ID,
+		Token:  session.Token,
+		UserID: session.UserID,
 	}
 }
 
-func (u *Session) FromYDBModel() models.Session {
-	return models.Session{
-		ID:       u.ID,
-		UserID:   u.UserID,
-		UserRole: models.UserRole(u.UserRole),
-		Token:    u.Token,
+func (s *Session) FromYDBModel() *models.SessionWithUserRole {
+	return &models.SessionWithUserRole{
+		Session: models.Session{
+			ID:     s.ID,
+			Token:  s.Token,
+			UserID: s.UserID,
+		},
+		UserRole: models.UserRole(s.UserRole),
 	}
 }

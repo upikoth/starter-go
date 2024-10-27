@@ -3,22 +3,33 @@ package sessions
 import (
 	"context"
 	"encoding/json"
+	"fmt"
+	"reflect"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
+	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"
 	ydbmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
 	"github.com/ydb-platform/ydb-go-sdk/v3"
 	"github.com/ydb-platform/ydb-go-sdk/v3/query"
 )
 
-func (s *Sessions) Create(
+type fieldNameGetBy string
+
+var (
+	fieldNameGetByID    fieldNameGetBy = "id"
+	fieldNameGetByToken fieldNameGetBy = "token"
+)
+
+func (s *Sessions) getBy(
 	inputCtx context.Context,
-	sessionToCreate *models.Session,
+	fieldName fieldNameGetBy,
+	fieldValue string,
 ) (res *models.SessionWithUserRole, err error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YDB.Sessions.Create")
+	span := sentry.StartSpan(inputCtx, "Repository: YDB.Sessions.getBy")
 	defer func() {
-		if err != nil {
+		if err != nil && !errors.Is(err, constants.ErrDBEntityNotFound) {
 			sentry.CaptureException(err)
 		} else {
 			bytes, _ := json.Marshal(res)
@@ -28,33 +39,24 @@ func (s *Sessions) Create(
 	}()
 	ctx := span.Context()
 
-	var dbCreatedSession ydbmodels.Session
-	dbSessionToCreate := ydbmodels.NewYDBSessionModel(sessionToCreate)
+	var session ydbmodels.Session
 
 	err = s.executeInQueryTransaction(ctx, func(qCtx context.Context, tx query.Transaction) error {
 		qRes, qErr := tx.QueryResultSet(
 			qCtx,
-			`declare $id as text;
-				declare $token as text;
-				declare $user_id as text;
-				
-				insert into sessions
-				(id, token, user_id)
-				values ($id, $token, $user_id);
-
-				select
-					s.id as id,
-					s.token as token,
-					s.user_id as user_id,
-					u.role as user_role,
-				from sessions as s join users as u on s.user_id = u.id
-				where s.id = $id;`,
+			fmt.Sprintf(
+				`declare $filterValue as text;
+					select
+						s.id as id,
+						s.token as token,
+						s.user_id as user_id,
+						u.role as user_role,
+					from sessions as s join users as u on s.user_id = u.id
+					where %s = $filterValue;`,
+				fieldName,
+			),
 			query.WithParameters(
-				ydb.ParamsBuilder().
-					Param("$id").Text(dbSessionToCreate.ID).
-					Param("$token").Text(dbSessionToCreate.Token).
-					Param("$user_id").Text(dbSessionToCreate.UserID).
-					Build(),
+				ydb.ParamsBuilder().Param("$filterValue").Text(fieldValue).Build(),
 			),
 		)
 
@@ -70,10 +72,10 @@ func (s *Sessions) Create(
 			}
 
 			sErr := row.ScanNamed(
-				query.Named("id", &dbCreatedSession.ID),
-				query.Named("token", &dbCreatedSession.Token),
-				query.Named("user_id", &dbCreatedSession.UserID),
-				query.Named("user_role", &dbCreatedSession.UserRole),
+				query.Named("id", &session.ID),
+				query.Named("token", &session.Token),
+				query.Named("user_id", &session.UserID),
+				query.Named("user_role", &session.UserRole),
 			)
 
 			if sErr != nil {
@@ -88,5 +90,9 @@ func (s *Sessions) Create(
 		return nil, err
 	}
 
-	return dbCreatedSession.FromYDBModel(), nil
+	if reflect.ValueOf(session).IsZero() {
+		return nil, errors.WithStack(constants.ErrDBEntityNotFound)
+	}
+
+	return session.FromYDBModel(), nil
 }

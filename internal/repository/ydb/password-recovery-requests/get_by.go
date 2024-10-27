@@ -3,22 +3,33 @@ package passwordrecoveryrequests
 import (
 	"context"
 	"encoding/json"
+	"fmt"
+	"reflect"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
+	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"
 	ydbmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
 	"github.com/ydb-platform/ydb-go-sdk/v3"
 	"github.com/ydb-platform/ydb-go-sdk/v3/query"
 )
 
-func (p *PasswordRecoveryRequests) Create(
+type fieldNameGetBy string
+
+var (
+	fieldNameGetByConfrimationToken fieldNameGetBy = "confirmation_token"
+	fieldNameGetByEmail             fieldNameGetBy = "email"
+)
+
+func (p *PasswordRecoveryRequests) getBy(
 	inputCtx context.Context,
-	prrToCreate *models.PasswordRecoveryRequest,
+	fieldName fieldNameGetBy,
+	fieldValue string,
 ) (res *models.PasswordRecoveryRequest, err error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YDB.PasswordRecoveryRequests.Create")
+	span := sentry.StartSpan(inputCtx, "Repository: YDB.PasswordRecoveryRequests.getBy")
 	defer func() {
-		if err != nil {
+		if err != nil && !errors.Is(err, constants.ErrDBEntityNotFound) {
 			sentry.CaptureException(err)
 		} else {
 			bytes, _ := json.Marshal(res)
@@ -28,32 +39,23 @@ func (p *PasswordRecoveryRequests) Create(
 	}()
 	ctx := span.Context()
 
-	var dbCreatedPRR ydbmodels.PasswordRecoveryRequest
-	dbPRRToCreate := ydbmodels.NewYDBPasswordRecoveryRequestModel(prrToCreate)
+	var prr ydbmodels.PasswordRecoveryRequest
 
 	err = p.executeInQueryTransaction(ctx, func(qCtx context.Context, tx query.Transaction) error {
 		qRes, qErr := tx.QueryResultSet(
 			qCtx,
-			`declare $id as text;
-				declare $email as text;
-				declare $confirmation_token as text;
-				
-				insert into password_recovery_requests
-				(id, email, confirmation_token)
-				values ($id, $email, $confirmation_token);
-
-				select
-					id,
-					email,
-					confirmation_token,
-				from password_recovery_requests as prr
-				where prr.id = $id;`,
+			fmt.Sprintf(
+				`declare $filterValue as text;
+					select
+						id,
+						email,
+						confirmation_token,
+					from password_recovery_requests
+					where %s = $filterValue;`,
+				fieldName,
+			),
 			query.WithParameters(
-				ydb.ParamsBuilder().
-					Param("$id").Text(dbPRRToCreate.ID).
-					Param("$email").Text(dbPRRToCreate.Email).
-					Param("$confirmation_token").Text(dbPRRToCreate.ConfirmationToken).
-					Build(),
+				ydb.ParamsBuilder().Param("$filterValue").Text(fieldValue).Build(),
 			),
 		)
 
@@ -69,9 +71,9 @@ func (p *PasswordRecoveryRequests) Create(
 			}
 
 			sErr := row.ScanNamed(
-				query.Named("id", &dbCreatedPRR.ID),
-				query.Named("email", &dbCreatedPRR.Email),
-				query.Named("confirmation_token", &dbCreatedPRR.ConfirmationToken),
+				query.Named("id", &prr.ID),
+				query.Named("email", &prr.Email),
+				query.Named("confirmation_token", &prr.ConfirmationToken),
 			)
 
 			if sErr != nil {
@@ -86,5 +88,9 @@ func (p *PasswordRecoveryRequests) Create(
 		return nil, err
 	}
 
-	return dbCreatedPRR.FromYDBModel(), nil
+	if reflect.ValueOf(prr).IsZero() {
+		return nil, errors.WithStack(constants.ErrDBEntityNotFound)
+	}
+
+	return prr.FromYDBModel(), nil
 }

@@ -50,8 +50,8 @@ func New(config *config.Config, logger logger.Logger) (*App, error) {
 	}, nil
 }
 
-func (s *App) Start() error {
-	err := s.repository.Connect()
+func (s *App) Start(ctx context.Context) error {
+	err := s.repository.Connect(ctx)
 
 	if err != nil {
 		return err
@@ -63,7 +63,7 @@ func (s *App) Start() error {
 }
 
 func (s *App) Stop(ctx context.Context) error {
-	err := s.repository.Disconnect()
+	err := s.repository.Disconnect(ctx)
 
 	if err != nil {
 		return err

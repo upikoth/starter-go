@@ -6,6 +6,8 @@ import (
 
 	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
+	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"
 )
 
@@ -80,7 +82,13 @@ func (p *PasswordRecoveryRequests) Create(
 		ConfirmationToken: uuid.New().String(),
 	}
 
-	existingUser, err := p.repository.YDB.Users.GetByEmail(ctx, passwordRecoveryRequest.Email)
+	_, err := p.repository.YDB.Users.GetByEmail(ctx, passwordRecoveryRequest.Email)
+
+	// Если пользователь не найден, возвращаем такой же ответ как если бы он был найден.
+	// Так нельзя будет понять есть ли такой email в приложении.
+	if errors.Is(err, constants.ErrDBEntityNotFound) {
+		return passwordRecoveryRequest, nil
+	}
 
 	if err != nil {
 		sentry.CaptureException(err)
@@ -90,14 +98,10 @@ func (p *PasswordRecoveryRequests) Create(
 		}
 	}
 
-	if existingUser.ID == "" {
-		return passwordRecoveryRequest, nil
-	}
-
 	existingPasswordRecoveryRequest, err :=
 		p.repository.YDB.PasswordRecoveryRequests.GetByEmail(ctx, passwordRecoveryRequest.Email)
 
-	if err != nil {
+	if err != nil && !errors.Is(err, constants.ErrDBEntityNotFound) {
 		sentry.CaptureException(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestYdbCreatePasswordRecoveryRequest,
@@ -105,10 +109,10 @@ func (p *PasswordRecoveryRequests) Create(
 		}
 	}
 
-	if existingPasswordRecoveryRequest.ID != "" {
-		passwordRecoveryRequest = existingPasswordRecoveryRequest
+	if err != nil && errors.Is(err, constants.ErrDBEntityNotFound) {
+		passwordRecoveryRequest, err = p.repository.YDB.PasswordRecoveryRequests.Create(ctx, passwordRecoveryRequest)
 	} else {
-		passwordRecoveryRequest, err = p.repository.YDB.PasswordRecoveryRequests.Create(ctx, *passwordRecoveryRequest)
+		passwordRecoveryRequest = existingPasswordRecoveryRequest
 	}
 
 	if err != nil {

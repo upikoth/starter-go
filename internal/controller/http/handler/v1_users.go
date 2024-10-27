@@ -33,7 +33,7 @@ func (h *Handler) V1GetUsers(
 		}
 	}
 
-	usersGetListParams := models.UsersGetListParams{
+	usersGetListParams := &models.UsersGetListParams{
 		Limit:  params.Limit.Value,
 		Offset: params.Offset.Value,
 	}

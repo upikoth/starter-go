@@ -6,6 +6,7 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
 	"go.opentelemetry.io/otel"
+
 	"net/mail"
 )
 

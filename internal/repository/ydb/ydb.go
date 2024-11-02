@@ -15,8 +15,10 @@ import (
 	"github.com/upikoth/starter-go/internal/repository/ydb/registrations"
 	"github.com/upikoth/starter-go/internal/repository/ydb/sessions"
 	"github.com/upikoth/starter-go/internal/repository/ydb/users"
+	ydbOtel "github.com/ydb-platform/ydb-go-sdk-otel"
 	"github.com/ydb-platform/ydb-go-sdk/v3"
 	"github.com/ydb-platform/ydb-go-sdk/v3/query"
+	"github.com/ydb-platform/ydb-go-sdk/v3/trace"
 	yc "github.com/ydb-platform/ydb-go-yc"
 )
 
@@ -52,6 +54,9 @@ func (y *YDB) Connect(ctx context.Context) error {
 		ctx,
 		y.config.Dsn,
 		yc.WithServiceAccountKeyFileCredentials(filePath),
+		ydbOtel.WithTraces(
+			ydbOtel.WithDetails(trace.DetailsAll),
+		),
 	)
 
 	if err != nil {

@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"
@@ -30,6 +31,7 @@ func (s *Sessions) DeleteByID(
 
 	if err != nil {
 		span.RecordError(err)
+		sentry.CaptureException(err)
 		return &models.Error{
 			Code:        models.ErrorCodeSessionsDeleteSessionDBError,
 			Description: err.Error(),

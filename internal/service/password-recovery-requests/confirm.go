@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/constants"
@@ -37,6 +38,7 @@ func (p *PasswordRecoveryRequests) Confirm(
 
 	if err != nil {
 		span.RecordError(err)
+		sentry.CaptureException(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestYdbCheckConfirmationToken,
 			Description: err.Error(),
@@ -47,6 +49,7 @@ func (p *PasswordRecoveryRequests) Confirm(
 
 	if err != nil {
 		span.RecordError(err)
+		sentry.CaptureException(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestGeneratePasswordHash,
 			Description: err.Error(),
@@ -79,6 +82,7 @@ func (p *PasswordRecoveryRequests) Confirm(
 
 	if err != nil {
 		span.RecordError(err)
+		sentry.CaptureException(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestUpdateUserPassword,
 			Description: err.Error(),
@@ -95,6 +99,7 @@ func (p *PasswordRecoveryRequests) Confirm(
 
 	if err != nil {
 		span.RecordError(err)
+		sentry.CaptureException(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestCreateSession,
 			Description: err.Error(),

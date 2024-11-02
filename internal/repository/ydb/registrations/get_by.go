@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"reflect"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"
@@ -35,6 +36,7 @@ func (r *Registrations) getBy(
 	defer func() {
 		if err != nil && !errors.Is(err, constants.ErrDBEntityNotFound) {
 			span.RecordError(err)
+			sentry.CaptureException(err)
 		} else {
 			bytes, _ := json.Marshal(res)
 			span.SetAttributes(

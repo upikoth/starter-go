@@ -3,9 +3,9 @@ package ycp
 import (
 	"context"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
 	"go.opentelemetry.io/otel"
-
 	"net/mail"
 )
 
@@ -22,6 +22,7 @@ func (y *Ycp) SendEmail(
 	defer func() {
 		if err != nil {
 			span.RecordError(err)
+			sentry.CaptureException(err)
 		}
 	}()
 

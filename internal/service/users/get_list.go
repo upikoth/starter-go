@@ -3,6 +3,7 @@ package users
 import (
 	"context"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/upikoth/starter-go/internal/models"
 	"go.opentelemetry.io/otel"
 )
@@ -19,6 +20,7 @@ func (u *Users) GetList(
 
 	if err != nil {
 		span.RecordError(err)
+		sentry.CaptureException(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodeUsersGetListDBError,
 			Description: err.Error(),

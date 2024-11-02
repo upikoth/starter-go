@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"strconv"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/models"
 	ydbmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
@@ -25,6 +26,7 @@ func (u *Users) GetList(
 	defer func() {
 		if err != nil {
 			span.RecordError(err)
+			sentry.CaptureException(err)
 		} else {
 			bytes, _ := json.Marshal(res)
 			span.SetAttributes(

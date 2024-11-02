@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/constants"
@@ -90,6 +91,7 @@ func (p *PasswordRecoveryRequests) Create(
 
 	if err != nil {
 		span.RecordError(err)
+		sentry.CaptureException(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestYdbFindUser,
 			Description: err.Error(),
@@ -101,6 +103,7 @@ func (p *PasswordRecoveryRequests) Create(
 
 	if err != nil && !errors.Is(err, constants.ErrDBEntityNotFound) {
 		span.RecordError(err)
+		sentry.CaptureException(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestYdbCreatePasswordRecoveryRequest,
 			Description: err.Error(),
@@ -115,6 +118,7 @@ func (p *PasswordRecoveryRequests) Create(
 
 	if err != nil {
 		span.RecordError(err)
+		sentry.CaptureException(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestYdbCreatePasswordRecoveryRequest,
 			Description: err.Error(),
@@ -137,6 +141,7 @@ func (p *PasswordRecoveryRequests) Create(
 
 	if err != nil {
 		span.RecordError(err)
+		sentry.CaptureException(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestSMTPSendEmail,
 			Description: err.Error(),

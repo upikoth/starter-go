@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/constants"
@@ -85,6 +86,7 @@ func (r *Registrations) Create(
 	// Если есть ошибка, которая отличается от того что пользователь не найден.
 	if err != nil && !errors.Is(err, constants.ErrDBEntityNotFound) {
 		span.RecordError(err)
+		sentry.CaptureException(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationYdbFindUser,
 			Description: err.Error(),
@@ -104,6 +106,7 @@ func (r *Registrations) Create(
 
 	if err != nil && !errors.Is(err, constants.ErrDBEntityNotFound) {
 		span.RecordError(err)
+		sentry.CaptureException(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationYdbCreateRegistration,
 			Description: err.Error(),
@@ -118,6 +121,7 @@ func (r *Registrations) Create(
 
 	if err != nil {
 		span.RecordError(err)
+		sentry.CaptureException(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationYdbCreateRegistration,
 			Description: err.Error(),
@@ -140,6 +144,7 @@ func (r *Registrations) Create(
 
 	if err != nil {
 		span.RecordError(err)
+		sentry.CaptureException(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationSMTPSendEmail,
 			Description: err.Error(),

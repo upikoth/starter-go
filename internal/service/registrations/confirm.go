@@ -4,13 +4,13 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/repository/ydb"
 	"go.opentelemetry.io/otel"
-
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -34,6 +34,7 @@ func (r *Registrations) Confirm(
 
 	if err != nil {
 		span.RecordError(err)
+		sentry.CaptureException(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationYdbCheckConfirmationToken,
 			Description: err.Error(),
@@ -44,6 +45,7 @@ func (r *Registrations) Confirm(
 
 	if err != nil {
 		span.RecordError(err)
+		sentry.CaptureException(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationGeneratePasswordHash,
 			Description: err.Error(),
@@ -80,6 +82,7 @@ func (r *Registrations) Confirm(
 
 	if err != nil {
 		span.RecordError(err)
+		sentry.CaptureException(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationDBError,
 			Description: err.Error(),
@@ -96,6 +99,7 @@ func (r *Registrations) Confirm(
 
 	if err != nil {
 		span.RecordError(err)
+		sentry.CaptureException(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationCreateSession,
 			Description: err.Error(),

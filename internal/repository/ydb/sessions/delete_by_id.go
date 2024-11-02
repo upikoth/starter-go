@@ -4,6 +4,7 @@ import (
 	"context"
 	"reflect"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/constants"
 	ydbmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
@@ -23,6 +24,7 @@ func (s *Sessions) DeleteByID(
 	defer func() {
 		if err != nil {
 			span.RecordError(err)
+			sentry.CaptureException(err)
 		}
 	}()
 

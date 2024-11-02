@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"
+	"go.opentelemetry.io/otel"
 )
 
 var RegistrationEmailTemplate = `
@@ -70,11 +70,9 @@ func (r *Registrations) Create(
 	inputCtx context.Context,
 	params models.RegistrationCreateParams,
 ) (*models.Registration, error) {
-	span := sentry.StartSpan(inputCtx, "Service: Registrations.Create")
-	defer func() {
-		span.Finish()
-	}()
-	ctx := span.Context()
+	tracer := otel.Tracer("Service: Registrations.Create")
+	ctx, span := tracer.Start(inputCtx, "Service: Registrations.Create")
+	defer span.End()
 
 	registration := &models.Registration{
 		ID:                uuid.New().String(),
@@ -86,7 +84,7 @@ func (r *Registrations) Create(
 
 	// Если есть ошибка, которая отличается от того что пользователь не найден.
 	if err != nil && !errors.Is(err, constants.ErrDBEntityNotFound) {
-		sentry.CaptureException(err)
+		span.RecordError(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationYdbFindUser,
 			Description: err.Error(),
@@ -105,7 +103,7 @@ func (r *Registrations) Create(
 	existingRegistration, err := r.repository.YDB.Registrations.GetByEmail(ctx, registration.Email)
 
 	if err != nil && !errors.Is(err, constants.ErrDBEntityNotFound) {
-		sentry.CaptureException(err)
+		span.RecordError(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationYdbCreateRegistration,
 			Description: err.Error(),
@@ -119,7 +117,7 @@ func (r *Registrations) Create(
 	}
 
 	if err != nil {
-		sentry.CaptureException(err)
+		span.RecordError(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationYdbCreateRegistration,
 			Description: err.Error(),
@@ -141,7 +139,7 @@ func (r *Registrations) Create(
 	)
 
 	if err != nil {
-		sentry.CaptureException(err)
+		span.RecordError(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationSMTPSendEmail,
 			Description: err.Error(),

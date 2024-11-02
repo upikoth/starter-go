@@ -4,12 +4,12 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/repository/ydb"
+	"go.opentelemetry.io/otel"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -17,11 +17,9 @@ func (p *PasswordRecoveryRequests) Confirm(
 	inputCtx context.Context,
 	params models.PasswordRecoveryRequestConfirmParams,
 ) (*models.SessionWithUserRole, error) {
-	span := sentry.StartSpan(inputCtx, "Service: PasswordRecoveryRequests.Confirm")
-	defer func() {
-		span.Finish()
-	}()
-	ctx := span.Context()
+	tracer := otel.Tracer("Service: PasswordRecoveryRequests.Confirm")
+	ctx, span := tracer.Start(inputCtx, "Service: PasswordRecoveryRequests.Confirm")
+	defer span.End()
 
 	passwordRecoveryRequest, err := p.
 		repository.
@@ -38,7 +36,7 @@ func (p *PasswordRecoveryRequests) Confirm(
 	}
 
 	if err != nil {
-		sentry.CaptureException(err)
+		span.RecordError(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestYdbCheckConfirmationToken,
 			Description: err.Error(),
@@ -48,7 +46,7 @@ func (p *PasswordRecoveryRequests) Confirm(
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(params.NewPassword), bcrypt.DefaultCost)
 
 	if err != nil {
-		sentry.CaptureException(err)
+		span.RecordError(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestGeneratePasswordHash,
 			Description: err.Error(),
@@ -80,7 +78,7 @@ func (p *PasswordRecoveryRequests) Confirm(
 	)
 
 	if err != nil {
-		sentry.CaptureException(err)
+		span.RecordError(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestUpdateUserPassword,
 			Description: err.Error(),
@@ -96,7 +94,7 @@ func (p *PasswordRecoveryRequests) Confirm(
 	createdSession, err := p.repository.YDB.Sessions.Create(ctx, session)
 
 	if err != nil {
-		sentry.CaptureException(err)
+		span.RecordError(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestCreateSession,
 			Description: err.Error(),

@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"
+	"go.opentelemetry.io/otel"
 )
 
 //nolint:gosec // тут нет хардкода паролей.
@@ -70,11 +70,9 @@ func (p *PasswordRecoveryRequests) Create(
 	inputCtx context.Context,
 	params models.PasswordRecoveryRequestCreateParams,
 ) (*models.PasswordRecoveryRequest, error) {
-	span := sentry.StartSpan(inputCtx, "Service: PasswordRecoveryRequests.Create")
-	defer func() {
-		span.Finish()
-	}()
-	ctx := span.Context()
+	tracer := otel.Tracer("Service: PasswordRecoveryRequests.Create")
+	ctx, span := tracer.Start(inputCtx, "Service: PasswordRecoveryRequests.Create")
+	defer span.End()
 
 	passwordRecoveryRequest := &models.PasswordRecoveryRequest{
 		ID:                uuid.New().String(),
@@ -91,7 +89,7 @@ func (p *PasswordRecoveryRequests) Create(
 	}
 
 	if err != nil {
-		sentry.CaptureException(err)
+		span.RecordError(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestYdbFindUser,
 			Description: err.Error(),
@@ -102,7 +100,7 @@ func (p *PasswordRecoveryRequests) Create(
 		p.repository.YDB.PasswordRecoveryRequests.GetByEmail(ctx, passwordRecoveryRequest.Email)
 
 	if err != nil && !errors.Is(err, constants.ErrDBEntityNotFound) {
-		sentry.CaptureException(err)
+		span.RecordError(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestYdbCreatePasswordRecoveryRequest,
 			Description: err.Error(),
@@ -116,7 +114,7 @@ func (p *PasswordRecoveryRequests) Create(
 	}
 
 	if err != nil {
-		sentry.CaptureException(err)
+		span.RecordError(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestYdbCreatePasswordRecoveryRequest,
 			Description: err.Error(),
@@ -138,7 +136,7 @@ func (p *PasswordRecoveryRequests) Create(
 	)
 
 	if err != nil {
-		sentry.CaptureException(err)
+		span.RecordError(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodePasswordRecoveryRequestSMTPSendEmail,
 			Description: err.Error(),

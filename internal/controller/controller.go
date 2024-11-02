@@ -7,6 +7,7 @@ import (
 	"github.com/upikoth/starter-go/internal/controller/http"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 	"github.com/upikoth/starter-go/internal/service"
+	"go.opentelemetry.io/otel/trace"
 )
 
 type Controller struct {
@@ -19,8 +20,9 @@ func New(
 	config *config.Config,
 	logger logger.Logger,
 	service *service.Service,
+	tp trace.TracerProvider,
 ) (*Controller, error) {
-	httpInstance, err := http.New(&config.Controller.HTTP, logger, service)
+	httpInstance, err := http.New(&config.Controller.HTTP, logger, service, tp)
 
 	if err != nil {
 		return nil, err

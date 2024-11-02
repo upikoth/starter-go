@@ -4,21 +4,19 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"
+	"go.opentelemetry.io/otel"
 )
 
 func (s *Sessions) DeleteByID(
 	inputCtx context.Context,
 	id string,
 ) error {
-	span := sentry.StartSpan(inputCtx, "Service: Sessions.DeleteByID")
-	defer func() {
-		span.Finish()
-	}()
-	ctx := span.Context()
+	tracer := otel.Tracer("Service: Sessions.DeleteByID")
+	ctx, span := tracer.Start(inputCtx, "Service: Sessions.DeleteByID")
+	defer span.End()
 
 	err := s.repository.YDB.Sessions.DeleteByID(ctx, id)
 
@@ -31,7 +29,7 @@ func (s *Sessions) DeleteByID(
 	}
 
 	if err != nil {
-		sentry.CaptureException(err)
+		span.RecordError(err)
 		return &models.Error{
 			Code:        models.ErrorCodeSessionsDeleteSessionDBError,
 			Description: err.Error(),

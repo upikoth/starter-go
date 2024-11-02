@@ -10,12 +10,16 @@ import (
 	"time"
 
 	"github.com/getsentry/sentry-go"
+	sentryotel "github.com/getsentry/sentry-go/otel"
 	"github.com/joho/godotenv"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/app"
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
+	"go.opentelemetry.io/otel"
+	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+	"go.opentelemetry.io/otel/trace"
 )
 
 func main() {
@@ -41,12 +45,12 @@ func main() {
 		loggerInstance.SetPrettyOutputToConsole()
 	}
 
-	initSentry(
+	tp := initTracing(
 		&cfg.Controller.HTTP,
 		loggerInstance,
 	)
 
-	appInstance, err := app.New(cfg, loggerInstance)
+	appInstance, err := app.New(cfg, loggerInstance, tp)
 	if err != nil {
 		loggerInstance.Fatal(err.Error())
 	}
@@ -79,13 +83,14 @@ func main() {
 	loggerInstance.Info("Приложение остановлено")
 }
 
-func initSentry(
+func initTracing(
 	config *config.ControllerHTTP,
 	logger logger.Logger,
-) {
+) trace.TracerProvider {
 	err := sentry.Init(sentry.ClientOptions{
 		Dsn:                config.SentryDsn,
 		Environment:        config.Environment,
+		DebugWriter:        os.Stdout,
 		EnableTracing:      true,
 		AttachStacktrace:   true,
 		TracesSampleRate:   1.0,
@@ -98,4 +103,13 @@ func initSentry(
 	} else {
 		logger.Debug("Sentry успешно инициализирована")
 	}
+
+	tp := sdktrace.NewTracerProvider(
+		sdktrace.WithSpanProcessor(sentryotel.NewSentrySpanProcessor()),
+	)
+
+	otel.SetTextMapPropagator(sentryotel.NewSentryPropagator())
+	otel.SetTracerProvider(tp)
+
+	return tp
 }

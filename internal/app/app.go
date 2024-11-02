@@ -9,6 +9,7 @@ import (
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 	"github.com/upikoth/starter-go/internal/repository"
 	"github.com/upikoth/starter-go/internal/service"
+	"go.opentelemetry.io/otel/trace"
 )
 
 type App struct {
@@ -19,7 +20,11 @@ type App struct {
 	controller *controller.Controller
 }
 
-func New(config *config.Config, logger logger.Logger) (*App, error) {
+func New(
+	config *config.Config,
+	logger logger.Logger,
+	tp trace.TracerProvider,
+) (*App, error) {
 	repositoryInstance, err := repository.New(logger, &config.Repository)
 
 	if err != nil {
@@ -34,7 +39,7 @@ func New(config *config.Config, logger logger.Logger) (*App, error) {
 		return nil, err
 	}
 
-	controllerInstance, err := controller.New(config, logger, serviceInstance)
+	controllerInstance, err := controller.New(config, logger, serviceInstance, tp)
 
 	if err != nil {
 		logger.Error(fmt.Sprintf("Ошибка при инициализации controller: %s", err))

@@ -4,29 +4,33 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/models"
 	ydbmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
 	"github.com/ydb-platform/ydb-go-sdk/v3"
 	"github.com/ydb-platform/ydb-go-sdk/v3/query"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
 func (s *Sessions) Create(
 	inputCtx context.Context,
 	sessionToCreate *models.Session,
 ) (res *models.SessionWithUserRole, err error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YDB.Sessions.Create")
+	tracer := otel.Tracer("Repository: YDB.Sessions.Create")
+	ctx, span := tracer.Start(inputCtx, "Repository: YDB.Sessions.Create")
+	defer span.End()
+
 	defer func() {
 		if err != nil {
-			sentry.CaptureException(err)
+			span.RecordError(err)
 		} else {
 			bytes, _ := json.Marshal(res)
-			span.SetData("Result", string(bytes))
+			span.SetAttributes(
+				attribute.String("ydb.res", string(bytes)),
+			)
 		}
-		span.Finish()
 	}()
-	ctx := span.Context()
 
 	var dbCreatedSession ydbmodels.Session
 	dbSessionToCreate := ydbmodels.NewYDBSessionModel(sessionToCreate)

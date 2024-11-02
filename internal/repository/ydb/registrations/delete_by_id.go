@@ -4,26 +4,27 @@ import (
 	"context"
 	"reflect"
 
-	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/constants"
 	ydbmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
 	"github.com/ydb-platform/ydb-go-sdk/v3"
 	"github.com/ydb-platform/ydb-go-sdk/v3/query"
+	"go.opentelemetry.io/otel"
 )
 
 func (r *Registrations) DeleteByID(
 	inputCtx context.Context,
 	id string,
 ) (err error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YDB.Registrations.DeleteByID")
+	tracer := otel.Tracer("Repository: YDB.Registrations.DeleteByID")
+	ctx, span := tracer.Start(inputCtx, "Repository: YDB.Registrations.DeleteByID")
+	defer span.End()
+
 	defer func() {
-		if err != nil && !errors.Is(err, constants.ErrDBEntityNotFound) {
-			sentry.CaptureException(err)
+		if err != nil {
+			span.RecordError(err)
 		}
-		span.Finish()
 	}()
-	ctx := span.Context()
 
 	var deletedRegistration ydbmodels.Registration
 

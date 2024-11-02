@@ -4,6 +4,7 @@ go 1.23
 
 require (
 	github.com/getsentry/sentry-go v0.29.1
+	github.com/getsentry/sentry-go/otel v0.29.1
 	github.com/go-faster/errors v0.7.1
 	github.com/go-faster/jx v1.1.0
 	github.com/google/uuid v1.6.0
@@ -14,8 +15,11 @@ require (
 	github.com/pressly/goose/v3 v3.22.1
 	github.com/rs/zerolog v1.33.0
 	github.com/ydb-platform/ydb-go-sdk/v3 v3.84.1
+	github.com/ydb-platform/ydb-go-yc v0.12.3
+	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.56.0
 	go.opentelemetry.io/otel v1.31.0
 	go.opentelemetry.io/otel/metric v1.31.0
+	go.opentelemetry.io/otel/sdk v1.31.0
 	go.opentelemetry.io/otel/trace v1.31.0
 	go.uber.org/multierr v1.11.0
 	golang.org/x/crypto v0.28.0
@@ -24,6 +28,7 @@ require (
 require (
 	github.com/dlclark/regexp2 v1.11.4 // indirect
 	github.com/fatih/color v1.17.0 // indirect
+	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-faster/yaml v0.4.6 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
@@ -37,7 +42,6 @@ require (
 	github.com/sethvargo/go-retry v0.3.0 // indirect
 	github.com/yandex-cloud/go-genproto v0.0.0-20240819112322-98a264d392f6 // indirect
 	github.com/ydb-platform/ydb-go-genproto v0.0.0-20240920120314-0fed943b0136 // indirect
-	github.com/ydb-platform/ydb-go-yc v0.12.3 // indirect
 	github.com/ydb-platform/ydb-go-yc-metadata v0.6.1 // indirect
 	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/exp v0.0.0-20241009180824-f66d83c29e7c // indirect

@@ -3,8 +3,8 @@ package ycp
 import (
 	"context"
 
-	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
+	"go.opentelemetry.io/otel"
 
 	"net/mail"
 )
@@ -15,12 +15,14 @@ func (y *Ycp) SendEmail(
 	title string,
 	body string,
 ) (err error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YCP.SendEmail")
+	tracer := otel.Tracer("Repository: YCP.SendEmail")
+	_, span := tracer.Start(inputCtx, "Repository: YCP.SendEmail")
+	defer span.End()
+
 	defer func() {
 		if err != nil {
-			sentry.CaptureException(err)
+			span.RecordError(err)
 		}
-		span.Finish()
 	}()
 
 	err = y.client.Connect()

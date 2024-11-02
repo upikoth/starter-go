@@ -4,29 +4,33 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/models"
 	ydbmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
 	"github.com/ydb-platform/ydb-go-sdk/v3"
 	"github.com/ydb-platform/ydb-go-sdk/v3/query"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
 func (u *Users) Update(
 	inputCtx context.Context,
 	userToUpdate *models.User,
 ) (res *models.User, err error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YDB.Users.Update")
+	tracer := otel.Tracer("Repository: YDB.Users.Update")
+	ctx, span := tracer.Start(inputCtx, "Repository: YDB.Users.Update")
+	defer span.End()
+
 	defer func() {
 		if err != nil {
-			sentry.CaptureException(err)
+			span.RecordError(err)
 		} else {
 			bytes, _ := json.Marshal(res)
-			span.SetData("Result", string(bytes))
+			span.SetAttributes(
+				attribute.String("ydb.res", string(bytes)),
+			)
 		}
-		span.Finish()
 	}()
-	ctx := span.Context()
 
 	if userToUpdate == nil || userToUpdate.ID == "" {
 		return nil, errors.New("не задан id пользователя")

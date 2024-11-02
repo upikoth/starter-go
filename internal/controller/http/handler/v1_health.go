@@ -3,15 +3,14 @@ package handler
 import (
 	"context"
 
-	"github.com/getsentry/sentry-go"
 	app "github.com/upikoth/starter-go/internal/generated/app"
+	"go.opentelemetry.io/otel"
 )
 
-func (h *Handler) V1CheckHealth(ctx context.Context) (*app.SuccessResponse, error) {
-	span := sentry.StartSpan(ctx, "Controller: V1CheckHealth")
-	defer func() {
-		span.Finish()
-	}()
+func (h *Handler) V1CheckHealth(inputCtx context.Context) (*app.SuccessResponse, error) {
+	tracer := otel.Tracer("Controller: V1CheckHealth")
+	_, span := tracer.Start(inputCtx, "Controller: V1CheckHealth")
+	defer span.End()
 
 	return &app.SuccessResponse{
 		Success: app.SuccessResponseSuccessTrue,

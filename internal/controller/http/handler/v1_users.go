@@ -4,20 +4,18 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/getsentry/sentry-go"
 	app "github.com/upikoth/starter-go/internal/generated/app"
 	"github.com/upikoth/starter-go/internal/models"
+	"go.opentelemetry.io/otel"
 )
 
 func (h *Handler) V1GetUsers(
 	inputCtx context.Context,
 	params app.V1GetUsersParams,
 ) (*app.V1UsersGetUsersResponse, error) {
-	span := sentry.StartSpan(inputCtx, "Controller: V1GetUsers")
-	defer func() {
-		span.Finish()
-	}()
-	ctx := span.Context()
+	tracer := otel.Tracer("Controller: V1GetUsers")
+	ctx, span := tracer.Start(inputCtx, "Controller: V1GetUsers")
+	defer span.End()
 
 	session, err := h.service.Sessions.CheckToken(ctx, params.AuthorizationToken)
 

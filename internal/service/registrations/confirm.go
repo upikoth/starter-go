@@ -4,12 +4,12 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/getsentry/sentry-go"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/repository/ydb"
+	"go.opentelemetry.io/otel"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -18,11 +18,9 @@ func (r *Registrations) Confirm(
 	inputCtx context.Context,
 	params models.RegistrationConfirmParams,
 ) (*models.SessionWithUserRole, error) {
-	span := sentry.StartSpan(inputCtx, "Service: Registrations.Confirm")
-	defer func() {
-		span.Finish()
-	}()
-	ctx := span.Context()
+	tracer := otel.Tracer("Service: Registrations.Confirm")
+	ctx, span := tracer.Start(inputCtx, "Service: Registrations.Confirm")
+	defer span.End()
 
 	registration, err := r.repository.YDB.Registrations.GetByToken(ctx, params.ConfirmationToken)
 
@@ -35,7 +33,7 @@ func (r *Registrations) Confirm(
 	}
 
 	if err != nil {
-		sentry.CaptureException(err)
+		span.RecordError(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationYdbCheckConfirmationToken,
 			Description: err.Error(),
@@ -45,7 +43,7 @@ func (r *Registrations) Confirm(
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(params.Password), bcrypt.DefaultCost)
 
 	if err != nil {
-		sentry.CaptureException(err)
+		span.RecordError(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationGeneratePasswordHash,
 			Description: err.Error(),
@@ -81,7 +79,7 @@ func (r *Registrations) Confirm(
 	)
 
 	if err != nil {
-		sentry.CaptureException(err)
+		span.RecordError(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationDBError,
 			Description: err.Error(),
@@ -97,7 +95,7 @@ func (r *Registrations) Confirm(
 	createdSession, err := r.repository.YDB.Sessions.Create(ctx, session)
 
 	if err != nil {
-		sentry.CaptureException(err)
+		span.RecordError(err)
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationCreateSession,
 			Description: err.Error(),

@@ -4,20 +4,18 @@ package handler
 import (
 	"context"
 
-	"github.com/getsentry/sentry-go"
 	app "github.com/upikoth/starter-go/internal/generated/app"
 	"github.com/upikoth/starter-go/internal/models"
+	"go.opentelemetry.io/otel"
 )
 
 func (h *Handler) V1CreateRegistration(
 	inputCtx context.Context,
 	req *app.V1RegistrationsCreateRegistrationRequestBody,
 ) (*app.V1RegistrationsCreateRegistrationResponse, error) {
-	span := sentry.StartSpan(inputCtx, "Controller: V1CreateRegistration")
-	defer func() {
-		span.Finish()
-	}()
-	ctx := span.Context()
+	tracer := otel.Tracer("Controller: V1CreateRegistration")
+	ctx, span := tracer.Start(inputCtx, "Controller: V1CreateRegistration")
+	defer span.End()
 
 	registrationCreateParams := models.RegistrationCreateParams{
 		Email: req.Email,
@@ -42,11 +40,9 @@ func (h *Handler) V1ConfirmRegistration(
 	inputCtx context.Context,
 	req *app.V1RegistrationsConfirmRegistrationRequestBody,
 ) (*app.V1RegistrationsConfirmRegistrationResponse, error) {
-	span := sentry.StartSpan(inputCtx, "Controller: V1ConfirmRegistration")
-	defer func() {
-		span.Finish()
-	}()
-	ctx := span.Context()
+	tracer := otel.Tracer("Controller: V1ConfirmRegistration")
+	ctx, span := tracer.Start(inputCtx, "Controller: V1ConfirmRegistration")
+	defer span.End()
 
 	registrationConfirmParams := models.RegistrationConfirmParams{
 		ConfirmationToken: req.ConfirmationToken,

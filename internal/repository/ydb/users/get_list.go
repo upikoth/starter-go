@@ -5,29 +5,33 @@ import (
 	"encoding/json"
 	"strconv"
 
-	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/models"
 	ydbmodels "github.com/upikoth/starter-go/internal/repository/ydb/ydb-models"
 	"github.com/ydb-platform/ydb-go-sdk/v3"
 	"github.com/ydb-platform/ydb-go-sdk/v3/query"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
 func (u *Users) GetList(
 	inputCtx context.Context,
 	params *models.UsersGetListParams,
 ) (res *models.UserList, err error) {
-	span := sentry.StartSpan(inputCtx, "Repository: YDB.Users.GetList")
+	tracer := otel.Tracer("Repository: YDB.Users.GetList")
+	ctx, span := tracer.Start(inputCtx, "Repository: YDB.Users.GetList")
+	defer span.End()
+
 	defer func() {
 		if err != nil {
-			sentry.CaptureException(err)
+			span.RecordError(err)
 		} else {
 			bytes, _ := json.Marshal(res)
-			span.SetData("Result", string(bytes))
+			span.SetAttributes(
+				attribute.String("ydb.res", string(bytes)),
+			)
 		}
-		span.Finish()
 	}()
-	ctx := span.Context()
 
 	var resUsers []*models.User
 	var total int

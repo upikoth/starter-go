@@ -17,11 +17,11 @@ require (
 	github.com/ydb-platform/ydb-go-sdk-otel v0.8.1
 	github.com/ydb-platform/ydb-go-sdk/v3 v3.85.1
 	github.com/ydb-platform/ydb-go-yc v0.12.3
-	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.56.0
-	go.opentelemetry.io/otel v1.31.0
-	go.opentelemetry.io/otel/metric v1.31.0
+	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.57.0
+	go.opentelemetry.io/otel v1.32.0
+	go.opentelemetry.io/otel/metric v1.32.0
 	go.opentelemetry.io/otel/sdk v1.31.0
-	go.opentelemetry.io/otel/trace v1.31.0
+	go.opentelemetry.io/otel/trace v1.32.0
 	go.uber.org/multierr v1.11.0
 	golang.org/x/crypto v0.28.0
 )

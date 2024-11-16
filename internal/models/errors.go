@@ -32,13 +32,13 @@ const (
 	ErrorCodePasswordRecoveryRequestYdbCheckConfirmationToken       ErrorCode = "600"
 	ErrorCodePasswordRecoveryRequestPasswordRecoveryRequestNotFound ErrorCode = "601"
 	ErrorCodePasswordRecoveryRequestGeneratePasswordHash            ErrorCode = "602"
-	ErrorCodePasswordRecoveryRequestCreateSession                   ErrorCode = "604"
-	ErrorCodePasswordRecoveryRequestUpdateUserPassword              ErrorCode = "605"
+	ErrorCodePasswordRecoveryRequestCreateSession                   ErrorCode = "603"
+	ErrorCodePasswordRecoveryRequestUpdateUserPassword              ErrorCode = "604"
 
 	ErrorCodeUsersGetListForbidden ErrorCode = "700"
 	ErrorCodeUsersGetListDBError   ErrorCode = "701"
 
-	ErrorCodeSessionsCheckTokenDBError ErrorCode = "702"
+	ErrorCodeSessionsCheckTokenDBError ErrorCode = "800"
 )
 
 type Error struct {

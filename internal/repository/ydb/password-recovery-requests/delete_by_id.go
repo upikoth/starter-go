@@ -34,9 +34,9 @@ func (p *PasswordRecoveryRequests) DeleteByID(
 		qRes, qErr := tx.QueryResultSet(
 			qCtx,
 			`declare $id as text;
-				delete from password_recovery_requests
-				where id = $id
-				returning id, email, confirmation_token`,
+			delete from password_recovery_requests
+			where id = $id
+			returning id, email, confirmation_token`,
 			query.WithParameters(
 				ydb.ParamsBuilder().Param("$id").Text(id).Build(),
 			),

@@ -3,6 +3,7 @@ package registrations
 import (
 	"context"
 	"encoding/json"
+	"time"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
@@ -41,24 +42,26 @@ func (r *Registrations) Create(
 		qRes, qErr := tx.QueryResultSet(
 			qCtx,
 			`declare $id as text;
-				declare $email as text;
-				declare $confirmation_token as text;
-				
-				insert into registrations
-				(id, email, confirmation_token)
-				values ($id, $email, $confirmation_token);
+			declare $email as text;
+			declare $confirmation_token as text;
+			declare $created_at as timestamp;
+			
+			insert into registrations
+			(id, email, confirmation_token, created_at)
+			values ($id, $email, $confirmation_token, $created_at);
 
-				select
-					id,
-					email,
-					confirmation_token,
-				from registrations
-				where registrations.id = $id;`,
+			select
+				id,
+				email,
+				confirmation_token,
+			from registrations
+			where registrations.id = $id;`,
 			query.WithParameters(
 				ydb.ParamsBuilder().
 					Param("$id").Text(dbRegistrationToCreate.ID).
 					Param("$email").Text(dbRegistrationToCreate.Email).
 					Param("$confirmation_token").Text(dbRegistrationToCreate.ConfirmationToken).
+					Param("$created_at").Timestamp(time.Now()).
 					Build(),
 			),
 		)

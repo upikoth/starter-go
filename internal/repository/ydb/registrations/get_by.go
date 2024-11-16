@@ -52,12 +52,12 @@ func (r *Registrations) getBy(
 			qCtx,
 			fmt.Sprintf(
 				`declare $filterValue as text;
-					select
-						id,
-						email,
-						confirmation_token,
-					from registrations
-					where %s = $filterValue;`,
+				select
+					id,
+					email,
+					confirmation_token,
+				from registrations
+				where %s = $filterValue;`,
 				fieldName,
 			),
 			query.WithParameters(

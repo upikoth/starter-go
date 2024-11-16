@@ -70,16 +70,16 @@ func queryUsers(qCtx context.Context, tx query.Transaction, params *models.Users
 	qRes, qErr := tx.QueryResultSet(
 		qCtx,
 		`declare $limit as Uint64;
-				declare $offset as Uint64;
+		declare $offset as Uint64;
 
-				select
-					id,
-					email,
-					password_hash,
-					role,
-				from users
-				limit $limit
-				offset $offset`,
+		select
+			id,
+			email,
+			password_hash,
+			role,
+		from users
+		limit $limit
+		offset $offset`,
 		query.WithParameters(
 			ydb.ParamsBuilder().
 				Param("$limit").Uint64(uint64(params.Limit)).

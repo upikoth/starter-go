@@ -51,13 +51,13 @@ func (u *Users) getBy(
 			qCtx,
 			fmt.Sprintf(
 				`declare $filterValue as text;
-					select
-						id,
-						email,
-						role,
-						password_hash,
-					from users
-					where %s = $filterValue;`,
+				select
+					id,
+					email,
+					role,
+					password_hash,
+				from users
+				where %s = $filterValue;`,
 				fieldName,
 			),
 			query.WithParameters(

@@ -3,6 +3,7 @@ package sessions
 import (
 	"context"
 	"encoding/json"
+	"time"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
@@ -41,25 +42,27 @@ func (s *Sessions) Create(
 		qRes, qErr := tx.QueryResultSet(
 			qCtx,
 			`declare $id as text;
-				declare $token as text;
-				declare $user_id as text;
-				
-				insert into sessions
-				(id, token, user_id)
-				values ($id, $token, $user_id);
+			declare $token as text;
+			declare $user_id as text;
+			declare $created_at as timestamp;
+			
+			insert into sessions
+			(id, token, user_id, created_at)
+			values ($id, $token, $user_id, $created_at);
 
-				select
-					s.id as id,
-					s.token as token,
-					s.user_id as user_id,
-					u.role as user_role,
-				from sessions as s join users as u on s.user_id = u.id
-				where s.id = $id;`,
+			select
+				s.id as id,
+				s.token as token,
+				s.user_id as user_id,
+				u.role as user_role,
+			from sessions as s join users as u on s.user_id = u.id
+			where s.id = $id;`,
 			query.WithParameters(
 				ydb.ParamsBuilder().
 					Param("$id").Text(dbSessionToCreate.ID).
 					Param("$token").Text(dbSessionToCreate.Token).
 					Param("$user_id").Text(dbSessionToCreate.UserID).
+					Param("$created_at").Timestamp(time.Now()).
 					Build(),
 			),
 		)

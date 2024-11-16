@@ -52,13 +52,13 @@ func (s *Sessions) getBy(
 			qCtx,
 			fmt.Sprintf(
 				`declare $filterValue as text;
-					select
-						s.id as id,
-						s.token as token,
-						s.user_id as user_id,
-						u.role as user_role,
-					from sessions as s join users as u on s.user_id = u.id
-					where %s = $filterValue;`,
+				select
+					s.id as id,
+					s.token as token,
+					s.user_id as user_id,
+					u.role as user_role,
+				from sessions as s join users as u on s.user_id = u.id
+				where %s = $filterValue;`,
 				fieldName,
 			),
 			query.WithParameters(

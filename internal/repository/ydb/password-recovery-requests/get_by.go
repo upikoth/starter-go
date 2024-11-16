@@ -52,12 +52,12 @@ func (p *PasswordRecoveryRequests) getBy(
 			qCtx,
 			fmt.Sprintf(
 				`declare $filterValue as text;
-					select
-						id,
-						email,
-						confirmation_token,
-					from password_recovery_requests
-					where %s = $filterValue;`,
+				select
+					id,
+					email,
+					confirmation_token,
+				from password_recovery_requests
+				where %s = $filterValue;`,
 				fieldName,
 			),
 			query.WithParameters(

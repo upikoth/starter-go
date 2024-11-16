@@ -3,6 +3,7 @@ package users
 import (
 	"context"
 	"encoding/json"
+	"time"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
@@ -45,30 +46,33 @@ func (u *Users) Update(
 		qRes, qErr := tx.QueryResultSet(
 			qCtx,
 			`declare $id as text;
-				declare $email as text;
-				declare $role as text;
-				declare $password_hash as text;
-	
-				update users
-				set
-					email = $email,
-					role = $role,
-					password_hash = $password_hash
-				where id = $id;
-	
-				select
-					id,
-					email,
-					role,
-					password_hash,
-				from users
-				where users.id = $id;`,
+			declare $email as text;
+			declare $role as text;
+			declare $password_hash as text;
+			declare $updated_at as timestamp;
+
+			update users
+			set
+				email = $email,
+				role = $role,
+				password_hash = $password_hash
+				updated_at = $updated_at
+			where id = $id;
+
+			select
+				id,
+				email,
+				role,
+				password_hash,
+			from users
+			where users.id = $id;`,
 			query.WithParameters(
 				ydb.ParamsBuilder().
 					Param("$id").Text(dbUserToUpdate.ID).
 					Param("$email").Text(dbUserToUpdate.Email).
 					Param("$role").Text(dbUserToUpdate.Role).
 					Param("$password_hash").Text(dbUserToUpdate.PasswordHash).
+					Param("$updated_at").Timestamp(time.Now()).
 					Build(),
 			),
 		)

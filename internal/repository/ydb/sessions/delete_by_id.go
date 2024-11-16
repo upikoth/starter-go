@@ -34,9 +34,9 @@ func (s *Sessions) DeleteByID(
 		qRes, qErr := tx.QueryResultSet(
 			qCtx,
 			`declare $id as text;
-				delete from sessions
-				where id = $id
-				returning id, token, user_id`,
+			delete from sessions
+			where id = $id
+			returning id, token, user_id`,
 			query.WithParameters(
 				ydb.ParamsBuilder().Param("$id").Text(id).Build(),
 			),

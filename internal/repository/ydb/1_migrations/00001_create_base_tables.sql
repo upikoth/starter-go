@@ -1,30 +1,30 @@
 -- +goose Up
 create table if not exists users (
-     id string,
-     email string,
-     password_hash string,
-     role string,
+     id text,
+     email text,
+     password_hash text,
+     role text,
      primary key (id)
 );
 
 create table if not exists sessions (
-    id string,
-    token string,
-    user_id string,
+    id text,
+    token text,
+    user_id text,
     primary key (id)
 );
 
 create table if not exists registrations (
-     id string,
-     email string,
-     confirmation_token string,
+     id text,
+     email text,
+     confirmation_token text,
      primary key (id)
 );
 
 create table if not exists password_recovery_requests (
-     id string,
-     email string,
-     confirmation_token string,
+     id text,
+     email text,
+     confirmation_token text,
      primary key (id)
 );
 

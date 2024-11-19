@@ -2,10 +2,10 @@ package handler
 
 import (
 	"context"
-	"github.com/upikoth/starter-go/internal/models"
 	"net/http"
 
 	app "github.com/upikoth/starter-go/internal/generated/app"
+	"github.com/upikoth/starter-go/internal/models"
 	"go.opentelemetry.io/otel"
 )
 

@@ -82,6 +82,27 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 
 				elem = origElem
+			case 'o': // Prefix: "oauth"
+				origElem := elem
+				if l := len("oauth"); len(elem) >= l && elem[0:l] == "oauth" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					// Leaf node.
+					switch r.Method {
+					case "POST":
+						s.handleV1AuthorizeUsingOauthRequest([0]string{}, elemIsEscaped, w, r)
+					default:
+						s.notAllowed(w, r, "POST")
+					}
+
+					return
+				}
+
+				elem = origElem
 			case 'p': // Prefix: "passwordRecoveryRequests"
 				origElem := elem
 				if l := len("passwordRecoveryRequests"); len(elem) >= l && elem[0:l] == "passwordRecoveryRequests" {
@@ -332,6 +353,31 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						r.summary = ""
 						r.operationID = "V1CheckHealth"
 						r.pathPattern = "/api/v1/health"
+						r.args = args
+						r.count = 0
+						return r, true
+					default:
+						return
+					}
+				}
+
+				elem = origElem
+			case 'o': // Prefix: "oauth"
+				origElem := elem
+				if l := len("oauth"); len(elem) >= l && elem[0:l] == "oauth" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					// Leaf node.
+					switch method {
+					case "POST":
+						r.name = "V1AuthorizeUsingOauth"
+						r.summary = ""
+						r.operationID = "V1AuthorizeUsingOauth"
+						r.pathPattern = "/api/v1/oauth"
 						r.args = args
 						r.count = 0
 						return r, true

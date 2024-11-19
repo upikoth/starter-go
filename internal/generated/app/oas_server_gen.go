@@ -8,6 +8,12 @@ import (
 
 // Handler handles operations described by OpenAPI v3 specification.
 type Handler interface {
+	// V1AuthorizeUsingOauth implements V1AuthorizeUsingOauth operation.
+	//
+	// Авторизация в приложении с помощью oauth.
+	//
+	// POST /api/v1/oauth
+	V1AuthorizeUsingOauth(ctx context.Context, req *V1AuthorizeUsingOauthRequestBody) (*V1AuthorizeUsingOauthSeeOther, error)
 	// V1CheckCurrentSession implements V1CheckCurrentSession operation.
 	//
 	// Получить информацию валидна ли текущая сессия.

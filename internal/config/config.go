@@ -24,6 +24,7 @@ type ControllerHTTP struct {
 type Service struct {
 	Registrations            Registrations
 	PasswordRecoveryRequests PasswordRecoveryRequests
+	Oauth                    Oauth
 }
 
 type Registrations struct {
@@ -35,6 +36,12 @@ type PasswordRecoveryRequests struct {
 	FrontURL string `envconfig:"FRONT_URL" required:"true"`
 	//nolint:lll
 	FrontConfirmationPasswordRecoveryRequestURL string `envconfig:"FRONT_CONFIRMATION_PASSWORD_RECOVERY_REQUEST_URL" required:"true"`
+}
+
+type Oauth struct {
+	VkClientID     string `envconfig:"OAUTH_VK_CLIENT_ID" required:"true"`
+	VkClientSecret string `envconfig:"OAUTH_VK_CLIENT_SECRET" required:"true"`
+	VkRedirectURL  string `envconfig:"OAUTH_VK_REDIRECT_URL" required:"true"`
 }
 
 type Repository struct {

@@ -189,6 +189,44 @@ func (s UserRole) Validate() error {
 	}
 }
 
+func (s *V1AuthorizeUsingOauthRequestBody) Validate() error {
+	if s == nil {
+		return validate.ErrNilPointer
+	}
+
+	var failures []validate.FieldError
+	if err := func() error {
+		if err := s.OauthSource.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "oauthSource",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+
+func (s V1AuthorizeUsingOauthRequestBodyOauthSource) Validate() error {
+	switch s {
+	case "vk":
+		return nil
+	case "ok":
+		return nil
+	case "mail":
+		return nil
+	case "yandex":
+		return nil
+	default:
+		return errors.Errorf("invalid value: %v", s)
+	}
+}
+
 func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody) Validate() error {
 	if s == nil {
 		return validate.ErrNilPointer

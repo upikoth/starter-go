@@ -39,6 +39,8 @@ const (
 	ErrorCodeUsersGetListDBError   ErrorCode = "701"
 
 	ErrorCodeSessionsCheckTokenDBError ErrorCode = "800"
+
+	ErrorCodeOauthSourceNotExist ErrorCode = "900"
 )
 
 type Error struct {

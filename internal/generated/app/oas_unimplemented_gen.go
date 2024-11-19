@@ -13,6 +13,15 @@ type UnimplementedHandler struct{}
 
 var _ Handler = UnimplementedHandler{}
 
+// V1AuthorizeUsingOauth implements V1AuthorizeUsingOauth operation.
+//
+// Авторизация в приложении с помощью oauth.
+//
+// POST /api/v1/oauth
+func (UnimplementedHandler) V1AuthorizeUsingOauth(ctx context.Context, req *V1AuthorizeUsingOauthRequestBody) (r *V1AuthorizeUsingOauthSeeOther, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // V1CheckCurrentSession implements V1CheckCurrentSession operation.
 //
 // Получить информацию валидна ли текущая сессия.

@@ -161,6 +161,52 @@ func (o OptInt) Or(d int) int {
 	return d
 }
 
+// NewOptString returns new OptString with value set to v.
+func NewOptString(v string) OptString {
+	return OptString{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptString is optional string.
+type OptString struct {
+	Value string
+	Set   bool
+}
+
+// IsSet returns true if OptString was set.
+func (o OptString) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptString) Reset() {
+	var v string
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptString) SetTo(v string) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptString) Get() (v string, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptString) Or(d string) string {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // Ref: #/components/schemas/Session
 type Session struct {
 	ID       string   `json:"id"`
@@ -318,6 +364,91 @@ func (s *UserRole) UnmarshalText(data []byte) error {
 	default:
 		return errors.Errorf("invalid value: %q", data)
 	}
+}
+
+// Ref: #/components/schemas/V1AuthorizeUsingOauthRequestBody
+type V1AuthorizeUsingOauthRequestBody struct {
+	OauthSource V1AuthorizeUsingOauthRequestBodyOauthSource `json:"oauthSource"`
+}
+
+// GetOauthSource returns the value of OauthSource.
+func (s *V1AuthorizeUsingOauthRequestBody) GetOauthSource() V1AuthorizeUsingOauthRequestBodyOauthSource {
+	return s.OauthSource
+}
+
+// SetOauthSource sets the value of OauthSource.
+func (s *V1AuthorizeUsingOauthRequestBody) SetOauthSource(val V1AuthorizeUsingOauthRequestBodyOauthSource) {
+	s.OauthSource = val
+}
+
+type V1AuthorizeUsingOauthRequestBodyOauthSource string
+
+const (
+	V1AuthorizeUsingOauthRequestBodyOauthSourceVk     V1AuthorizeUsingOauthRequestBodyOauthSource = "vk"
+	V1AuthorizeUsingOauthRequestBodyOauthSourceOk     V1AuthorizeUsingOauthRequestBodyOauthSource = "ok"
+	V1AuthorizeUsingOauthRequestBodyOauthSourceMail   V1AuthorizeUsingOauthRequestBodyOauthSource = "mail"
+	V1AuthorizeUsingOauthRequestBodyOauthSourceYandex V1AuthorizeUsingOauthRequestBodyOauthSource = "yandex"
+)
+
+// AllValues returns all V1AuthorizeUsingOauthRequestBodyOauthSource values.
+func (V1AuthorizeUsingOauthRequestBodyOauthSource) AllValues() []V1AuthorizeUsingOauthRequestBodyOauthSource {
+	return []V1AuthorizeUsingOauthRequestBodyOauthSource{
+		V1AuthorizeUsingOauthRequestBodyOauthSourceVk,
+		V1AuthorizeUsingOauthRequestBodyOauthSourceOk,
+		V1AuthorizeUsingOauthRequestBodyOauthSourceMail,
+		V1AuthorizeUsingOauthRequestBodyOauthSourceYandex,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s V1AuthorizeUsingOauthRequestBodyOauthSource) MarshalText() ([]byte, error) {
+	switch s {
+	case V1AuthorizeUsingOauthRequestBodyOauthSourceVk:
+		return []byte(s), nil
+	case V1AuthorizeUsingOauthRequestBodyOauthSourceOk:
+		return []byte(s), nil
+	case V1AuthorizeUsingOauthRequestBodyOauthSourceMail:
+		return []byte(s), nil
+	case V1AuthorizeUsingOauthRequestBodyOauthSourceYandex:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *V1AuthorizeUsingOauthRequestBodyOauthSource) UnmarshalText(data []byte) error {
+	switch V1AuthorizeUsingOauthRequestBodyOauthSource(data) {
+	case V1AuthorizeUsingOauthRequestBodyOauthSourceVk:
+		*s = V1AuthorizeUsingOauthRequestBodyOauthSourceVk
+		return nil
+	case V1AuthorizeUsingOauthRequestBodyOauthSourceOk:
+		*s = V1AuthorizeUsingOauthRequestBodyOauthSourceOk
+		return nil
+	case V1AuthorizeUsingOauthRequestBodyOauthSourceMail:
+		*s = V1AuthorizeUsingOauthRequestBodyOauthSourceMail
+		return nil
+	case V1AuthorizeUsingOauthRequestBodyOauthSourceYandex:
+		*s = V1AuthorizeUsingOauthRequestBodyOauthSourceYandex
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
+}
+
+// V1AuthorizeUsingOauthSeeOther is response for V1AuthorizeUsingOauth operation.
+type V1AuthorizeUsingOauthSeeOther struct {
+	Location OptString
+}
+
+// GetLocation returns the value of Location.
+func (s *V1AuthorizeUsingOauthSeeOther) GetLocation() OptString {
+	return s.Location
+}
+
+// SetLocation sets the value of Location.
+func (s *V1AuthorizeUsingOauthSeeOther) SetLocation(val OptString) {
+	s.Location = val
 }
 
 // Ref: #/components/schemas/V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody

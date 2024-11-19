@@ -4,6 +4,7 @@ import (
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 	"github.com/upikoth/starter-go/internal/repository"
+	"github.com/upikoth/starter-go/internal/service/oauth"
 	passwordrecoveryrequests "github.com/upikoth/starter-go/internal/service/password-recovery-requests"
 	"github.com/upikoth/starter-go/internal/service/registrations"
 	"github.com/upikoth/starter-go/internal/service/sessions"
@@ -15,31 +16,36 @@ type Service struct {
 	Sessions                 *sessions.Sessions
 	PasswordRecoveryRequests *passwordrecoveryrequests.PasswordRecoveryRequests
 	Users                    *users.Users
+	Oauth                    *oauth.Oauth
 }
 
 func New(
-	logger logger.Logger,
-	config *config.Config,
-	repository *repository.Repository,
+	log logger.Logger,
+	cfg *config.Config,
+	repo *repository.Repository,
 ) (*Service, error) {
 	return &Service{
 		Registrations: registrations.New(
-			logger,
-			&config.Service.Registrations,
-			repository,
+			log,
+			&cfg.Service.Registrations,
+			repo,
 		),
 		Sessions: sessions.New(
-			logger,
-			repository,
+			log,
+			repo,
 		),
 		PasswordRecoveryRequests: passwordrecoveryrequests.New(
-			logger,
-			&config.Service.PasswordRecoveryRequests,
-			repository,
+			log,
+			&cfg.Service.PasswordRecoveryRequests,
+			repo,
 		),
 		Users: users.New(
-			logger,
-			repository,
+			log,
+			repo,
+		),
+		Oauth: oauth.New(
+			log,
+			cfg.Service.Oauth,
 		),
 	}, nil
 }

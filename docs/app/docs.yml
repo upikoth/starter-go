@@ -148,6 +148,26 @@ paths:
           description: Ошибка
           $ref: "#/components/responses/ErrorResponse"
 
+  /api/v1/oauth:
+    post:
+      tags:
+        - oauth
+      description: Авторизация в приложении с помощью oauth
+      operationId: V1AuthorizeUsingOauth
+      requestBody:
+        $ref: '#/components/requestBodies/V1AuthorizeUsingOauthRequestBody'
+      responses:
+        303:
+          description: Редирект на страницу авторизации с помощью oauth
+          headers:
+            Location:
+              description: URL, куда нужно перенаправить
+              schema:
+                type: string
+        default:
+          description: Ошибка
+          $ref: "#/components/responses/ErrorResponse"
+
 components:
   parameters:
     AuthorizationToken:
@@ -194,7 +214,7 @@ components:
         - id
         - token
         - userRole
-      properties: 
+      properties:
         id:
           type: string
         token:
@@ -222,7 +242,7 @@ components:
       required:
         - success
         - data
-      properties: 
+      properties:
         success:
           type: boolean
           enum:
@@ -236,7 +256,7 @@ components:
         - success
         - data
         - error
-      properties: 
+      properties:
         success:
           type: boolean
           enum:
@@ -268,7 +288,7 @@ components:
       required:
         - success
         - data
-      properties: 
+      properties:
         success:
           type: boolean
           enum:
@@ -278,7 +298,7 @@ components:
           required:
             - id
             - email
-          properties: 
+          properties:
             id:
               type: string
             email:
@@ -301,7 +321,7 @@ components:
       required:
         - success
         - data
-      properties: 
+      properties:
         success:
           type: boolean
           enum:
@@ -310,7 +330,7 @@ components:
           type: object
           required:
             - session
-          properties: 
+          properties:
             session:
               $ref: "#/components/schemas/Session"
 
@@ -331,7 +351,7 @@ components:
       required:
         - success
         - data
-      properties: 
+      properties:
         success:
           type: boolean
           enum:
@@ -340,7 +360,7 @@ components:
           type: object
           required:
             - session
-          properties: 
+          properties:
             session:
               $ref: "#/components/schemas/Session"
 
@@ -358,7 +378,7 @@ components:
       required:
         - success
         - data
-      properties: 
+      properties:
         success:
           type: boolean
           enum:
@@ -368,7 +388,7 @@ components:
           required:
             - id
             - email
-          properties: 
+          properties:
             id:
               type: string
             email:
@@ -391,7 +411,7 @@ components:
       required:
         - success
         - data
-      properties: 
+      properties:
         success:
           type: boolean
           enum:
@@ -400,7 +420,7 @@ components:
           type: object
           required:
             - session
-          properties: 
+          properties:
             session:
               $ref: "#/components/schemas/Session"
 
@@ -409,7 +429,7 @@ components:
       required:
         - success
         - data
-      properties: 
+      properties:
         success:
           type: boolean
           enum:
@@ -432,6 +452,19 @@ components:
               type: integer
             total:
               type: integer
+
+    V1AuthorizeUsingOauthRequestBody:
+      type: object
+      required:
+        - oauthSource
+      properties:
+        oauthSource:
+          type: string
+          enum:
+            - vk
+            - ok
+            - mail
+            - yandex
 
   requestBodies:
     V1RegistrationsCreateRegistrationRequestBody:
@@ -473,6 +506,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody'
+
+    V1AuthorizeUsingOauthRequestBody:
+      description: Запрос для авторизации в приложении с помощью oauth
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/V1AuthorizeUsingOauthRequestBody'
 
   responses:
     SuccessResponse:

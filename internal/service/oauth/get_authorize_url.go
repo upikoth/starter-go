@@ -2,10 +2,10 @@ package oauth
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/upikoth/starter-go/internal/models"
 	"go.opentelemetry.io/otel"
-	"net/http"
 )
 
 func (o *Oauth) GetAuthorizeURL(

@@ -392,17 +392,55 @@ func (s *V1AuthorizeUsingOauthRequestBodyOauthSource) UnmarshalText(data []byte)
 
 // Ref: #/components/schemas/V1AuthorizeUsingOauthResponse
 type V1AuthorizeUsingOauthResponse struct {
+	Success V1AuthorizeUsingOauthResponseSuccess `json:"success"`
+	Data    V1AuthorizeUsingOauthResponseData    `json:"data"`
+}
+
+// GetSuccess returns the value of Success.
+func (s *V1AuthorizeUsingOauthResponse) GetSuccess() V1AuthorizeUsingOauthResponseSuccess {
+	return s.Success
+}
+
+// GetData returns the value of Data.
+func (s *V1AuthorizeUsingOauthResponse) GetData() V1AuthorizeUsingOauthResponseData {
+	return s.Data
+}
+
+// SetSuccess sets the value of Success.
+func (s *V1AuthorizeUsingOauthResponse) SetSuccess(val V1AuthorizeUsingOauthResponseSuccess) {
+	s.Success = val
+}
+
+// SetData sets the value of Data.
+func (s *V1AuthorizeUsingOauthResponse) SetData(val V1AuthorizeUsingOauthResponseData) {
+	s.Data = val
+}
+
+type V1AuthorizeUsingOauthResponseData struct {
 	URL string `json:"url"`
 }
 
 // GetURL returns the value of URL.
-func (s *V1AuthorizeUsingOauthResponse) GetURL() string {
+func (s *V1AuthorizeUsingOauthResponseData) GetURL() string {
 	return s.URL
 }
 
 // SetURL sets the value of URL.
-func (s *V1AuthorizeUsingOauthResponse) SetURL(val string) {
+func (s *V1AuthorizeUsingOauthResponseData) SetURL(val string) {
 	s.URL = val
+}
+
+type V1AuthorizeUsingOauthResponseSuccess bool
+
+const (
+	V1AuthorizeUsingOauthResponseSuccessTrue V1AuthorizeUsingOauthResponseSuccess = true
+)
+
+// AllValues returns all V1AuthorizeUsingOauthResponseSuccess values.
+func (V1AuthorizeUsingOauthResponseSuccess) AllValues() []V1AuthorizeUsingOauthResponseSuccess {
+	return []V1AuthorizeUsingOauthResponseSuccess{
+		V1AuthorizeUsingOauthResponseSuccessTrue,
+	}
 }
 
 // Ref: #/components/schemas/V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody

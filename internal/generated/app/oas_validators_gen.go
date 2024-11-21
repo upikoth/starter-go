@@ -227,6 +227,38 @@ func (s V1AuthorizeUsingOauthRequestBodyOauthSource) Validate() error {
 	}
 }
 
+func (s *V1AuthorizeUsingOauthResponse) Validate() error {
+	if s == nil {
+		return validate.ErrNilPointer
+	}
+
+	var failures []validate.FieldError
+	if err := func() error {
+		if err := s.Success.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "success",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+
+func (s V1AuthorizeUsingOauthResponseSuccess) Validate() error {
+	switch s {
+	case true:
+		return nil
+	default:
+		return errors.Errorf("invalid value: %v", s)
+	}
+}
+
 func (s *V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody) Validate() error {
 	if s == nil {
 		return validate.ErrNilPointer

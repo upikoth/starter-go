@@ -43,6 +43,9 @@ func (h *Handler) V1AuthorizeUsingOauth(
 	}
 
 	return &app.V1AuthorizeUsingOauthResponse{
-		URL: url,
+		Success: true,
+		Data: app.V1AuthorizeUsingOauthResponseData{
+			URL: url,
+		},
 	}, nil
 }

@@ -1,4 +1,5 @@
 //nolint:dupl // тут нужно дублировать
+
 package handler
 
 import (

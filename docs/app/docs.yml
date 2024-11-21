@@ -465,10 +465,20 @@ components:
     V1AuthorizeUsingOauthResponse:
       type: object
       required:
-        - url
+        - success
+        - data
       properties:
-        url:
-          type: string
+        success:
+          type: boolean
+          enum:
+            - true
+        data:
+          type: object
+          required:
+            - url
+          properties:
+            url:
+              type: string
 
   requestBodies:
     V1RegistrationsCreateRegistrationRequestBody:

@@ -18,7 +18,7 @@ var _ Handler = UnimplementedHandler{}
 // Авторизация в приложении с помощью oauth.
 //
 // POST /api/v1/oauth
-func (UnimplementedHandler) V1AuthorizeUsingOauth(ctx context.Context, req *V1AuthorizeUsingOauthRequestBody) (r *V1AuthorizeUsingOauthSeeOther, _ error) {
+func (UnimplementedHandler) V1AuthorizeUsingOauth(ctx context.Context, req *V1AuthorizeUsingOauthRequestBody) (r *V1AuthorizeUsingOauthResponse, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

@@ -84,7 +84,7 @@ func (s *Server) handleV1AuthorizeUsingOauthRequest(args [0]string, argsEscaped 
 		}
 	}()
 
-	var response *V1AuthorizeUsingOauthSeeOther
+	var response *V1AuthorizeUsingOauthResponse
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -99,7 +99,7 @@ func (s *Server) handleV1AuthorizeUsingOauthRequest(args [0]string, argsEscaped 
 		type (
 			Request  = *V1AuthorizeUsingOauthRequestBody
 			Params   = struct{}
-			Response = *V1AuthorizeUsingOauthSeeOther
+			Response = *V1AuthorizeUsingOauthResponse
 		)
 		response, err = middleware.HookMiddleware[
 			Request,

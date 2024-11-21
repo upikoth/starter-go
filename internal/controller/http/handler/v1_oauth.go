@@ -12,7 +12,7 @@ import (
 func (h *Handler) V1AuthorizeUsingOauth(
 	inputCtx context.Context,
 	req *app.V1AuthorizeUsingOauthRequestBody,
-) (*app.V1AuthorizeUsingOauthSeeOther, error) {
+) (*app.V1AuthorizeUsingOauthResponse, error) {
 	tracer := otel.Tracer("Controller: V1AuthorizeUsingOauth")
 	ctx, span := tracer.Start(inputCtx, "Controller: V1AuthorizeUsingOauth")
 	defer span.End()
@@ -42,7 +42,7 @@ func (h *Handler) V1AuthorizeUsingOauth(
 		return nil, err
 	}
 
-	return &app.V1AuthorizeUsingOauthSeeOther{
-		Location: app.NewOptString(url),
+	return &app.V1AuthorizeUsingOauthResponse{
+		URL: url,
 	}, nil
 }

@@ -28,7 +28,7 @@ type Invoker interface {
 	// Авторизация в приложении с помощью oauth.
 	//
 	// POST /api/v1/oauth
-	V1AuthorizeUsingOauth(ctx context.Context, request *V1AuthorizeUsingOauthRequestBody) (*V1AuthorizeUsingOauthSeeOther, error)
+	V1AuthorizeUsingOauth(ctx context.Context, request *V1AuthorizeUsingOauthRequestBody) (*V1AuthorizeUsingOauthResponse, error)
 	// V1CheckCurrentSession invokes V1CheckCurrentSession operation.
 	//
 	// Получить информацию валидна ли текущая сессия.
@@ -142,12 +142,12 @@ func (c *Client) requestURL(ctx context.Context) *url.URL {
 // Авторизация в приложении с помощью oauth.
 //
 // POST /api/v1/oauth
-func (c *Client) V1AuthorizeUsingOauth(ctx context.Context, request *V1AuthorizeUsingOauthRequestBody) (*V1AuthorizeUsingOauthSeeOther, error) {
+func (c *Client) V1AuthorizeUsingOauth(ctx context.Context, request *V1AuthorizeUsingOauthRequestBody) (*V1AuthorizeUsingOauthResponse, error) {
 	res, err := c.sendV1AuthorizeUsingOauth(ctx, request)
 	return res, err
 }
 
-func (c *Client) sendV1AuthorizeUsingOauth(ctx context.Context, request *V1AuthorizeUsingOauthRequestBody) (res *V1AuthorizeUsingOauthSeeOther, err error) {
+func (c *Client) sendV1AuthorizeUsingOauth(ctx context.Context, request *V1AuthorizeUsingOauthRequestBody) (res *V1AuthorizeUsingOauthResponse, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("V1AuthorizeUsingOauth"),
 		semconv.HTTPRequestMethodKey.String("POST"),

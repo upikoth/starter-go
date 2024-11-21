@@ -161,52 +161,6 @@ func (o OptInt) Or(d int) int {
 	return d
 }
 
-// NewOptString returns new OptString with value set to v.
-func NewOptString(v string) OptString {
-	return OptString{
-		Value: v,
-		Set:   true,
-	}
-}
-
-// OptString is optional string.
-type OptString struct {
-	Value string
-	Set   bool
-}
-
-// IsSet returns true if OptString was set.
-func (o OptString) IsSet() bool { return o.Set }
-
-// Reset unsets value.
-func (o *OptString) Reset() {
-	var v string
-	o.Value = v
-	o.Set = false
-}
-
-// SetTo sets value to v.
-func (o *OptString) SetTo(v string) {
-	o.Set = true
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o OptString) Get() (v string, ok bool) {
-	if !o.Set {
-		return v, false
-	}
-	return o.Value, true
-}
-
-// Or returns value if set, or given parameter if does not.
-func (o OptString) Or(d string) string {
-	if v, ok := o.Get(); ok {
-		return v
-	}
-	return d
-}
-
 // Ref: #/components/schemas/Session
 type Session struct {
 	ID       string   `json:"id"`
@@ -436,19 +390,19 @@ func (s *V1AuthorizeUsingOauthRequestBodyOauthSource) UnmarshalText(data []byte)
 	}
 }
 
-// V1AuthorizeUsingOauthSeeOther is response for V1AuthorizeUsingOauth operation.
-type V1AuthorizeUsingOauthSeeOther struct {
-	Location OptString
+// Ref: #/components/schemas/V1AuthorizeUsingOauthResponse
+type V1AuthorizeUsingOauthResponse struct {
+	URL string `json:"url"`
 }
 
-// GetLocation returns the value of Location.
-func (s *V1AuthorizeUsingOauthSeeOther) GetLocation() OptString {
-	return s.Location
+// GetURL returns the value of URL.
+func (s *V1AuthorizeUsingOauthResponse) GetURL() string {
+	return s.URL
 }
 
-// SetLocation sets the value of Location.
-func (s *V1AuthorizeUsingOauthSeeOther) SetLocation(val OptString) {
-	s.Location = val
+// SetURL sets the value of URL.
+func (s *V1AuthorizeUsingOauthResponse) SetURL(val string) {
+	s.URL = val
 }
 
 // Ref: #/components/schemas/V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody

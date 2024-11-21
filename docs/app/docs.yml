@@ -157,13 +157,9 @@ paths:
       requestBody:
         $ref: '#/components/requestBodies/V1AuthorizeUsingOauthRequestBody'
       responses:
-        303:
-          description: Редирект на страницу авторизации с помощью oauth
-          headers:
-            Location:
-              description: URL, куда нужно перенаправить
-              schema:
-                type: string
+        200:
+          description: Возвращает URL, куда нужно перенаправить пользователя
+          $ref: '#/components/responses/V1AuthorizeUsingOauthResponse'
         default:
           description: Ошибка
           $ref: "#/components/responses/ErrorResponse"
@@ -466,6 +462,14 @@ components:
             - mail
             - yandex
 
+    V1AuthorizeUsingOauthResponse:
+      type: object
+      required:
+        - url
+      properties:
+        url:
+          type: string
+
   requestBodies:
     V1RegistrationsCreateRegistrationRequestBody:
       description: Запрос для создания заявки на регистрацию
@@ -571,3 +575,10 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/V1UsersGetUsersResponse'
+
+    V1AuthorizeUsingOauthResponse:
+      description: Ответ при успешной генерации URL, куда нужно перенаправить пользователя
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/V1AuthorizeUsingOauthResponse'

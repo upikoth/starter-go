@@ -87,6 +87,7 @@ func (r *Registrations) Create(
 	if err != nil && !errors.Is(err, constants.ErrDBEntityNotFound) {
 		span.RecordError(err)
 		sentry.CaptureException(err)
+
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationYdbFindUser,
 			Description: err.Error(),
@@ -107,6 +108,7 @@ func (r *Registrations) Create(
 	if err != nil && !errors.Is(err, constants.ErrDBEntityNotFound) {
 		span.RecordError(err)
 		sentry.CaptureException(err)
+
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationYdbCreateRegistration,
 			Description: err.Error(),
@@ -122,6 +124,7 @@ func (r *Registrations) Create(
 	if err != nil {
 		span.RecordError(err)
 		sentry.CaptureException(err)
+
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationYdbCreateRegistration,
 			Description: err.Error(),
@@ -145,6 +148,7 @@ func (r *Registrations) Create(
 	if err != nil {
 		span.RecordError(err)
 		sentry.CaptureException(err)
+
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationSMTPSendEmail,
 			Description: err.Error(),

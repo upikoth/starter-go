@@ -7,9 +7,9 @@ import (
 )
 
 type Registrations struct {
-	repository *repository.Repository
 	logger     logger.Logger
 	config     *config.Registrations
+	repository *repository.Repository
 }
 
 func New(
@@ -18,8 +18,8 @@ func New(
 	repository *repository.Repository,
 ) *Registrations {
 	return &Registrations{
-		repository: repository,
 		logger:     logger,
 		config:     config,
+		repository: repository,
 	}
 }

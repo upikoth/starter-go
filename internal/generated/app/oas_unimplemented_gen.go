@@ -22,6 +22,15 @@ func (UnimplementedHandler) V1AuthorizeUsingOauth(ctx context.Context, req *V1Au
 	return r, ht.ErrNotImplemented
 }
 
+// V1AuthorizeUsingOauthHandleVkRedirect implements V1AuthorizeUsingOauthHandleVkRedirect operation.
+//
+// Обработка редиректа после авторизации в vk.
+//
+// GET /api/v1/oauthRedirect/vk
+func (UnimplementedHandler) V1AuthorizeUsingOauthHandleVkRedirect(ctx context.Context, params V1AuthorizeUsingOauthHandleVkRedirectParams) (r *V1AuthorizeUsingOauthHandleVkRedirectFound, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // V1CheckCurrentSession implements V1CheckCurrentSession operation.
 //
 // Получить информацию валидна ли текущая сессия.

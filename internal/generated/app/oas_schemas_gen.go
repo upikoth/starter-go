@@ -161,6 +161,52 @@ func (o OptInt) Or(d int) int {
 	return d
 }
 
+// NewOptString returns new OptString with value set to v.
+func NewOptString(v string) OptString {
+	return OptString{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptString is optional string.
+type OptString struct {
+	Value string
+	Set   bool
+}
+
+// IsSet returns true if OptString was set.
+func (o OptString) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptString) Reset() {
+	var v string
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptString) SetTo(v string) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptString) Get() (v string, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptString) Or(d string) string {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // Ref: #/components/schemas/Session
 type Session struct {
 	ID       string   `json:"id"`
@@ -318,6 +364,21 @@ func (s *UserRole) UnmarshalText(data []byte) error {
 	default:
 		return errors.Errorf("invalid value: %q", data)
 	}
+}
+
+// V1AuthorizeUsingOauthHandleVkRedirectFound is response for V1AuthorizeUsingOauthHandleVkRedirect operation.
+type V1AuthorizeUsingOauthHandleVkRedirectFound struct {
+	Location OptString
+}
+
+// GetLocation returns the value of Location.
+func (s *V1AuthorizeUsingOauthHandleVkRedirectFound) GetLocation() OptString {
+	return s.Location
+}
+
+// SetLocation sets the value of Location.
+func (s *V1AuthorizeUsingOauthHandleVkRedirectFound) SetLocation(val OptString) {
+	s.Location = val
 }
 
 // Ref: #/components/schemas/V1AuthorizeUsingOauthRequestBody

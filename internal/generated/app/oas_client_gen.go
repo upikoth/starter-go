@@ -29,6 +29,12 @@ type Invoker interface {
 	//
 	// POST /api/v1/oauth
 	V1AuthorizeUsingOauth(ctx context.Context, request *V1AuthorizeUsingOauthRequestBody) (*V1AuthorizeUsingOauthResponse, error)
+	// V1AuthorizeUsingOauthHandleVkRedirect invokes V1AuthorizeUsingOauthHandleVkRedirect operation.
+	//
+	// Обработка редиректа после авторизации в vk.
+	//
+	// GET /api/v1/oauthRedirect/vk
+	V1AuthorizeUsingOauthHandleVkRedirect(ctx context.Context, params V1AuthorizeUsingOauthHandleVkRedirectParams) (*V1AuthorizeUsingOauthHandleVkRedirectFound, error)
 	// V1CheckCurrentSession invokes V1CheckCurrentSession operation.
 	//
 	// Получить информацию валидна ли текущая сессия.
@@ -205,6 +211,96 @@ func (c *Client) sendV1AuthorizeUsingOauth(ctx context.Context, request *V1Autho
 
 	stage = "DecodeResponse"
 	result, err := decodeV1AuthorizeUsingOauthResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// V1AuthorizeUsingOauthHandleVkRedirect invokes V1AuthorizeUsingOauthHandleVkRedirect operation.
+//
+// Обработка редиректа после авторизации в vk.
+//
+// GET /api/v1/oauthRedirect/vk
+func (c *Client) V1AuthorizeUsingOauthHandleVkRedirect(ctx context.Context, params V1AuthorizeUsingOauthHandleVkRedirectParams) (*V1AuthorizeUsingOauthHandleVkRedirectFound, error) {
+	res, err := c.sendV1AuthorizeUsingOauthHandleVkRedirect(ctx, params)
+	return res, err
+}
+
+func (c *Client) sendV1AuthorizeUsingOauthHandleVkRedirect(ctx context.Context, params V1AuthorizeUsingOauthHandleVkRedirectParams) (res *V1AuthorizeUsingOauthHandleVkRedirectFound, err error) {
+	otelAttrs := []attribute.KeyValue{
+		otelogen.OperationID("V1AuthorizeUsingOauthHandleVkRedirect"),
+		semconv.HTTPRequestMethodKey.String("GET"),
+		semconv.HTTPRouteKey.String("/api/v1/oauthRedirect/vk"),
+	}
+
+	// Run stopwatch.
+	startTime := time.Now()
+	defer func() {
+		// Use floating point division here for higher precision (instead of Millisecond method).
+		elapsedDuration := time.Since(startTime)
+		c.duration.Record(ctx, float64(float64(elapsedDuration)/float64(time.Millisecond)), metric.WithAttributes(otelAttrs...))
+	}()
+
+	// Increment request counter.
+	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+
+	// Start a span for this request.
+	ctx, span := c.cfg.Tracer.Start(ctx, "V1AuthorizeUsingOauthHandleVkRedirect",
+		trace.WithAttributes(otelAttrs...),
+		clientSpanKind,
+	)
+	// Track stage for error reporting.
+	var stage string
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, stage)
+			c.errors.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
+		}
+		span.End()
+	}()
+
+	stage = "BuildURL"
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/api/v1/oauthRedirect/vk"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	stage = "EncodeQueryParams"
+	q := uri.NewQueryEncoder()
+	{
+		// Encode "code" parameter.
+		cfg := uri.QueryParameterEncodingConfig{
+			Name:    "code",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
+			return e.EncodeValue(conv.StringToString(params.Code))
+		}); err != nil {
+			return res, errors.Wrap(err, "encode query")
+		}
+	}
+	u.RawQuery = q.Values().Encode()
+
+	stage = "EncodeRequest"
+	r, err := ht.NewRequest(ctx, "GET", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+
+	stage = "SendRequest"
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	defer resp.Body.Close()
+
+	stage = "DecodeResponse"
+	result, err := decodeV1AuthorizeUsingOauthHandleVkRedirectResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}

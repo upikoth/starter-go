@@ -7,6 +7,7 @@ type User struct {
 	Email        string
 	PasswordHash string
 	Role         string
+	VkID         string
 }
 
 func NewYDBUserModel(user *models.User) *User {
@@ -15,6 +16,7 @@ func NewYDBUserModel(user *models.User) *User {
 		Email:        user.Email,
 		PasswordHash: user.PasswordHash,
 		Role:         string(user.Role),
+		VkID:         user.VkID,
 	}
 }
 
@@ -24,5 +26,6 @@ func (u *User) FromYDBModel() *models.User {
 		Email:        u.Email,
 		PasswordHash: u.PasswordHash,
 		Role:         models.UserRole(u.Role),
+		VkID:         u.VkID,
 	}
 }

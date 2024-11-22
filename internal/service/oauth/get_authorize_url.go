@@ -13,7 +13,7 @@ func (o *Oauth) GetAuthorizeURL(
 	oauthSource models.OauthSource,
 ) (string, error) {
 	tracer := otel.Tracer("Service: Oauth.GetAuthorizeURL")
-	_, span := tracer.Start(inputCtx, "Oauth: Sessions.GetAuthorizeURL")
+	_, span := tracer.Start(inputCtx, "Service: Oauth.GetAuthorizeURL")
 	defer span.End()
 
 	switch oauthSource {

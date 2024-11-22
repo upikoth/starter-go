@@ -164,6 +164,31 @@ paths:
           description: Ошибка
           $ref: "#/components/responses/ErrorResponse"
 
+  /api/v1/oauthRedirect/vk:
+    get:
+      tags:
+        - oauth
+      description: Обработка редиректа после авторизации в vk
+      operationId: V1AuthorizeUsingOauthHandleVkRedirect
+      parameters:
+        - description: Код, по которому можно получить информацию о пользователе из vk
+          in: query
+          name: code
+          required: true
+          schema:
+            type: string
+      responses:
+        302:
+          description: Возвращает URL, куда нужно перенаправить пользователя, home page приложения
+          headers:
+            Location:
+              description: URL, куда нужно перенаправить пользователя после авторизации, home page приложения
+              schema:
+                type: string
+        default:
+          description: Ошибка
+          $ref: "#/components/responses/ErrorResponse"
+
 components:
   parameters:
     AuthorizationToken:

@@ -35,6 +35,7 @@ func (r *Registrations) Confirm(
 	if err != nil {
 		span.RecordError(err)
 		sentry.CaptureException(err)
+
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationYdbCheckConfirmationToken,
 			Description: err.Error(),
@@ -46,6 +47,7 @@ func (r *Registrations) Confirm(
 	if err != nil {
 		span.RecordError(err)
 		sentry.CaptureException(err)
+
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationGeneratePasswordHash,
 			Description: err.Error(),
@@ -83,6 +85,7 @@ func (r *Registrations) Confirm(
 	if err != nil {
 		span.RecordError(err)
 		sentry.CaptureException(err)
+
 		return nil, &models.Error{
 			Code:        models.ErrorCodeRegistrationDBError,
 			Description: err.Error(),

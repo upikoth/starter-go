@@ -91,7 +91,6 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 
 				if len(elem) == 0 {
-					// Leaf node.
 					switch r.Method {
 					case "POST":
 						s.handleV1AuthorizeUsingOauthRequest([0]string{}, elemIsEscaped, w, r)
@@ -100,6 +99,29 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					}
 
 					return
+				}
+				switch elem[0] {
+				case 'R': // Prefix: "Redirect/vk"
+					origElem := elem
+					if l := len("Redirect/vk"); len(elem) >= l && elem[0:l] == "Redirect/vk" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch r.Method {
+						case "GET":
+							s.handleV1AuthorizeUsingOauthHandleVkRedirectRequest([0]string{}, elemIsEscaped, w, r)
+						default:
+							s.notAllowed(w, r, "GET")
+						}
+
+						return
+					}
+
+					elem = origElem
 				}
 
 				elem = origElem
@@ -371,7 +393,6 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				}
 
 				if len(elem) == 0 {
-					// Leaf node.
 					switch method {
 					case "POST":
 						r.name = "V1AuthorizeUsingOauth"
@@ -384,6 +405,33 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					default:
 						return
 					}
+				}
+				switch elem[0] {
+				case 'R': // Prefix: "Redirect/vk"
+					origElem := elem
+					if l := len("Redirect/vk"); len(elem) >= l && elem[0:l] == "Redirect/vk" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch method {
+						case "GET":
+							r.name = "V1AuthorizeUsingOauthHandleVkRedirect"
+							r.summary = ""
+							r.operationID = "V1AuthorizeUsingOauthHandleVkRedirect"
+							r.pathPattern = "/api/v1/oauthRedirect/vk"
+							r.args = args
+							r.count = 0
+							return r, true
+						default:
+							return
+						}
+					}
+
+					elem = origElem
 				}
 
 				elem = origElem

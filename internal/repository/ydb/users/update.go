@@ -50,6 +50,7 @@ func (u *Users) Update(
 			declare $role as text;
 			declare $password_hash as text;
 			declare $updated_at as timestamp;
+			declare &vk_id as text;
 
 			update users
 			set
@@ -57,6 +58,7 @@ func (u *Users) Update(
 				role = $role,
 				password_hash = $password_hash
 				updated_at = $updated_at
+				vk_id = $vk_id
 			where id = $id;
 
 			select
@@ -64,6 +66,7 @@ func (u *Users) Update(
 				email,
 				role,
 				password_hash,
+				vk_id,
 			from users
 			where users.id = $id;`,
 			query.WithParameters(
@@ -73,6 +76,7 @@ func (u *Users) Update(
 					Param("$role").Text(dbUserToUpdate.Role).
 					Param("$password_hash").Text(dbUserToUpdate.PasswordHash).
 					Param("$updated_at").Timestamp(time.Now()).
+					Param("&vk_id").Text(dbUserToUpdate.VkID).
 					Build(),
 			),
 		)
@@ -93,6 +97,7 @@ func (u *Users) Update(
 				query.Named("email", &dbUpdatedUser.Email),
 				query.Named("role", &dbUpdatedUser.Role),
 				query.Named("password_hash", &dbUpdatedUser.PasswordHash),
+				query.Named("vk_id", &dbUpdatedUser.VkID),
 			)
 
 			if sErr != nil {

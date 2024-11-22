@@ -14,6 +14,12 @@ type Handler interface {
 	//
 	// POST /api/v1/oauth
 	V1AuthorizeUsingOauth(ctx context.Context, req *V1AuthorizeUsingOauthRequestBody) (*V1AuthorizeUsingOauthResponse, error)
+	// V1AuthorizeUsingOauthHandleVkRedirect implements V1AuthorizeUsingOauthHandleVkRedirect operation.
+	//
+	// Обработка редиректа после авторизации в vk.
+	//
+	// GET /api/v1/oauthRedirect/vk
+	V1AuthorizeUsingOauthHandleVkRedirect(ctx context.Context, params V1AuthorizeUsingOauthHandleVkRedirectParams) (*V1AuthorizeUsingOauthHandleVkRedirectFound, error)
 	// V1CheckCurrentSession implements V1CheckCurrentSession operation.
 	//
 	// Получить информацию валидна ли текущая сессия.

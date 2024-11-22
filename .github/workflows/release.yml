@@ -56,6 +56,7 @@ jobs:
             YDB_AUTH_FILE_DIR_NAME=${{ vars.YDB_AUTH_FILE_DIR_NAME }}
             YDB_AUTH_FILE_NAME=${{ vars.YDB_AUTH_FILE_NAME }}
             FRONT_URL=${{ vars.FRONT_URL }}
+            FRONT_HOME_PAGE_URL=${{ vars.FRONT_HOME_PAGE_URL }}
             SENTRY_DSN=${{ vars.SENTRY_DSN }}
             ENVIRONMENT=${{ vars.ENVIRONMENT }}
             FRONT_CONFIRMATION_REGISTRATION_URL=${{ vars.FRONT_CONFIRMATION_REGISTRATION_URL }}

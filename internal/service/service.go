@@ -46,6 +46,7 @@ func New(
 		Oauth: oauth.New(
 			log,
 			cfg.Service.Oauth,
+			repo,
 		),
 	}, nil
 }

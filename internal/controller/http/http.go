@@ -31,7 +31,11 @@ func New(
 	s *service.Service,
 	tp trace.TracerProvider,
 ) (*HTTP, error) {
-	handlerInstance := handler.New(loggerInstance, s)
+	handlerInstance := handler.New(
+		loggerInstance,
+		s,
+		cfg,
+	)
 
 	srv, err := app.NewServer(
 		handlerInstance,

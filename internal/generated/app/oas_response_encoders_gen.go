@@ -10,7 +10,9 @@ import (
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 
+	"github.com/ogen-go/ogen/conv"
 	ht "github.com/ogen-go/ogen/http"
+	"github.com/ogen-go/ogen/uri"
 )
 
 func encodeV1AuthorizeUsingOauthResponse(response *V1AuthorizeUsingOauthResponse, w http.ResponseWriter, span trace.Span) error {
@@ -23,6 +25,32 @@ func encodeV1AuthorizeUsingOauthResponse(response *V1AuthorizeUsingOauthResponse
 	if _, err := e.WriteTo(w); err != nil {
 		return errors.Wrap(err, "write")
 	}
+
+	return nil
+}
+
+func encodeV1AuthorizeUsingOauthHandleVkRedirectResponse(response *V1AuthorizeUsingOauthHandleVkRedirectFound, w http.ResponseWriter, span trace.Span) error {
+	// Encoding response headers.
+	{
+		h := uri.NewHeaderEncoder(w.Header())
+		// Encode "Location" header.
+		{
+			cfg := uri.HeaderParameterEncodingConfig{
+				Name:    "Location",
+				Explode: false,
+			}
+			if err := h.EncodeParam(cfg, func(e uri.Encoder) error {
+				if val, ok := response.Location.Get(); ok {
+					return e.EncodeValue(conv.StringToString(val))
+				}
+				return nil
+			}); err != nil {
+				return errors.Wrap(err, "encode Location header")
+			}
+		}
+	}
+	w.WriteHeader(302)
+	span.SetStatus(codes.Ok, http.StatusText(302))
 
 	return nil
 }

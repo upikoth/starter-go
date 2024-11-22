@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"errors"
+	"github.com/upikoth/starter-go/internal/config"
 	"net/http"
 
 	app "github.com/upikoth/starter-go/internal/generated/app"
@@ -14,12 +15,18 @@ import (
 type Handler struct {
 	logger  logger.Logger
 	service *service.Service
+	cfg     *config.ControllerHTTP
 }
 
-func New(logger logger.Logger, service *service.Service) *Handler {
+func New(
+	log logger.Logger,
+	srv *service.Service,
+	cfg *config.ControllerHTTP,
+) *Handler {
 	return &Handler{
-		logger:  logger,
-		service: service,
+		logger:  log,
+		service: srv,
+		cfg:     cfg,
 	}
 }
 

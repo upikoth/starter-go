@@ -49,3 +49,22 @@ func (h *Handler) V1AuthorizeUsingOauth(
 		},
 	}, nil
 }
+
+func (h *Handler) V1AuthorizeUsingOauthHandleVkRedirect(
+	inputCtx context.Context,
+	params app.V1AuthorizeUsingOauthHandleVkRedirectParams,
+) (*app.V1AuthorizeUsingOauthHandleVkRedirectFound, error) {
+	tracer := otel.Tracer("Controller: V1AuthorizeUsingOauthHandleVkRedirect")
+	ctx, span := tracer.Start(inputCtx, "Controller: V1AuthorizeUsingOauthHandleVkRedirect")
+	defer span.End()
+
+	_, err := h.service.Oauth.HandleVkRedirect(ctx, params.Code)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &app.V1AuthorizeUsingOauthHandleVkRedirectFound{
+		Location: app.NewOptString(h.cfg.FrontHomePageURL),
+	}, nil
+}

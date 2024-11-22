@@ -31,6 +31,7 @@ type User struct {
 	Email        string
 	PasswordHash string
 	Role         UserRole
+	VkID         string
 }
 
 type UserList struct {

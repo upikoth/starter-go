@@ -40,7 +40,12 @@ const (
 
 	ErrorCodeSessionsCheckTokenDBError ErrorCode = "800"
 
-	ErrorCodeOauthSourceNotExist ErrorCode = "900"
+	ErrorCodeOauthSourceNotExist     ErrorCode = "900"
+	ErrorCodeOauthVkTokenCreating    ErrorCode = "901"
+	ErrorCodeOauthVkEmailInvalid     ErrorCode = "902"
+	ErrorCodeOauthVkUserIDInvalid    ErrorCode = "903"
+	ErrorCodeOauthVkGetUserByVkID    ErrorCode = "904"
+	ErrorCodeOauthVkGetUserByVkEmail ErrorCode = "905"
 )
 
 type Error struct {

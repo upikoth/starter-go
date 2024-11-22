@@ -17,10 +17,12 @@ type Controller struct {
 }
 
 type ControllerHTTP struct {
-	Port        string `envconfig:"PORT" required:"true"`
-	SentryDsn   string `envconfig:"SENTRY_DSN" required:"true"`
-	Environment string `envconfig:"ENVIRONMENT" required:"true"`
+	Port             string `envconfig:"PORT" required:"true"`
+	SentryDsn        string `envconfig:"SENTRY_DSN" required:"true"`
+	Environment      string `envconfig:"ENVIRONMENT" required:"true"`
+	FrontHomePageURL string `envconfig:"FRONT_HOME_PAGE_URL" required:"true"`
 }
+
 type Service struct {
 	Registrations            Registrations
 	PasswordRecoveryRequests PasswordRecoveryRequests

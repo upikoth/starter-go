@@ -6,6 +6,7 @@ import (
 
 	app "github.com/upikoth/starter-go/internal/generated/app"
 	"github.com/upikoth/starter-go/internal/models"
+	"github.com/upikoth/starter-go/internal/pkg/tracing"
 	"go.opentelemetry.io/otel"
 )
 
@@ -13,8 +14,8 @@ func (h *Handler) V1AuthorizeUsingOauth(
 	inputCtx context.Context,
 	req *app.V1AuthorizeUsingOauthRequestBody,
 ) (*app.V1AuthorizeUsingOauthResponse, error) {
-	tracer := otel.Tracer("Controller: V1AuthorizeUsingOauth")
-	ctx, span := tracer.Start(inputCtx, "Controller: V1AuthorizeUsingOauth")
+	tracer := otel.Tracer(tracing.GetHandlerTraceName())
+	ctx, span := tracer.Start(inputCtx, tracing.GetHandlerTraceName())
 	defer span.End()
 
 	var oauthSource models.OauthSource
@@ -54,8 +55,8 @@ func (h *Handler) V1AuthorizeUsingOauthHandleVkRedirect(
 	inputCtx context.Context,
 	params app.V1AuthorizeUsingOauthHandleVkRedirectParams,
 ) (*app.V1AuthorizeUsingOauthHandleVkRedirectFound, error) {
-	tracer := otel.Tracer("Controller: V1AuthorizeUsingOauthHandleVkRedirect")
-	ctx, span := tracer.Start(inputCtx, "Controller: V1AuthorizeUsingOauthHandleVkRedirect")
+	tracer := otel.Tracer(tracing.GetHandlerTraceName())
+	ctx, span := tracer.Start(inputCtx, tracing.GetHandlerTraceName())
 	defer span.End()
 
 	_, err := h.service.Oauth.HandleVkRedirect(ctx, params.Code)

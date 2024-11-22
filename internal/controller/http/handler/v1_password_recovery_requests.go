@@ -7,6 +7,7 @@ import (
 
 	app "github.com/upikoth/starter-go/internal/generated/app"
 	"github.com/upikoth/starter-go/internal/models"
+	"github.com/upikoth/starter-go/internal/pkg/tracing"
 	"go.opentelemetry.io/otel"
 )
 
@@ -14,8 +15,8 @@ func (h *Handler) V1CreatePasswordRecoveryRequest(
 	inputCtx context.Context,
 	req *app.V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestRequestBody,
 ) (*app.V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponse, error) {
-	tracer := otel.Tracer("Controller: V1CreatePasswordRecoveryRequest")
-	ctx, span := tracer.Start(inputCtx, "Controller: V1CreatePasswordRecoveryRequest")
+	tracer := otel.Tracer(tracing.GetHandlerTraceName())
+	ctx, span := tracer.Start(inputCtx, tracing.GetHandlerTraceName())
 	defer span.End()
 
 	passwordRecoveryRequestCreateParams := models.PasswordRecoveryRequestCreateParams{
@@ -41,8 +42,8 @@ func (h *Handler) V1ConfirmPasswordRecoveryRequest(
 	inputCtx context.Context,
 	req *app.V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestRequestBody,
 ) (*app.V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponse, error) {
-	tracer := otel.Tracer("Controller: V1ConfirmPasswordRecoveryRequest")
-	ctx, span := tracer.Start(inputCtx, "Controller: V1ConfirmPasswordRecoveryRequest")
+	tracer := otel.Tracer(tracing.GetHandlerTraceName())
+	ctx, span := tracer.Start(inputCtx, tracing.GetHandlerTraceName())
 	defer span.End()
 
 	passwordRecoveryRequestConfirmParams := models.PasswordRecoveryRequestConfirmParams{

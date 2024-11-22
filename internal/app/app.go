@@ -7,16 +7,16 @@ import (
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/controller"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
-	"github.com/upikoth/starter-go/internal/repository"
-	"github.com/upikoth/starter-go/internal/service"
+	"github.com/upikoth/starter-go/internal/repositories"
+	"github.com/upikoth/starter-go/internal/services"
 	"go.opentelemetry.io/otel/trace"
 )
 
 type App struct {
 	config     *config.Config
 	logger     logger.Logger
-	repository *repository.Repository
-	service    *service.Service
+	repository *repositories.Repository
+	service    *services.Service
 	controller *controller.Controller
 }
 
@@ -25,14 +25,14 @@ func New(
 	logger logger.Logger,
 	tp trace.TracerProvider,
 ) (*App, error) {
-	repositoryInstance, err := repository.New(logger, &config.Repository)
+	repositoryInstance, err := repositories.New(logger, &config.Repository)
 
 	if err != nil {
 		logger.Error(fmt.Sprintf("Ошибка при инициализации repository: %s", err))
 		return nil, err
 	}
 
-	serviceInstance, err := service.New(logger, config, repositoryInstance)
+	serviceInstance, err := services.New(logger, config, repositoryInstance)
 
 	if err != nil {
 		logger.Error(fmt.Sprintf("Ошибка при инициализации service: %s", err))

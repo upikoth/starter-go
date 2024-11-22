@@ -14,7 +14,7 @@ import (
 	"github.com/upikoth/starter-go/internal/controller/http/handler"
 	app "github.com/upikoth/starter-go/internal/generated/app"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
-	"github.com/upikoth/starter-go/internal/service"
+	"github.com/upikoth/starter-go/internal/services"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
@@ -28,7 +28,7 @@ type HTTP struct {
 func New(
 	cfg *config.ControllerHTTP,
 	loggerInstance logger.Logger,
-	s *service.Service,
+	s *services.Service,
 	tp trace.TracerProvider,
 ) (*HTTP, error) {
 	handlerInstance := handler.New(

@@ -9,18 +9,18 @@ import (
 	app "github.com/upikoth/starter-go/internal/generated/app"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
-	"github.com/upikoth/starter-go/internal/service"
+	"github.com/upikoth/starter-go/internal/services"
 )
 
 type Handler struct {
 	logger  logger.Logger
-	service *service.Service
+	service *services.Service
 	cfg     *config.ControllerHTTP
 }
 
 func New(
 	log logger.Logger,
-	srv *service.Service,
+	srv *services.Service,
 	cfg *config.ControllerHTTP,
 ) *Handler {
 	return &Handler{

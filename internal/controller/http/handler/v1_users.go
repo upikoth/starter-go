@@ -6,6 +6,7 @@ import (
 
 	app "github.com/upikoth/starter-go/internal/generated/app"
 	"github.com/upikoth/starter-go/internal/models"
+	"github.com/upikoth/starter-go/internal/pkg/tracing"
 	"go.opentelemetry.io/otel"
 )
 
@@ -13,8 +14,8 @@ func (h *Handler) V1GetUsers(
 	inputCtx context.Context,
 	params app.V1GetUsersParams,
 ) (*app.V1UsersGetUsersResponse, error) {
-	tracer := otel.Tracer("Controller: V1GetUsers")
-	ctx, span := tracer.Start(inputCtx, "Controller: V1GetUsers")
+	tracer := otel.Tracer(tracing.GetHandlerTraceName())
+	ctx, span := tracer.Start(inputCtx, tracing.GetHandlerTraceName())
 	defer span.End()
 
 	session, err := h.service.Sessions.CheckToken(ctx, params.AuthorizationToken)

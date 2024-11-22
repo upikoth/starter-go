@@ -6,6 +6,7 @@ import (
 
 	app "github.com/upikoth/starter-go/internal/generated/app"
 	"github.com/upikoth/starter-go/internal/models"
+	"github.com/upikoth/starter-go/internal/pkg/tracing"
 	"go.opentelemetry.io/otel"
 )
 
@@ -13,8 +14,8 @@ func (h *Handler) V1CreateRegistration(
 	inputCtx context.Context,
 	req *app.V1RegistrationsCreateRegistrationRequestBody,
 ) (*app.V1RegistrationsCreateRegistrationResponse, error) {
-	tracer := otel.Tracer("Controller: V1CreateRegistration")
-	ctx, span := tracer.Start(inputCtx, "Controller: V1CreateRegistration")
+	tracer := otel.Tracer(tracing.GetHandlerTraceName())
+	ctx, span := tracer.Start(inputCtx, tracing.GetHandlerTraceName())
 	defer span.End()
 
 	registrationCreateParams := models.RegistrationCreateParams{
@@ -40,8 +41,8 @@ func (h *Handler) V1ConfirmRegistration(
 	inputCtx context.Context,
 	req *app.V1RegistrationsConfirmRegistrationRequestBody,
 ) (*app.V1RegistrationsConfirmRegistrationResponse, error) {
-	tracer := otel.Tracer("Controller: V1ConfirmRegistration")
-	ctx, span := tracer.Start(inputCtx, "Controller: V1ConfirmRegistration")
+	tracer := otel.Tracer(tracing.GetHandlerTraceName())
+	ctx, span := tracer.Start(inputCtx, tracing.GetHandlerTraceName())
 	defer span.End()
 
 	registrationConfirmParams := models.RegistrationConfirmParams{

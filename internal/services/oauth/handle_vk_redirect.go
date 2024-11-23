@@ -3,21 +3,21 @@ package oauth
 import (
 	"context"
 	"fmt"
-	"github.com/upikoth/starter-go/internal/pkg/tracing"
 
-	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"
+	"github.com/upikoth/starter-go/internal/pkg/tracing"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"golang.org/x/oauth2"
 )
 
+//nolint:funlen пока решил заигнорить.
 func (o *Oauth) HandleVkRedirect(
 	inputCtx context.Context,
 	code string,
-) (string, error) {
+) (*models.SessionWithUserRole, error) {
 	tracer := otel.Tracer(tracing.GetServiceTraceName())
 	ctx, span := tracer.Start(inputCtx, tracing.GetServiceTraceName())
 	defer span.End()
@@ -25,83 +25,87 @@ func (o *Oauth) HandleVkRedirect(
 	token, err := o.vkConfig.Exchange(ctx, code)
 
 	if err != nil {
-		span.RecordError(err)
-		sentry.CaptureException(err)
-
-		return "", &models.Error{
-			Code:        models.ErrorCodeOauthVkTokenCreating,
-			Description: err.Error(),
-		}
+		tracing.HandleError(span, err)
+		return nil, err
 	}
 
 	email, err := getEmail(token)
 
 	if err != nil {
-		span.RecordError(err)
-		sentry.CaptureException(err)
-
-		return "", &models.Error{
-			Code:        models.ErrorCodeOauthVkEmailInvalid,
-			Description: err.Error(),
-		}
+		tracing.HandleError(span, err)
+		return nil, err
 	}
 
 	userVkID, err := getUserVkID(token)
 
 	if err != nil {
-		span.RecordError(err)
-		sentry.CaptureException(err)
-
-		return "", &models.Error{
-			Code:        models.ErrorCodeOauthVkUserIDInvalid,
-			Description: err.Error(),
-		}
+		tracing.HandleError(span, err)
+		return nil, err
 	}
 
 	span.SetAttributes(attribute.String("email", email))
 	span.SetAttributes(attribute.String("userVkID", userVkID))
 
-	_, err = o.repository.YDB.Users.GetByVkID(ctx, userVkID)
+	var user *models.User
+	var errByVkID error
+	var errByEmail error
+	var errCreateUser error
 
-	if err != nil && !errors.Is(err, constants.ErrDBEntityNotFound) {
-		span.RecordError(err)
-		sentry.CaptureException(err)
+	user, errByVkID = o.services.users.GetByVkID(ctx, userVkID)
 
-		return "", &models.Error{
-			Code:        models.ErrorCodeOauthVkGetUserByVkID,
-			Description: err.Error(),
+	// Если ошибка отличается от того что пользователь не найден.
+	if errByVkID != nil && !errors.Is(errByVkID, constants.ErrUserNotFound) {
+		tracing.HandleError(span, errByVkID)
+		return nil, errByVkID
+	}
+
+	// Если пользователь не найден по vk id.
+	if errByVkID != nil && errors.Is(errByVkID, constants.ErrUserNotFound) {
+		user, errByEmail = o.services.users.GetByEmail(ctx, email)
+
+		// Если ошибка отличается от того что пользователь не найден.
+		if errByEmail != nil && !errors.Is(errByEmail, constants.ErrUserNotFound) {
+			tracing.HandleError(span, errByEmail)
+			return nil, errByEmail
 		}
 	}
 
-	if err != nil && errors.Is(err, constants.ErrDBEntityNotFound) {
-		_, errByVkEmail := o.repository.YDB.Users.GetByEmail(ctx, email)
+	// Если пользователь не найден даже по email, создаем нового.
+	if errByEmail != nil && errors.Is(errByEmail, constants.ErrUserNotFound) {
+		user, errCreateUser = o.services.users.CreateByEmailVkID(ctx, email, userVkID)
 
-		if errByVkEmail != nil && !errors.Is(errByVkEmail, constants.ErrDBEntityNotFound) {
-			span.RecordError(errByVkEmail)
-			sentry.CaptureException(errByVkEmail)
-
-			return "", &models.Error{
-				Code:        models.ErrorCodeOauthVkGetUserByVkEmail,
-				Description: errByVkEmail.Error(),
-			}
+		if errCreateUser != nil {
+			tracing.HandleError(span, errCreateUser)
+			return nil, errCreateUser
 		}
-
-		if errByVkEmail != nil && errors.Is(errByVkEmail, constants.ErrDBEntityNotFound) {
-			// create user
-			// create session
-			// return session
-		}
-
-		// update vk_id
-		// create session
-		// return session
 	}
 
-	// update email if needed
-	// create session
-	// return session
+	// Если пользоваль найден по vk id, обновляем почту если нужно, создаем сессию
+	if errByVkID == nil {
+		// Обновляем почту, если она отличается от той, что в токене.
+		if user.Email != email {
+			user.Email = email
+			_, _ = o.services.users.UpdateUser(ctx, user)
+		}
+	}
 
-	return "", nil
+	// Если пользоваль найден по email, обновляем vk id если нужно, создаем сессию.
+	if errByVkID != nil && errByEmail == nil {
+		// Обновляем vk id, если отличается от текущего.
+		if user.VkID != userVkID {
+			user.VkID = userVkID
+			_, _ = o.services.users.UpdateUser(ctx, user)
+		}
+	}
+
+	session, errS := o.services.sessions.CreateByUserID(ctx, user.ID)
+
+	if errS != nil {
+		tracing.HandleError(span, errS)
+		return nil, errS
+	}
+
+	return session, nil
 }
 
 func getEmail(token *oauth2.Token) (string, error) {

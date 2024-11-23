@@ -29,7 +29,7 @@ func (h *Handler) V1CreateRegistration(
 
 	if errors.Is(err, constants.ErrUserAlreadyExist) {
 		return nil, &models.Error{
-			Code:        models.ErrorCodeRegistrationUserWithThisEmailAlreadyExist,
+			Code:        models.ErrCodeRegistrationUserWithThisEmailAlreadyExist,
 			Description: "A user with the specified email already exists",
 			StatusCode:  http.StatusBadRequest,
 		}
@@ -69,7 +69,7 @@ func (h *Handler) V1ConfirmRegistration(
 
 	if errors.Is(err, constants.ErrRegistrationNotFound) {
 		return nil, &models.Error{
-			Code:        models.ErrorCodeRegistrationRegistrationNotFound,
+			Code:        models.ErrCodeRegistrationNotFound,
 			Description: "Registration with transferred token not found",
 			StatusCode:  http.StatusBadRequest,
 		}

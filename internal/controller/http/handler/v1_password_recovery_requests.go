@@ -4,10 +4,10 @@ package handler
 
 import (
 	"context"
-	"github.com/pkg/errors"
-	"github.com/upikoth/starter-go/internal/constants"
 	"net/http"
 
+	"github.com/pkg/errors"
+	"github.com/upikoth/starter-go/internal/constants"
 	app "github.com/upikoth/starter-go/internal/generated/app"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/tracing"
@@ -61,7 +61,7 @@ func (h *Handler) V1ConfirmPasswordRecoveryRequest(
 
 	if errors.Is(err, constants.ErrPasswordRecoveryRequestNotFound) {
 		return nil, &models.Error{
-			Code:        models.ErrorCodePasswordRecoveryRequestPasswordRecoveryRequestNotFound,
+			Code:        models.ErrorCodePasswordRecoveryRequestNotFound,
 			Description: "Password recovery request with transferred token not found",
 			StatusCode:  http.StatusBadRequest,
 		}

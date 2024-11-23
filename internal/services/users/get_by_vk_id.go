@@ -3,40 +3,31 @@ package users
 import (
 	"context"
 
+	"github.com/pkg/errors"
+	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/tracing"
 	"go.opentelemetry.io/otel"
-	"golang.org/x/crypto/bcrypt"
 )
 
-func (u *Users) CreateByEmailPassword(
+func (u *Users) GetByVkID(
 	inputCtx context.Context,
-	email string,
-	password string,
+	vkID string,
 ) (*models.User, error) {
 	tracer := otel.Tracer(tracing.GetServiceTraceName())
 	ctx, span := tracer.Start(inputCtx, tracing.GetServiceTraceName())
 	defer span.End()
 
-	passwordHash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	user, err := u.repositories.users.GetByVkID(ctx, vkID)
+
+	if errors.Is(err, constants.ErrDBEntityNotFound) {
+		return nil, constants.ErrUserNotFound
+	}
 
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err
 	}
 
-	createdUser, err := u.repositories.users.Create(
-		ctx,
-		newUser(
-			email,
-			withPasswordHash(string(passwordHash)),
-		),
-	)
-
-	if err != nil {
-		tracing.HandleError(span, err)
-		return nil, err
-	}
-
-	return createdUser, nil
+	return user, nil
 }

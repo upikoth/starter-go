@@ -8,11 +8,13 @@ import (
 type Option func(user *models.User)
 
 func newUser(
+	email string,
 	options ...Option,
 ) *models.User {
 	user := &models.User{
-		ID:   models.UserID(uuid.New().String()),
-		Role: models.UserRoleUser,
+		ID:    models.UserID(uuid.New().String()),
+		Email: email,
+		Role:  models.UserRoleUser,
 	}
 
 	for _, option := range options {
@@ -28,8 +30,8 @@ func withPasswordHash(ph string) Option {
 	}
 }
 
-func withEmail(email string) Option {
+func withVkID(vkID string) Option {
 	return func(user *models.User) {
-		user.Email = email
+		user.VkID = vkID
 	}
 }

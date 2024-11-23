@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	app "github.com/upikoth/starter-go/internal/generated/app"
@@ -59,13 +60,24 @@ func (h *Handler) V1AuthorizeUsingOauthHandleVkRedirect(
 	ctx, span := tracer.Start(inputCtx, tracing.GetHandlerTraceName())
 	defer span.End()
 
-	_, err := h.services.Oauth.HandleVkRedirect(ctx, params.Code)
+	session, err := h.services.Oauth.HandleVkRedirect(ctx, params.Code)
 
 	if err != nil {
-		return nil, err
+		return nil, &models.Error{
+			Code:        models.ErrCodeInterval,
+			Description: err.Error(),
+		}
 	}
 
 	return &app.V1AuthorizeUsingOauthHandleVkRedirectFound{
-		Location: app.NewOptString(h.cfg.FrontHomePageURL),
+		Location: app.NewOptString(
+			fmt.Sprintf(
+				"%s?id=%s&token=%s&userRole=%s",
+				h.cfg.FrontHomePageURL,
+				string(session.ID),
+				session.Token,
+				string(session.UserRole),
+			),
+		),
 	}, nil
 }

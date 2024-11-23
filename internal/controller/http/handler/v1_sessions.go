@@ -55,7 +55,7 @@ func (h *Handler) V1CreateSession(
 
 	if errors.Is(err, constants.ErrSessionCreateInvalidCredentials) {
 		return nil, &models.Error{
-			Code:        models.ErrorCodeSessionsCreateSessionWrongEmailOrPassword,
+			Code:        models.ErrorCodeCreateSessionWrongEmailOrPassword,
 			Description: "Incorrect email or password",
 			StatusCode:  http.StatusBadRequest,
 		}
@@ -93,7 +93,7 @@ func (h *Handler) V1DeleteSession(
 
 	if errors.Is(err, constants.ErrSessionNotFound) {
 		return nil, &models.Error{
-			Code:        models.ErrorCodeSessionsDeleteSessionNotFound,
+			Code:        models.ErrorCodeSessionNotFound,
 			Description: "Session with the given id was not found",
 			StatusCode:  http.StatusBadRequest,
 		}

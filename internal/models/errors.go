@@ -9,24 +9,17 @@ const (
 	ErrCodeUserUnauthorized    ErrorCode = "2"
 	ErrCodeInterval            ErrorCode = "3"
 
-	ErrorCodeRegistrationUserWithThisEmailAlreadyExist ErrorCode = "103"
+	ErrCodeRegistrationUserWithThisEmailAlreadyExist ErrorCode = "100"
+	ErrCodeRegistrationNotFound                      ErrorCode = "101"
 
-	ErrorCodeRegistrationRegistrationNotFound ErrorCode = "201"
+	ErrorCodeCreateSessionWrongEmailOrPassword ErrorCode = "200"
+	ErrorCodeSessionNotFound                   ErrorCode = "201"
 
-	ErrorCodeSessionsCreateSessionWrongEmailOrPassword ErrorCode = "301"
+	ErrorCodePasswordRecoveryRequestNotFound ErrorCode = "300"
 
-	ErrorCodeSessionsDeleteSessionNotFound ErrorCode = "401"
+	ErrorCodeUsersGetListForbidden ErrorCode = "400"
 
-	ErrorCodePasswordRecoveryRequestPasswordRecoveryRequestNotFound ErrorCode = "601"
-
-	ErrorCodeUsersGetListForbidden ErrorCode = "700"
-
-	ErrorCodeOauthSourceNotExist     ErrorCode = "900"
-	ErrorCodeOauthVkTokenCreating    ErrorCode = "901"
-	ErrorCodeOauthVkEmailInvalid     ErrorCode = "902"
-	ErrorCodeOauthVkUserIDInvalid    ErrorCode = "903"
-	ErrorCodeOauthVkGetUserByVkID    ErrorCode = "904"
-	ErrorCodeOauthVkGetUserByVkEmail ErrorCode = "905"
+	ErrorCodeOauthSourceNotExist ErrorCode = "500"
 )
 
 type Error struct {

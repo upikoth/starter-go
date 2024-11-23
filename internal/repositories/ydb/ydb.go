@@ -43,7 +43,8 @@ func New(
 		return nil, err
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+	timeoutSecondsCount := 30
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(timeoutSecondsCount))
 	defer cancel()
 
 	driver, err := ydb.Open(

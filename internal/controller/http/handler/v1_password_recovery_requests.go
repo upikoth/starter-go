@@ -4,6 +4,9 @@ package handler
 
 import (
 	"context"
+	"github.com/pkg/errors"
+	"github.com/upikoth/starter-go/internal/constants"
+	"net/http"
 
 	app "github.com/upikoth/starter-go/internal/generated/app"
 	"github.com/upikoth/starter-go/internal/models"
@@ -23,16 +26,19 @@ func (h *Handler) V1CreatePasswordRecoveryRequest(
 		Email: req.Email,
 	}
 
-	passwordRecoveryRequest, err := h.service.PasswordRecoveryRequests.Create(ctx, passwordRecoveryRequestCreateParams)
+	passwordRecoveryRequest, err := h.services.PasswordRecoveryRequests.Create(ctx, passwordRecoveryRequestCreateParams)
 
 	if err != nil {
-		return nil, err
+		return nil, &models.Error{
+			Code:        models.ErrCodeInterval,
+			Description: err.Error(),
+		}
 	}
 
 	return &app.V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponse{
 		Success: true,
 		Data: app.V1PasswordRecoveryRequestsCreatePasswordRecoveryRequestResponseData{
-			ID:    passwordRecoveryRequest.ID,
+			ID:    string(passwordRecoveryRequest.ID),
 			Email: passwordRecoveryRequest.Email,
 		},
 	}, nil
@@ -51,17 +57,28 @@ func (h *Handler) V1ConfirmPasswordRecoveryRequest(
 		NewPassword:       string(req.NewPassword),
 	}
 
-	session, err := h.service.PasswordRecoveryRequests.Confirm(ctx, passwordRecoveryRequestConfirmParams)
+	session, err := h.services.PasswordRecoveryRequests.Confirm(ctx, passwordRecoveryRequestConfirmParams)
+
+	if errors.Is(err, constants.ErrPasswordRecoveryRequestNotFound) {
+		return nil, &models.Error{
+			Code:        models.ErrorCodePasswordRecoveryRequestPasswordRecoveryRequestNotFound,
+			Description: "Password recovery request with transferred token not found",
+			StatusCode:  http.StatusBadRequest,
+		}
+	}
 
 	if err != nil {
-		return nil, err
+		return nil, &models.Error{
+			Code:        models.ErrCodeInterval,
+			Description: err.Error(),
+		}
 	}
 
 	return &app.V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponse{
 		Success: true,
 		Data: app.V1PasswordRecoveryRequestsConfirmPasswordRecoveryRequestResponseData{
 			Session: app.Session{
-				ID:       session.ID,
+				ID:       string(session.ID),
 				Token:    session.Token,
 				UserRole: app.UserRole(session.UserRole),
 			},

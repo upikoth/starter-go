@@ -28,12 +28,12 @@ type HTTP struct {
 func New(
 	cfg *config.ControllerHTTP,
 	loggerInstance logger.Logger,
-	s *services.Service,
+	srvs *services.Services,
 	tp trace.TracerProvider,
 ) (*HTTP, error) {
 	handlerInstance := handler.New(
 		loggerInstance,
-		s,
+		srvs,
 		cfg,
 	)
 

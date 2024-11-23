@@ -3,25 +3,31 @@ package users
 import (
 	"context"
 
+	"github.com/pkg/errors"
+	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/tracing"
 	"go.opentelemetry.io/otel"
 )
 
-func (u *Users) GetList(
+func (u *Users) GetByEmail(
 	inputCtx context.Context,
-	params *models.UsersGetListParams,
-) (*models.UserList, error) {
+	email string,
+) (*models.User, error) {
 	tracer := otel.Tracer(tracing.GetServiceTraceName())
 	ctx, span := tracer.Start(inputCtx, tracing.GetServiceTraceName())
 	defer span.End()
 
-	res, err := u.repositories.users.GetList(ctx, params)
+	user, err := u.repositories.users.GetByEmail(ctx, email)
+
+	if errors.Is(err, constants.ErrDBEntityNotFound) {
+		return nil, constants.ErrUserNotFound
+	}
 
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err
 	}
 
-	return res, nil
+	return user, nil
 }

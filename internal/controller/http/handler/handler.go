@@ -3,9 +3,9 @@ package handler
 import (
 	"context"
 	"errors"
-	"github.com/upikoth/starter-go/internal/config"
 	"net/http"
 
+	"github.com/upikoth/starter-go/internal/config"
 	app "github.com/upikoth/starter-go/internal/generated/app"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
@@ -13,27 +13,27 @@ import (
 )
 
 type Handler struct {
-	logger  logger.Logger
-	service *services.Service
-	cfg     *config.ControllerHTTP
+	logger   logger.Logger
+	services *services.Services
+	cfg      *config.ControllerHTTP
 }
 
 func New(
 	log logger.Logger,
-	srv *services.Service,
+	srv *services.Services,
 	cfg *config.ControllerHTTP,
 ) *Handler {
 	return &Handler{
-		logger:  log,
-		service: srv,
-		cfg:     cfg,
+		logger:   log,
+		services: srv,
+		cfg:      cfg,
 	}
 }
 
 func (h *Handler) NewError(_ context.Context, err error) *app.ErrorResponseStatusCode {
 	modelErr := &models.Error{}
 
-	code := models.ErrorCodeValidationByOpenapi
+	code := models.ErrCodeValidationByOpenapi
 	statusCode := http.StatusBadRequest
 
 	if errors.As(err, &modelErr) {

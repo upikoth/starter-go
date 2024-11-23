@@ -3,7 +3,6 @@ module github.com/upikoth/starter-go
 go 1.23
 
 require (
-	github.com/SevereCloud/vksdk/v3 v3.0.0
 	github.com/getsentry/sentry-go v0.29.1
 	github.com/getsentry/sentry-go/otel v0.29.1
 	github.com/go-faster/errors v0.7.1
@@ -38,14 +37,11 @@ require (
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.1 // indirect
 	github.com/jonboulle/clockwork v0.4.0 // indirect
-	github.com/klauspost/compress v1.17.9 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mfridman/interpolate v0.0.2 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
 	github.com/sethvargo/go-retry v0.3.0 // indirect
-	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
-	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/yandex-cloud/go-genproto v0.0.0-20240819112322-98a264d392f6 // indirect
 	github.com/ydb-platform/ydb-go-genproto v0.0.0-20240920120314-0fed943b0136 // indirect
 	github.com/ydb-platform/ydb-go-yc-metadata v0.6.1 // indirect

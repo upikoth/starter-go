@@ -2,71 +2,13 @@ package registrations
 
 import (
 	"context"
-	"fmt"
-	"net/http"
 
-	"github.com/getsentry/sentry-go"
-	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/tracing"
 	"go.opentelemetry.io/otel"
 )
-
-var RegistrationEmailTemplate = `
-<table width="100%%" border="0" cellspacing="20" cellpadding="0"
-	style="background: #fff; max-width: 600px; margin: auto; border-radius: 10px">
-	<tbody>
-		<tr>
-			<td align="center" style="
-					padding: 10px 0px;
-					font-size: 22px;
-					font-family: Helvetica, Arial, sans-serif;
-					color: #444;
-				">
-				Регистрация на <strong>%s</strong>
-			</td>
-		</tr>
-		<tr>
-			<td align="center" style="padding: 20px 0">
-				<table border="0" cellspacing="0" cellpadding="0">
-					<tbody>
-						<tr>
-							<td align="center" style="border-radius: 3px" bgcolor="#1976D2">
-								<a href="%s?token=%s" target="_blank" style="
-										font-size: 18px;
-										font-family: Helvetica, Arial, sans-serif;
-										color: #fff;
-										text-decoration: none;
-										border-radius: 3px;
-										padding: 10px 20px;
-										border: 1px solid #1976D2;
-										display: inline-block;
-										font-weight: bold;
-									" rel="noopener noreferrer">
-									Подтвердить регистрацию
-								</a>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</td>
-		</tr>
-		<tr>
-			<td align="center" style="
-					padding: 0px 0px 10px 0px;
-					font-size: 16px;
-					line-height: 22px;
-					font-family: Helvetica, Arial, sans-serif;
-					color: #444;
-				">
-				Если вы не отправляли заявку на регистрацию, игнорируйте сообщение.
-			</td>
-		</tr>
-	</tbody>
-</table>
-`
 
 func (r *Registrations) Create(
 	inputCtx context.Context,
@@ -76,84 +18,49 @@ func (r *Registrations) Create(
 	ctx, span := tracer.Start(inputCtx, tracing.GetServiceTraceName())
 	defer span.End()
 
-	registration := &models.Registration{
-		ID:                uuid.New().String(),
-		Email:             params.Email,
-		ConfirmationToken: uuid.New().String(),
-	}
-
-	existingUser, err := r.repository.YDB.Users.GetByEmail(ctx, registration.Email)
+	_, err := r.services.users.GetByEmail(ctx, params.Email)
 
 	// Если есть ошибка, которая отличается от того что пользователь не найден.
-	if err != nil && !errors.Is(err, constants.ErrDBEntityNotFound) {
-		span.RecordError(err)
-		sentry.CaptureException(err)
-
-		return nil, &models.Error{
-			Code:        models.ErrorCodeRegistrationYdbFindUser,
-			Description: err.Error(),
-		}
+	if err != nil && !errors.Is(err, constants.ErrUserNotFound) {
+		tracing.HandleError(span, err)
+		return nil, err
 	}
 
 	// Если пользователь найден.
-	if err != nil && existingUser != nil {
-		return nil, &models.Error{
-			Code:        models.ErrorCodeRegistrationUserWithThisEmailAlreadyExist,
-			Description: "A user with the specified email already exists",
-			StatusCode:  http.StatusBadRequest,
-		}
+	if err == nil {
+		return nil, constants.ErrUserAlreadyExist
 	}
 
-	existingRegistration, err := r.repository.YDB.Registrations.GetByEmail(ctx, registration.Email)
+	existingRegistration, err := r.repositories.registrations.GetByEmail(ctx, params.Email)
 
+	// Если есть ошибка, которая отличается от того что регистрация не найдена.
 	if err != nil && !errors.Is(err, constants.ErrDBEntityNotFound) {
-		span.RecordError(err)
-		sentry.CaptureException(err)
-
-		return nil, &models.Error{
-			Code:        models.ErrorCodeRegistrationYdbCreateRegistration,
-			Description: err.Error(),
-		}
+		tracing.HandleError(span, err)
+		return nil, err
 	}
+
+	var registration *models.Registration
 
 	if err != nil && errors.Is(err, constants.ErrDBEntityNotFound) {
-		registration, err = r.repository.YDB.Registrations.Create(ctx, registration)
+		registration, err = r.repositories.registrations.Create(ctx, newRegistration(params.Email))
 	} else {
 		registration = existingRegistration
 	}
 
 	if err != nil {
-		span.RecordError(err)
-		sentry.CaptureException(err)
-
-		return nil, &models.Error{
-			Code:        models.ErrorCodeRegistrationYdbCreateRegistration,
-			Description: err.Error(),
-		}
+		tracing.HandleError(span, err)
+		return nil, err
 	}
 
-	registrationEmail := fmt.Sprintf(
-		RegistrationEmailTemplate,
-		r.config.FrontURL,
-		r.config.FrontConfirmationRegistrationURL,
+	err = r.services.emails.SendRegistrationEmail(
+		ctx,
+		registration.Email,
 		registration.ConfirmationToken,
 	)
 
-	err = r.repository.YCP.SendEmail(
-		ctx,
-		registration.Email,
-		"Регистрация на "+r.config.FrontURL,
-		registrationEmail,
-	)
-
 	if err != nil {
-		span.RecordError(err)
-		sentry.CaptureException(err)
-
-		return nil, &models.Error{
-			Code:        models.ErrorCodeRegistrationSMTPSendEmail,
-			Description: err.Error(),
-		}
+		tracing.HandleError(span, err)
+		return nil, err
 	}
 
 	return registration, nil

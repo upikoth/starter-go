@@ -16,7 +16,7 @@ type Repository struct {
 
 func New(
 	logger logger.Logger,
-	config *config.Repository,
+	config *config.Repositories,
 ) (*Repository, error) {
 	ycpInstance, err := ycp.New(logger, &config.Ycp)
 
@@ -37,7 +37,7 @@ func New(
 }
 
 func (r *Repository) Connect(ctx context.Context) error {
-	return r.YDB.Connect(ctx)
+	return r.YDB.Migrate(ctx)
 }
 
 func (r *Repository) Disconnect(ctx context.Context) error {

@@ -11,18 +11,18 @@ type Session struct {
 
 func NewYDBSessionModel(session *models.Session) *Session {
 	return &Session{
-		ID:     session.ID,
+		ID:     string(session.ID),
 		Token:  session.Token,
-		UserID: session.UserID,
+		UserID: string(session.UserID),
 	}
 }
 
 func (s *Session) FromYDBModel() *models.SessionWithUserRole {
 	return &models.SessionWithUserRole{
 		Session: models.Session{
-			ID:     s.ID,
+			ID:     models.SessionID(s.ID),
 			Token:  s.Token,
-			UserID: s.UserID,
+			UserID: models.UserID(s.UserID),
 		},
 		UserRole: models.UserRole(s.UserRole),
 	}

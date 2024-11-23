@@ -4,6 +4,8 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/pkg/errors"
+	"github.com/upikoth/starter-go/internal/constants"
 	app "github.com/upikoth/starter-go/internal/generated/app"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/tracing"
@@ -18,10 +20,22 @@ func (h *Handler) V1GetUsers(
 	ctx, span := tracer.Start(inputCtx, tracing.GetHandlerTraceName())
 	defer span.End()
 
-	session, err := h.service.Sessions.CheckToken(ctx, params.AuthorizationToken)
+	session, err := h.services.Sessions.CheckToken(ctx, params.AuthorizationToken)
+
+	if errors.Is(err, constants.ErrSessionNotFound) {
+		return nil, &models.Error{
+			Code:        models.ErrCodeUserUnauthorized,
+			Description: "User session is invalid",
+			StatusCode:  http.StatusUnauthorized,
+		}
+	}
 
 	if err != nil {
-		return nil, err
+		tracing.HandleError(span, err)
+		return nil, &models.Error{
+			Code:        models.ErrCodeInterval,
+			Description: err.Error(),
+		}
 	}
 
 	if !session.UserRole.CheckAccessToAction(models.UserActionGetAnyUserInfo) {
@@ -37,16 +51,20 @@ func (h *Handler) V1GetUsers(
 		Offset: params.Offset.Value,
 	}
 
-	userList, err := h.service.Users.GetList(ctx, usersGetListParams)
+	userList, err := h.services.Users.GetList(ctx, usersGetListParams)
 
 	if err != nil {
-		return nil, err
+		tracing.HandleError(span, err)
+		return nil, &models.Error{
+			Code:        models.ErrCodeInterval,
+			Description: err.Error(),
+		}
 	}
 
 	var usersResult []app.User
 	for _, user := range userList.Users {
 		usersResult = append(usersResult, app.User{
-			ID:    user.ID,
+			ID:    string(user.ID),
 			Email: user.Email,
 			Role:  app.UserRole(user.Role),
 		})

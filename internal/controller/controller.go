@@ -17,12 +17,12 @@ type Controller struct {
 }
 
 func New(
-	config *config.Config,
-	logger logger.Logger,
-	service *services.Service,
+	cfg *config.Config,
+	log logger.Logger,
+	srvs *services.Services,
 	tp trace.TracerProvider,
 ) (*Controller, error) {
-	httpInstance, err := http.New(&config.Controller.HTTP, logger, service, tp)
+	httpInstance, err := http.New(&cfg.Controller.HTTP, log, srvs, tp)
 
 	if err != nil {
 		return nil, err
@@ -30,8 +30,8 @@ func New(
 
 	return &Controller{
 		http:   httpInstance,
-		logger: logger,
-		config: &config.Controller,
+		logger: log,
+		config: &cfg.Controller,
 	}, nil
 }
 

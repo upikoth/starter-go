@@ -10,7 +10,7 @@ type Registration struct {
 
 func NewYDBRegistrationModel(registration *models.Registration) *Registration {
 	return &Registration{
-		ID:                registration.ID,
+		ID:                string(registration.ID),
 		Email:             registration.Email,
 		ConfirmationToken: registration.ConfirmationToken,
 	}
@@ -18,7 +18,7 @@ func NewYDBRegistrationModel(registration *models.Registration) *Registration {
 
 func (r *Registration) FromYDBModel() *models.Registration {
 	return &models.Registration{
-		ID:                r.ID,
+		ID:                models.RegistrationID(r.ID),
 		Email:             r.Email,
 		ConfirmationToken: r.ConfirmationToken,
 	}

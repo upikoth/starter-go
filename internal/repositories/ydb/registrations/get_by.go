@@ -11,7 +11,7 @@ import (
 	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/tracing"
-	ydbmodels "github.com/upikoth/starter-go/internal/repositories/ydb/ydb-models"
+	"github.com/upikoth/starter-go/internal/repositories/ydb/ydbmodels"
 	"github.com/ydb-platform/ydb-go-sdk/v3"
 	"github.com/ydb-platform/ydb-go-sdk/v3/query"
 	"go.opentelemetry.io/otel"

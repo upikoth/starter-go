@@ -2,9 +2,7 @@ package sessions
 
 import (
 	"context"
-	"net/http"
 
-	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"
@@ -14,29 +12,21 @@ import (
 
 func (s *Sessions) DeleteByID(
 	inputCtx context.Context,
-	id string,
+	id models.SessionID,
 ) error {
 	tracer := otel.Tracer(tracing.GetServiceTraceName())
 	ctx, span := tracer.Start(inputCtx, tracing.GetServiceTraceName())
 	defer span.End()
 
-	err := s.repository.YDB.Sessions.DeleteByID(ctx, id)
+	err := s.repositories.sessions.DeleteByID(ctx, id)
 
 	if errors.Is(err, constants.ErrDBEntityNotFound) {
-		return &models.Error{
-			Code:        models.ErrorCodeSessionsDeleteSessionNotFound,
-			Description: "Session with the given id was not found",
-			StatusCode:  http.StatusBadRequest,
-		}
+		return constants.ErrSessionNotFound
 	}
 
 	if err != nil {
-		span.RecordError(err)
-		sentry.CaptureException(err)
-		return &models.Error{
-			Code:        models.ErrorCodeSessionsDeleteSessionDBError,
-			Description: err.Error(),
-		}
+		tracing.HandleError(span, err)
+		return err
 	}
 
 	return nil

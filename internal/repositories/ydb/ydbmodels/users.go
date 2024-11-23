@@ -12,7 +12,7 @@ type User struct {
 
 func NewYDBUserModel(user *models.User) *User {
 	return &User{
-		ID:           user.ID,
+		ID:           string(user.ID),
 		Email:        user.Email,
 		PasswordHash: user.PasswordHash,
 		Role:         string(user.Role),
@@ -22,7 +22,7 @@ func NewYDBUserModel(user *models.User) *User {
 
 func (u *User) FromYDBModel() *models.User {
 	return &models.User{
-		ID:           u.ID,
+		ID:           models.UserID(u.ID),
 		Email:        u.Email,
 		PasswordHash: u.PasswordHash,
 		Role:         models.UserRole(u.Role),

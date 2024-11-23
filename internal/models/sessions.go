@@ -1,9 +1,11 @@
 package models
 
+type SessionID string
+
 type Session struct {
-	ID     string
+	ID     SessionID
 	Token  string
-	UserID string
+	UserID UserID
 }
 
 type SessionWithUserRole struct {

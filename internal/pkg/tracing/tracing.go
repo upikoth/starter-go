@@ -3,7 +3,9 @@ package tracing
 import (
 	"fmt"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/upikoth/starter-go/internal/pkg/functions"
+	"go.opentelemetry.io/otel/trace"
 )
 
 func GetHandlerTraceName() string {
@@ -32,4 +34,9 @@ func GetRepositoryYDBTraceName() string {
 	packageName := functions.GetPackageName(functions.WithSkip(1))
 
 	return fmt.Sprintf("repository.ydb.%s.%s", packageName, functionName)
+}
+
+func HandleError(span trace.Span, err error) {
+	span.RecordError(err)
+	sentry.CaptureException(err)
 }

@@ -1,4 +1,4 @@
-package users
+package sessions
 
 import (
 	"context"
@@ -8,20 +8,20 @@ import (
 	"go.opentelemetry.io/otel"
 )
 
-func (u *Users) GetList(
+func (s *Sessions) CreateByUserID(
 	inputCtx context.Context,
-	params *models.UsersGetListParams,
-) (*models.UserList, error) {
+	userID models.UserID,
+) (*models.SessionWithUserRole, error) {
 	tracer := otel.Tracer(tracing.GetServiceTraceName())
 	ctx, span := tracer.Start(inputCtx, tracing.GetServiceTraceName())
 	defer span.End()
 
-	res, err := u.repositories.users.GetList(ctx, params)
+	session, err := s.repositories.sessions.Create(ctx, newSession(userID))
 
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err
 	}
 
-	return res, nil
+	return session, err
 }

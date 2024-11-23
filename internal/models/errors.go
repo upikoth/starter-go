@@ -5,40 +5,21 @@ import "net/http"
 type ErrorCode string
 
 const (
-	ErrorCodeValidationByOpenapi ErrorCode = "1"
-	ErrorCodeUserUnauthorized    ErrorCode = "2"
+	ErrCodeValidationByOpenapi ErrorCode = "1"
+	ErrCodeUserUnauthorized    ErrorCode = "2"
+	ErrCodeInterval            ErrorCode = "3"
 
-	ErrorCodeRegistrationSMTPSendEmail                 ErrorCode = "100"
-	ErrorCodeRegistrationYdbCreateRegistration         ErrorCode = "101"
-	ErrorCodeRegistrationYdbFindUser                   ErrorCode = "102"
 	ErrorCodeRegistrationUserWithThisEmailAlreadyExist ErrorCode = "103"
 
-	ErrorCodeRegistrationYdbCheckConfirmationToken ErrorCode = "200"
-	ErrorCodeRegistrationRegistrationNotFound      ErrorCode = "201"
-	ErrorCodeRegistrationGeneratePasswordHash      ErrorCode = "202"
-	ErrorCodeRegistrationCreateSession             ErrorCode = "203"
-	ErrorCodeRegistrationDBError                   ErrorCode = "204"
+	ErrorCodeRegistrationRegistrationNotFound ErrorCode = "201"
 
-	ErrorCodeSessionsCreateSessionDBError              ErrorCode = "300"
 	ErrorCodeSessionsCreateSessionWrongEmailOrPassword ErrorCode = "301"
 
-	ErrorCodeSessionsDeleteSessionDBError  ErrorCode = "400"
 	ErrorCodeSessionsDeleteSessionNotFound ErrorCode = "401"
 
-	ErrorCodePasswordRecoveryRequestYdbFindUser                      ErrorCode = "500"
-	ErrorCodePasswordRecoveryRequestYdbCreatePasswordRecoveryRequest ErrorCode = "501"
-	ErrorCodePasswordRecoveryRequestSMTPSendEmail                    ErrorCode = "502"
-
-	ErrorCodePasswordRecoveryRequestYdbCheckConfirmationToken       ErrorCode = "600"
 	ErrorCodePasswordRecoveryRequestPasswordRecoveryRequestNotFound ErrorCode = "601"
-	ErrorCodePasswordRecoveryRequestGeneratePasswordHash            ErrorCode = "602"
-	ErrorCodePasswordRecoveryRequestCreateSession                   ErrorCode = "603"
-	ErrorCodePasswordRecoveryRequestUpdateUserPassword              ErrorCode = "604"
 
 	ErrorCodeUsersGetListForbidden ErrorCode = "700"
-	ErrorCodeUsersGetListDBError   ErrorCode = "701"
-
-	ErrorCodeSessionsCheckTokenDBError ErrorCode = "800"
 
 	ErrorCodeOauthSourceNotExist     ErrorCode = "900"
 	ErrorCodeOauthVkTokenCreating    ErrorCode = "901"

@@ -13,68 +13,68 @@ import (
 )
 
 type App struct {
-	config     *config.Config
-	logger     logger.Logger
-	repository *repositories.Repository
-	service    *services.Service
-	controller *controller.Controller
+	config       *config.Config
+	logger       logger.Logger
+	repositories *repositories.Repository
+	services     *services.Services
+	controller   *controller.Controller
 }
 
 func New(
-	config *config.Config,
-	logger logger.Logger,
+	cfg *config.Config,
+	log logger.Logger,
 	tp trace.TracerProvider,
 ) (*App, error) {
-	repositoryInstance, err := repositories.New(logger, &config.Repository)
+	repositoriesInstance, err := repositories.New(log, &cfg.Repositories)
 
 	if err != nil {
-		logger.Error(fmt.Sprintf("Ошибка при инициализации repository: %s", err))
+		log.Error(fmt.Sprintf("Ошибка при инициализации repositories: %s", err))
 		return nil, err
 	}
 
-	serviceInstance, err := services.New(logger, config, repositoryInstance)
+	servicesInstance, err := services.New(log, cfg, repositoriesInstance)
 
 	if err != nil {
-		logger.Error(fmt.Sprintf("Ошибка при инициализации service: %s", err))
+		log.Error(fmt.Sprintf("Ошибка при инициализации services: %s", err))
 		return nil, err
 	}
 
-	controllerInstance, err := controller.New(config, logger, serviceInstance, tp)
+	controllerInstance, err := controller.New(cfg, log, servicesInstance, tp)
 
 	if err != nil {
-		logger.Error(fmt.Sprintf("Ошибка при инициализации controller: %s", err))
+		log.Error(fmt.Sprintf("Ошибка при инициализации controller: %s", err))
 		return nil, err
 	}
 
 	return &App{
-		config:     config,
-		logger:     logger,
-		repository: repositoryInstance,
-		service:    serviceInstance,
-		controller: controllerInstance,
+		config:       cfg,
+		logger:       log,
+		repositories: repositoriesInstance,
+		services:     servicesInstance,
+		controller:   controllerInstance,
 	}, nil
 }
 
 func (s *App) Start(ctx context.Context) error {
-	err := s.repository.Connect(ctx)
+	err := s.repositories.Connect(ctx)
 
 	if err != nil {
 		return err
 	}
 
-	s.logger.Debug("Подключение к repository прошло без ошибок")
+	s.logger.Debug("Подключение к repositories прошло без ошибок")
 
 	return s.controller.Start()
 }
 
 func (s *App) Stop(ctx context.Context) error {
-	err := s.repository.Disconnect(ctx)
+	err := s.repositories.Disconnect(ctx)
 
 	if err != nil {
 		return err
 	}
 
-	s.logger.Debug("Отключение от repository прошло без ошибок")
+	s.logger.Debug("Отключение от repositories прошло без ошибок")
 
 	return s.controller.Stop(ctx)
 }

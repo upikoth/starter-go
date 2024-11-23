@@ -10,7 +10,7 @@ type PasswordRecoveryRequest struct {
 
 func NewYDBPasswordRecoveryRequestModel(registration *models.PasswordRecoveryRequest) *PasswordRecoveryRequest {
 	return &PasswordRecoveryRequest{
-		ID:                registration.ID,
+		ID:                string(registration.ID),
 		Email:             registration.Email,
 		ConfirmationToken: registration.ConfirmationToken,
 	}
@@ -18,7 +18,7 @@ func NewYDBPasswordRecoveryRequestModel(registration *models.PasswordRecoveryReq
 
 func (r *PasswordRecoveryRequest) FromYDBModel() *models.PasswordRecoveryRequest {
 	return &models.PasswordRecoveryRequest{
-		ID:                r.ID,
+		ID:                models.PasswordRecoveryRequestID(r.ID),
 		Email:             r.Email,
 		ConfirmationToken: r.ConfirmationToken,
 	}

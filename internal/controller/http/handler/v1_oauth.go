@@ -37,7 +37,7 @@ func (h *Handler) V1AuthorizeUsingOauth(
 		}
 	}
 
-	url, err := h.service.Oauth.GetAuthorizeURL(ctx, oauthSource)
+	url, err := h.services.Oauth.GetAuthorizeURL(ctx, oauthSource)
 
 	if err != nil {
 		return nil, err
@@ -59,7 +59,7 @@ func (h *Handler) V1AuthorizeUsingOauthHandleVkRedirect(
 	ctx, span := tracer.Start(inputCtx, tracing.GetHandlerTraceName())
 	defer span.End()
 
-	_, err := h.service.Oauth.HandleVkRedirect(ctx, params.Code)
+	_, err := h.services.Oauth.HandleVkRedirect(ctx, params.Code)
 
 	if err != nil {
 		return nil, err

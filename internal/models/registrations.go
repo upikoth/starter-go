@@ -1,7 +1,9 @@
 package models
 
+type RegistrationID string
+
 type Registration struct {
-	ID                string
+	ID                RegistrationID
 	Email             string
 	ConfirmationToken string
 }

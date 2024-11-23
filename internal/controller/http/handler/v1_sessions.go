@@ -2,7 +2,10 @@ package handler
 
 import (
 	"context"
+	"net/http"
 
+	"github.com/pkg/errors"
+	"github.com/upikoth/starter-go/internal/constants"
 	app "github.com/upikoth/starter-go/internal/generated/app"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/tracing"
@@ -17,10 +20,22 @@ func (h *Handler) V1CheckCurrentSession(
 	ctx, span := tracer.Start(inputCtx, tracing.GetHandlerTraceName())
 	defer span.End()
 
-	_, err := h.service.Sessions.CheckToken(ctx, params.AuthorizationToken)
+	_, err := h.services.Sessions.CheckToken(ctx, params.AuthorizationToken)
+
+	if errors.Is(err, constants.ErrSessionNotFound) {
+		return nil, &models.Error{
+			Code:        models.ErrCodeUserUnauthorized,
+			Description: "User session is invalid",
+			StatusCode:  http.StatusUnauthorized,
+		}
+	}
 
 	if err != nil {
-		return nil, err
+		tracing.HandleError(span, err)
+		return nil, &models.Error{
+			Code:        models.ErrCodeInterval,
+			Description: err.Error(),
+		}
 	}
 
 	return &app.SuccessResponse{
@@ -36,22 +51,29 @@ func (h *Handler) V1CreateSession(
 	ctx, span := tracer.Start(inputCtx, tracing.GetHandlerTraceName())
 	defer span.End()
 
-	sessionCreateParams := models.SessionCreateParams{
-		Email:    req.Email,
-		Password: string(req.Password),
+	session, err := h.services.Sessions.CreateByEmailPassword(ctx, req.Email, string(req.Password))
+
+	if errors.Is(err, constants.ErrSessionCreateInvalidCredentials) {
+		return nil, &models.Error{
+			Code:        models.ErrorCodeSessionsCreateSessionWrongEmailOrPassword,
+			Description: "Incorrect email or password",
+			StatusCode:  http.StatusBadRequest,
+		}
 	}
 
-	session, err := h.service.Sessions.Create(ctx, sessionCreateParams)
-
 	if err != nil {
-		return nil, err
+		tracing.HandleError(span, err)
+		return nil, &models.Error{
+			Code:        models.ErrCodeInterval,
+			Description: err.Error(),
+		}
 	}
 
 	return &app.V1SessionsCreateSessionResponse{
 		Success: true,
 		Data: app.V1SessionsCreateSessionResponseData{
 			Session: app.Session{
-				ID:       session.ID,
+				ID:       string(session.ID),
 				Token:    session.Token,
 				UserRole: app.UserRole(session.UserRole),
 			},
@@ -67,10 +89,22 @@ func (h *Handler) V1DeleteSession(
 	ctx, span := tracer.Start(inputCtx, tracing.GetHandlerTraceName())
 	defer span.End()
 
-	err := h.service.Sessions.DeleteByID(ctx, params.ID)
+	err := h.services.Sessions.DeleteByID(ctx, models.SessionID(params.ID))
+
+	if errors.Is(err, constants.ErrSessionNotFound) {
+		return nil, &models.Error{
+			Code:        models.ErrorCodeSessionsDeleteSessionNotFound,
+			Description: "Session with the given id was not found",
+			StatusCode:  http.StatusBadRequest,
+		}
+	}
 
 	if err != nil {
-		return nil, err
+		tracing.HandleError(span, err)
+		return nil, &models.Error{
+			Code:        models.ErrCodeInterval,
+			Description: err.Error(),
+		}
 	}
 
 	return &app.SuccessResponse{

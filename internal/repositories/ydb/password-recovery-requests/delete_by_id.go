@@ -7,8 +7,9 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/constants"
+	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/tracing"
-	ydbmodels "github.com/upikoth/starter-go/internal/repositories/ydb/ydb-models"
+	"github.com/upikoth/starter-go/internal/repositories/ydb/ydbmodels"
 	"github.com/ydb-platform/ydb-go-sdk/v3"
 	"github.com/ydb-platform/ydb-go-sdk/v3/query"
 	"go.opentelemetry.io/otel"
@@ -16,7 +17,7 @@ import (
 
 func (p *PasswordRecoveryRequests) DeleteByID(
 	inputCtx context.Context,
-	id string,
+	id models.PasswordRecoveryRequestID,
 ) (err error) {
 	tracer := otel.Tracer(tracing.GetRepositoryYDBTraceName())
 	ctx, span := tracer.Start(inputCtx, tracing.GetRepositoryYDBTraceName())
@@ -39,7 +40,7 @@ func (p *PasswordRecoveryRequests) DeleteByID(
 			where id = $id
 			returning id, email, confirmation_token`,
 			query.WithParameters(
-				ydb.ParamsBuilder().Param("$id").Text(id).Build(),
+				ydb.ParamsBuilder().Param("$id").Text(string(id)).Build(),
 			),
 		)
 

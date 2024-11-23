@@ -26,8 +26,10 @@ func (u UserRole) CheckAccessToAction(action UserAction) bool {
 	return userRoleActionMap[u][action]
 }
 
+type UserID string
+
 type User struct {
-	ID           string
+	ID           UserID
 	Email        string
 	PasswordHash string
 	Role         UserRole

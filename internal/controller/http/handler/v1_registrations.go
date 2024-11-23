@@ -3,7 +3,10 @@ package handler
 
 import (
 	"context"
+	"net/http"
 
+	"github.com/pkg/errors"
+	"github.com/upikoth/starter-go/internal/constants"
 	app "github.com/upikoth/starter-go/internal/generated/app"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/tracing"
@@ -22,16 +25,28 @@ func (h *Handler) V1CreateRegistration(
 		Email: req.Email,
 	}
 
-	registration, err := h.service.Registrations.Create(ctx, registrationCreateParams)
+	registration, err := h.services.Registrations.Create(ctx, registrationCreateParams)
+
+	if errors.Is(err, constants.ErrUserAlreadyExist) {
+		return nil, &models.Error{
+			Code:        models.ErrorCodeRegistrationUserWithThisEmailAlreadyExist,
+			Description: "A user with the specified email already exists",
+			StatusCode:  http.StatusBadRequest,
+		}
+	}
 
 	if err != nil {
-		return nil, err
+		tracing.HandleError(span, err)
+		return nil, &models.Error{
+			Code:        models.ErrCodeInterval,
+			Description: err.Error(),
+		}
 	}
 
 	return &app.V1RegistrationsCreateRegistrationResponse{
 		Success: true,
 		Data: app.V1RegistrationsCreateRegistrationResponseData{
-			ID:    registration.ID,
+			ID:    string(registration.ID),
 			Email: registration.Email,
 		},
 	}, nil
@@ -50,17 +65,28 @@ func (h *Handler) V1ConfirmRegistration(
 		Password:          string(req.Password),
 	}
 
-	session, err := h.service.Registrations.Confirm(ctx, registrationConfirmParams)
+	session, err := h.services.Registrations.Confirm(ctx, registrationConfirmParams)
+
+	if errors.Is(err, constants.ErrRegistrationNotFound) {
+		return nil, &models.Error{
+			Code:        models.ErrorCodeRegistrationRegistrationNotFound,
+			Description: "Registration with transferred token not found",
+			StatusCode:  http.StatusBadRequest,
+		}
+	}
 
 	if err != nil {
-		return nil, err
+		return nil, &models.Error{
+			Code:        models.ErrCodeInterval,
+			Description: err.Error(),
+		}
 	}
 
 	return &app.V1RegistrationsConfirmRegistrationResponse{
 		Success: true,
 		Data: app.V1RegistrationsConfirmRegistrationResponseData{
 			Session: app.Session{
-				ID:       session.ID,
+				ID:       string(session.ID),
 				Token:    session.Token,
 				UserRole: app.UserRole(session.UserRole),
 			},

@@ -6,10 +6,10 @@ import (
 )
 
 type Config struct {
-	Environment string `envconfig:"ENVIRONMENT" required:"true"`
-	Controller  Controller
-	Service     Service
-	Repository  Repository
+	Environment  string `envconfig:"ENVIRONMENT" required:"true"`
+	Controller   Controller
+	Services     Services
+	Repositories Repositories
 }
 
 type Controller struct {
@@ -23,19 +23,14 @@ type ControllerHTTP struct {
 	FrontHomePageURL string `envconfig:"FRONT_HOME_PAGE_URL" required:"true"`
 }
 
-type Service struct {
-	Registrations            Registrations
-	PasswordRecoveryRequests PasswordRecoveryRequests
-	Oauth                    Oauth
+type Services struct {
+	Emails Emails
+	Oauth  Oauth
 }
 
-type Registrations struct {
+type Emails struct {
 	FrontURL                         string `envconfig:"FRONT_URL" required:"true"`
 	FrontConfirmationRegistrationURL string `envconfig:"FRONT_CONFIRMATION_REGISTRATION_URL" required:"true"`
-}
-
-type PasswordRecoveryRequests struct {
-	FrontURL string `envconfig:"FRONT_URL" required:"true"`
 	//nolint:lll
 	FrontConfirmationPasswordRecoveryRequestURL string `envconfig:"FRONT_CONFIRMATION_PASSWORD_RECOVERY_REQUEST_URL" required:"true"`
 }
@@ -46,7 +41,7 @@ type Oauth struct {
 	VkRedirectURL  string `envconfig:"OAUTH_VK_REDIRECT_URL" required:"true"`
 }
 
-type Repository struct {
+type Repositories struct {
 	Ycp Ycp
 	Ydb Ydb
 }

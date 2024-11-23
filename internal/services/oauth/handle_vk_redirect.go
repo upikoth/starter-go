@@ -13,7 +13,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-//nolint:funlen пока решил заигнорить.
+// nolint:funlen,gocognit,nolintlint //пока решил заигнорить.
 func (o *Oauth) HandleVkRedirect(
 	inputCtx context.Context,
 	code string,

@@ -73,7 +73,7 @@ func (h *Handler) V1AuthorizeUsingOauthHandleVkRedirect(
 		Location: app.NewOptString(
 			fmt.Sprintf(
 				"%s?id=%s&token=%s&userRole=%s",
-				h.cfg.FrontHomePageURL,
+				h.cfg.FrontHandleAuthPageURL,
 				string(session.ID),
 				session.Token,
 				string(session.UserRole),

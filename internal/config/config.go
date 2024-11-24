@@ -17,10 +17,10 @@ type Controller struct {
 }
 
 type ControllerHTTP struct {
-	Port             string `envconfig:"PORT" required:"true"`
-	SentryDsn        string `envconfig:"SENTRY_DSN" required:"true"`
-	Environment      string `envconfig:"ENVIRONMENT" required:"true"`
-	FrontHomePageURL string `envconfig:"FRONT_HOME_PAGE_URL" required:"true"`
+	Port                   string `envconfig:"PORT" required:"true"`
+	SentryDsn              string `envconfig:"SENTRY_DSN" required:"true"`
+	Environment            string `envconfig:"ENVIRONMENT" required:"true"`
+	FrontHandleAuthPageURL string `envconfig:"FRONT_HANDLE_AUTH_PAGE_URL" required:"true"`
 }
 
 type Services struct {

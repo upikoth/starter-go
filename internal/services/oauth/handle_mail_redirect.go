@@ -2,6 +2,7 @@ package oauth
 
 import (
 	"context"
+
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/constants"
 	"github.com/upikoth/starter-go/internal/models"

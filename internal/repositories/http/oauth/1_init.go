@@ -54,7 +54,7 @@ func (o *Oauth) sendHTTPRequest(
 	}
 
 	client := &http.Client{}
-	res, err := client.Do(request) //nolint:bodyclose
+	res, err := client.Do(request) //nolint:bodyclose // сделано чуть ниже.
 
 	if err != nil {
 		return []byte{}, errors.WithStack(err)

@@ -11,11 +11,13 @@ const (
 
 	ErrCodeRegistrationUserWithThisEmailAlreadyExist ErrorCode = "100"
 	ErrCodeRegistrationNotFound                      ErrorCode = "101"
+	ErrCodeRegistrationCreatingSession               ErrorCode = "102"
 
 	ErrCodeCreateSessionWrongEmailOrPassword ErrorCode = "200"
 	ErrCodeSessionNotFound                   ErrorCode = "201"
 
-	ErrCodePasswordRecoveryRequestNotFound ErrorCode = "300"
+	ErrCodePasswordRecoveryRequestNotFound        ErrorCode = "300"
+	ErrCodePasswordRecoveryRequestCreatingSession ErrorCode = "301"
 
 	ErrCodeUsersGetListForbidden ErrorCode = "400"
 

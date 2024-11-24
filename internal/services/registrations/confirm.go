@@ -68,7 +68,7 @@ func (r *Registrations) Confirm(
 
 	if err != nil {
 		tracing.HandleError(span, err)
-		return nil, err
+		return nil, constants.ErrRegistrationCreatingSession
 	}
 
 	return createdSession, nil

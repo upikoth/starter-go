@@ -67,7 +67,7 @@ func (p *PasswordRecoveryRequests) Confirm(
 
 	if err != nil {
 		tracing.HandleError(span, err)
-		return nil, err
+		return nil, constants.ErrPasswordRecoveryRequestCreatingSession
 	}
 
 	return createdSession, nil

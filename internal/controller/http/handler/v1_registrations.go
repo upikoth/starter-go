@@ -75,6 +75,13 @@ func (h *Handler) V1ConfirmRegistration(
 		}
 	}
 
+	if errors.Is(err, constants.ErrRegistrationCreatingSession) {
+		return nil, &models.Error{
+			Code:        models.ErrCodeRegistrationCreatingSession,
+			Description: "Session not created",
+		}
+	}
+
 	if err != nil {
 		return nil, &models.Error{
 			Code:        models.ErrCodeInterval,

@@ -67,6 +67,13 @@ func (h *Handler) V1ConfirmPasswordRecoveryRequest(
 		}
 	}
 
+	if errors.Is(err, constants.ErrPasswordRecoveryRequestCreatingSession) {
+		return nil, &models.Error{
+			Code:        models.ErrCodePasswordRecoveryRequestCreatingSession,
+			Description: "Session not created",
+		}
+	}
+
 	if err != nil {
 		return nil, &models.Error{
 			Code:        models.ErrCodeInterval,

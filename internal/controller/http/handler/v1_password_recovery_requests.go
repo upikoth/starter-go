@@ -61,7 +61,7 @@ func (h *Handler) V1ConfirmPasswordRecoveryRequest(
 
 	if errors.Is(err, constants.ErrPasswordRecoveryRequestNotFound) {
 		return nil, &models.Error{
-			Code:        models.ErrorCodePasswordRecoveryRequestNotFound,
+			Code:        models.ErrCodePasswordRecoveryRequestNotFound,
 			Description: "Password recovery request with transferred token not found",
 			StatusCode:  http.StatusBadRequest,
 		}

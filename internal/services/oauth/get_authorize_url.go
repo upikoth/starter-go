@@ -28,7 +28,7 @@ func (o *Oauth) GetAuthorizeURL(
 		return "", nil
 	default:
 		return "", &models.Error{
-			Code:        models.ErrorCodeOauthSourceNotExist,
+			Code:        models.ErrCodeOauthSourceNotExist,
 			Description: "Incorrect email or password",
 			StatusCode:  http.StatusBadRequest,
 		}

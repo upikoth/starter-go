@@ -32,7 +32,7 @@ func (h *Handler) V1AuthorizeUsingOauth(
 		oauthSource = models.OauthSourceYandex
 	default:
 		return nil, &models.Error{
-			Code:        models.ErrorCodeOauthSourceNotExist,
+			Code:        models.ErrCodeOauthSourceNotExist,
 			Description: "Incorrect email or password",
 			StatusCode:  http.StatusBadRequest,
 		}

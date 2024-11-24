@@ -12,14 +12,14 @@ const (
 	ErrCodeRegistrationUserWithThisEmailAlreadyExist ErrorCode = "100"
 	ErrCodeRegistrationNotFound                      ErrorCode = "101"
 
-	ErrorCodeCreateSessionWrongEmailOrPassword ErrorCode = "200"
-	ErrorCodeSessionNotFound                   ErrorCode = "201"
+	ErrCodeCreateSessionWrongEmailOrPassword ErrorCode = "200"
+	ErrCodeSessionNotFound                   ErrorCode = "201"
 
-	ErrorCodePasswordRecoveryRequestNotFound ErrorCode = "300"
+	ErrCodePasswordRecoveryRequestNotFound ErrorCode = "300"
 
-	ErrorCodeUsersGetListForbidden ErrorCode = "400"
+	ErrCodeUsersGetListForbidden ErrorCode = "400"
 
-	ErrorCodeOauthSourceNotExist ErrorCode = "500"
+	ErrCodeOauthSourceNotExist ErrorCode = "500"
 )
 
 type Error struct {

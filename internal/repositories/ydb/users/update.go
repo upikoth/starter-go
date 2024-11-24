@@ -16,6 +16,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
+//nolint:funlen
 func (u *Users) Update(
 	inputCtx context.Context,
 	userToUpdate *models.User,
@@ -51,15 +52,17 @@ func (u *Users) Update(
 			declare $role as text;
 			declare $password_hash as text;
 			declare $updated_at as timestamp;
-			declare &vk_id as text;
+			declare $vk_id as text;
+			declare $mailru_id as text;
 
 			update users
 			set
 				email = $email,
 				role = $role,
-				password_hash = $password_hash
-				updated_at = $updated_at
-				vk_id = $vk_id
+				password_hash = $password_hash,
+				updated_at = $updated_at,
+				vk_id = $vk_id,
+				mailru_id = $mailru_id
 			where id = $id;
 
 			select
@@ -68,6 +71,7 @@ func (u *Users) Update(
 				role,
 				password_hash,
 				vk_id,
+				mailru_id,
 			from users
 			where users.id = $id;`,
 			query.WithParameters(
@@ -77,7 +81,8 @@ func (u *Users) Update(
 					Param("$role").Text(dbUserToUpdate.Role).
 					Param("$password_hash").Text(dbUserToUpdate.PasswordHash).
 					Param("$updated_at").Timestamp(time.Now()).
-					Param("&vk_id").Text(dbUserToUpdate.VkID).
+					Param("$vk_id").Text(dbUserToUpdate.VkID).
+					Param("$mailru_id").Text(dbUserToUpdate.MailRuID).
 					Build(),
 			),
 		)
@@ -99,6 +104,7 @@ func (u *Users) Update(
 				query.Named("role", &dbUpdatedUser.Role),
 				query.Named("password_hash", &dbUpdatedUser.PasswordHash),
 				query.Named("vk_id", &dbUpdatedUser.VkID),
+				query.Named("mailru_id", &dbUpdatedUser.MailRuID),
 			)
 
 			if sErr != nil {

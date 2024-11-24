@@ -49,10 +49,11 @@ func (u *Users) Create(
 			declare $created_at as timestamp;
 			declare $updated_at as timestamp;
 			declare $vk_id as text;
+			declare $mailru_id as text;
 
 			insert into users
-			(id, email, role, password_hash, created_at, updated_at, vk_id)
-			values ($id, $email, $role, $password_hash, $created_at, $updated_at, $vk_id);
+			(id, email, role, password_hash, created_at, updated_at, vk_id, mailru_id)
+			values ($id, $email, $role, $password_hash, $created_at, $updated_at, $vk_id, $mailru_id);
 
 			select
 				id,
@@ -60,6 +61,7 @@ func (u *Users) Create(
 				role,
 				password_hash,
 				vk_id,
+				mailru_id,
 			from users
 			where users.id = $id;`,
 			query.WithParameters(
@@ -71,6 +73,7 @@ func (u *Users) Create(
 					Param("$created_at").Timestamp(time.Now()).
 					Param("$updated_at").Timestamp(time.Now()).
 					Param("$vk_id").Text(dbUserToCreate.VkID).
+					Param("$mailru_id").Text(dbUserToCreate.MailRuID).
 					Build(),
 			),
 		)
@@ -92,6 +95,7 @@ func (u *Users) Create(
 				query.Named("role", &dbCreatedUser.Role),
 				query.Named("password_hash", &dbCreatedUser.PasswordHash),
 				query.Named("vk_id", &dbCreatedUser.VkID),
+				query.Named("mailru_id", &dbCreatedUser.MailRuID),
 			)
 
 			if sErr != nil {

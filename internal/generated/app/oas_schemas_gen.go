@@ -366,6 +366,21 @@ func (s *UserRole) UnmarshalText(data []byte) error {
 	}
 }
 
+// V1AuthorizeUsingOauthHandleMailRedirectFound is response for V1AuthorizeUsingOauthHandleMailRedirect operation.
+type V1AuthorizeUsingOauthHandleMailRedirectFound struct {
+	Location OptString
+}
+
+// GetLocation returns the value of Location.
+func (s *V1AuthorizeUsingOauthHandleMailRedirectFound) GetLocation() OptString {
+	return s.Location
+}
+
+// SetLocation sets the value of Location.
+func (s *V1AuthorizeUsingOauthHandleMailRedirectFound) SetLocation(val OptString) {
+	s.Location = val
+}
+
 // V1AuthorizeUsingOauthHandleVkRedirectFound is response for V1AuthorizeUsingOauthHandleVkRedirect operation.
 type V1AuthorizeUsingOauthHandleVkRedirectFound struct {
 	Location OptString

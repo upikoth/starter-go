@@ -5,34 +5,43 @@ import (
 
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
+	"github.com/upikoth/starter-go/internal/repositories/http"
 	"github.com/upikoth/starter-go/internal/repositories/ycp"
 	"github.com/upikoth/starter-go/internal/repositories/ydb"
 )
 
 type Repository struct {
-	YCP *ycp.Ycp
-	YDB *ydb.YDB
+	YCP  *ycp.Ycp
+	YDB  *ydb.YDB
+	HTTP *http.HTTP
 }
 
 func New(
-	logger logger.Logger,
-	config *config.Repositories,
+	log logger.Logger,
+	cfg *config.Repositories,
 ) (*Repository, error) {
-	ycpInstance, err := ycp.New(logger, &config.Ycp)
+	ycpInstance, err := ycp.New(log, &cfg.Ycp)
 
 	if err != nil {
 		return nil, err
 	}
 
-	ydbInstance, err := ydb.New(logger, &config.Ydb)
+	ydbInstance, err := ydb.New(log, &cfg.Ydb)
+
+	if err != nil {
+		return nil, err
+	}
+
+	httpInstance, err := http.New(log)
 
 	if err != nil {
 		return nil, err
 	}
 
 	return &Repository{
-		YCP: ycpInstance,
-		YDB: ydbInstance,
+		YCP:  ycpInstance,
+		YDB:  ydbInstance,
+		HTTP: httpInstance,
 	}, nil
 }
 

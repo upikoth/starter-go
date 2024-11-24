@@ -35,3 +35,9 @@ func withVkID(vkID string) Option {
 		user.VkID = vkID
 	}
 }
+
+func withMailRuID(mailRuID string) Option {
+	return func(user *models.User) {
+		user.MailRuID = mailRuID
+	}
+}

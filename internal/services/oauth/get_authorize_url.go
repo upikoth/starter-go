@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/upikoth/starter-go/internal/models"
 	"github.com/upikoth/starter-go/internal/pkg/tracing"
 	"go.opentelemetry.io/otel"
@@ -19,11 +20,11 @@ func (o *Oauth) GetAuthorizeURL(
 
 	switch oauthSource {
 	case models.OauthSourceVk:
-		return o.vkConfig.AuthCodeURL(""), nil
+		return o.vkConfig.AuthCodeURL(uuid.New().String()), nil
 	case models.OauthSourceOK:
 		return "", nil
 	case models.OauthSourceMail:
-		return "", nil
+		return o.mailConfig.AuthCodeURL(uuid.New().String()), nil
 	case models.OauthSourceYandex:
 		return "", nil
 	default:

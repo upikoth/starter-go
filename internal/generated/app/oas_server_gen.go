@@ -14,6 +14,12 @@ type Handler interface {
 	//
 	// POST /api/v1/oauth
 	V1AuthorizeUsingOauth(ctx context.Context, req *V1AuthorizeUsingOauthRequestBody) (*V1AuthorizeUsingOauthResponse, error)
+	// V1AuthorizeUsingOauthHandleMailRedirect implements V1AuthorizeUsingOauthHandleMailRedirect operation.
+	//
+	// Обработка редиректа после авторизации в mail.ru.
+	//
+	// GET /api/v1/oauthRedirect/mail
+	V1AuthorizeUsingOauthHandleMailRedirect(ctx context.Context, params V1AuthorizeUsingOauthHandleMailRedirectParams) (*V1AuthorizeUsingOauthHandleMailRedirectFound, error)
 	// V1AuthorizeUsingOauthHandleVkRedirect implements V1AuthorizeUsingOauthHandleVkRedirect operation.
 	//
 	// Обработка редиректа после авторизации в vk.

@@ -22,6 +22,15 @@ func (UnimplementedHandler) V1AuthorizeUsingOauth(ctx context.Context, req *V1Au
 	return r, ht.ErrNotImplemented
 }
 
+// V1AuthorizeUsingOauthHandleMailRedirect implements V1AuthorizeUsingOauthHandleMailRedirect operation.
+//
+// Обработка редиректа после авторизации в mail.ru.
+//
+// GET /api/v1/oauthRedirect/mail
+func (UnimplementedHandler) V1AuthorizeUsingOauthHandleMailRedirect(ctx context.Context, params V1AuthorizeUsingOauthHandleMailRedirectParams) (r *V1AuthorizeUsingOauthHandleMailRedirectFound, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // V1AuthorizeUsingOauthHandleVkRedirect implements V1AuthorizeUsingOauthHandleVkRedirect operation.
 //
 // Обработка редиректа после авторизации в vk.

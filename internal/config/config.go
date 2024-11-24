@@ -39,6 +39,10 @@ type Oauth struct {
 	VkClientID     string `envconfig:"OAUTH_VK_CLIENT_ID" required:"true"`
 	VkClientSecret string `envconfig:"OAUTH_VK_CLIENT_SECRET" required:"true"`
 	VkRedirectURL  string `envconfig:"OAUTH_VK_REDIRECT_URL" required:"true"`
+
+	MailClientID     string `envconfig:"OAUTH_MAIL_CLIENT_ID" required:"true"`
+	MailClientSecret string `envconfig:"OAUTH_MAIL_CLIENT_SECRET" required:"true"`
+	MailRedirectURL  string `envconfig:"OAUTH_MAIL_REDIRECT_URL" required:"true"`
 }
 
 type Repositories struct {

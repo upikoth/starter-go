@@ -81,3 +81,33 @@ func (h *Handler) V1AuthorizeUsingOauthHandleVkRedirect(
 		),
 	}, nil
 }
+
+func (h *Handler) V1AuthorizeUsingOauthHandleMailRedirect(
+	inputCtx context.Context,
+	params app.V1AuthorizeUsingOauthHandleMailRedirectParams,
+) (*app.V1AuthorizeUsingOauthHandleMailRedirectFound, error) {
+	tracer := otel.Tracer(tracing.GetHandlerTraceName())
+	ctx, span := tracer.Start(inputCtx, tracing.GetHandlerTraceName())
+	defer span.End()
+
+	session, err := h.services.Oauth.HandleMailRuRedirect(ctx, params.Code)
+
+	if err != nil {
+		return nil, &models.Error{
+			Code:        models.ErrCodeInterval,
+			Description: err.Error(),
+		}
+	}
+
+	return &app.V1AuthorizeUsingOauthHandleMailRedirectFound{
+		Location: app.NewOptString(
+			fmt.Sprintf(
+				"%s?id=%s&token=%s&userRole=%s",
+				h.cfg.FrontHandleAuthPageURL,
+				string(session.ID),
+				session.Token,
+				string(session.UserRole),
+			),
+		),
+	}, nil
+}

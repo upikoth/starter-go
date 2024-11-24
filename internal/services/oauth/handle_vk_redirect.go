@@ -29,7 +29,7 @@ func (o *Oauth) HandleVkRedirect(
 		return nil, err
 	}
 
-	email, err := getEmail(token)
+	email, err := getEmailFromVk(token)
 
 	if err != nil {
 		tracing.HandleError(span, err)
@@ -108,7 +108,7 @@ func (o *Oauth) HandleVkRedirect(
 	return session, nil
 }
 
-func getEmail(token *oauth2.Token) (string, error) {
+func getEmailFromVk(token *oauth2.Token) (string, error) {
 	email := token.Extra("email")
 
 	parsedEmail, emailOk := email.(string)

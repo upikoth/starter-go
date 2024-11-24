@@ -21,8 +21,9 @@ import (
 type fieldNameGetBy string
 
 var (
-	fieldNameGetByEmail fieldNameGetBy = "email"
-	fieldNameGetByVkID  fieldNameGetBy = "vk_id"
+	fieldNameGetByEmail    fieldNameGetBy = "email"
+	fieldNameGetByVkID     fieldNameGetBy = "vk_id"
+	fieldNameGetByMailRuID fieldNameGetBy = "mailru_id"
 )
 
 func (u *Users) getBy(
@@ -59,6 +60,7 @@ func (u *Users) getBy(
 					role,
 					password_hash,
 					vk_id,
+					mailru_id,
 				from users
 				where %s = $filterValue;`,
 				fieldName,
@@ -85,6 +87,7 @@ func (u *Users) getBy(
 				query.Named("role", &user.Role),
 				query.Named("password_hash", &user.PasswordHash),
 				query.Named("vk_id", &user.VkID),
+				query.Named("mailru_id", &user.MailRuID),
 			)
 
 			if sErr != nil {

@@ -101,24 +101,60 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 				switch elem[0] {
-				case 'R': // Prefix: "Redirect/vk"
+				case 'R': // Prefix: "Redirect/"
 					origElem := elem
-					if l := len("Redirect/vk"); len(elem) >= l && elem[0:l] == "Redirect/vk" {
+					if l := len("Redirect/"); len(elem) >= l && elem[0:l] == "Redirect/" {
 						elem = elem[l:]
 					} else {
 						break
 					}
 
 					if len(elem) == 0 {
-						// Leaf node.
-						switch r.Method {
-						case "GET":
-							s.handleV1AuthorizeUsingOauthHandleVkRedirectRequest([0]string{}, elemIsEscaped, w, r)
-						default:
-							s.notAllowed(w, r, "GET")
+						break
+					}
+					switch elem[0] {
+					case 'm': // Prefix: "mail"
+						origElem := elem
+						if l := len("mail"); len(elem) >= l && elem[0:l] == "mail" {
+							elem = elem[l:]
+						} else {
+							break
 						}
 
-						return
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "GET":
+								s.handleV1AuthorizeUsingOauthHandleMailRedirectRequest([0]string{}, elemIsEscaped, w, r)
+							default:
+								s.notAllowed(w, r, "GET")
+							}
+
+							return
+						}
+
+						elem = origElem
+					case 'v': // Prefix: "vk"
+						origElem := elem
+						if l := len("vk"); len(elem) >= l && elem[0:l] == "vk" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "GET":
+								s.handleV1AuthorizeUsingOauthHandleVkRedirectRequest([0]string{}, elemIsEscaped, w, r)
+							default:
+								s.notAllowed(w, r, "GET")
+							}
+
+							return
+						}
+
+						elem = origElem
 					}
 
 					elem = origElem
@@ -407,28 +443,68 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					}
 				}
 				switch elem[0] {
-				case 'R': // Prefix: "Redirect/vk"
+				case 'R': // Prefix: "Redirect/"
 					origElem := elem
-					if l := len("Redirect/vk"); len(elem) >= l && elem[0:l] == "Redirect/vk" {
+					if l := len("Redirect/"); len(elem) >= l && elem[0:l] == "Redirect/" {
 						elem = elem[l:]
 					} else {
 						break
 					}
 
 					if len(elem) == 0 {
-						// Leaf node.
-						switch method {
-						case "GET":
-							r.name = "V1AuthorizeUsingOauthHandleVkRedirect"
-							r.summary = ""
-							r.operationID = "V1AuthorizeUsingOauthHandleVkRedirect"
-							r.pathPattern = "/api/v1/oauthRedirect/vk"
-							r.args = args
-							r.count = 0
-							return r, true
-						default:
-							return
+						break
+					}
+					switch elem[0] {
+					case 'm': // Prefix: "mail"
+						origElem := elem
+						if l := len("mail"); len(elem) >= l && elem[0:l] == "mail" {
+							elem = elem[l:]
+						} else {
+							break
 						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch method {
+							case "GET":
+								r.name = "V1AuthorizeUsingOauthHandleMailRedirect"
+								r.summary = ""
+								r.operationID = "V1AuthorizeUsingOauthHandleMailRedirect"
+								r.pathPattern = "/api/v1/oauthRedirect/mail"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
+							}
+						}
+
+						elem = origElem
+					case 'v': // Prefix: "vk"
+						origElem := elem
+						if l := len("vk"); len(elem) >= l && elem[0:l] == "vk" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch method {
+							case "GET":
+								r.name = "V1AuthorizeUsingOauthHandleVkRedirect"
+								r.summary = ""
+								r.operationID = "V1AuthorizeUsingOauthHandleVkRedirect"
+								r.pathPattern = "/api/v1/oauthRedirect/vk"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
+							}
+						}
+
+						elem = origElem
 					}
 
 					elem = origElem

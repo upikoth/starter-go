@@ -15,6 +15,65 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
+// V1AuthorizeUsingOauthHandleMailRedirectParams is parameters of V1AuthorizeUsingOauthHandleMailRedirect operation.
+type V1AuthorizeUsingOauthHandleMailRedirectParams struct {
+	// Код, по которому можно получить информацию о
+	// пользователе из mail.
+	Code string
+}
+
+func unpackV1AuthorizeUsingOauthHandleMailRedirectParams(packed middleware.Parameters) (params V1AuthorizeUsingOauthHandleMailRedirectParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "code",
+			In:   "query",
+		}
+		params.Code = packed[key].(string)
+	}
+	return params
+}
+
+func decodeV1AuthorizeUsingOauthHandleMailRedirectParams(args [0]string, argsEscaped bool, r *http.Request) (params V1AuthorizeUsingOauthHandleMailRedirectParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
+	// Decode query: code.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "code",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Code = c
+				return nil
+			}); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "code",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
 // V1AuthorizeUsingOauthHandleVkRedirectParams is parameters of V1AuthorizeUsingOauthHandleVkRedirect operation.
 type V1AuthorizeUsingOauthHandleVkRedirectParams struct {
 	// Код, по которому можно получить информацию о

@@ -4,10 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/models"
-	"net/http"
 )
 
 type getMailRuUserInfoResponse struct {

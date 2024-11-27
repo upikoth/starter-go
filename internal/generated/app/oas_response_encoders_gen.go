@@ -81,6 +81,32 @@ func encodeV1AuthorizeUsingOauthHandleVkRedirectResponse(response *V1AuthorizeUs
 	return nil
 }
 
+func encodeV1AuthorizeUsingOauthHandleYandexRedirectResponse(response *V1AuthorizeUsingOauthHandleYandexRedirectFound, w http.ResponseWriter, span trace.Span) error {
+	// Encoding response headers.
+	{
+		h := uri.NewHeaderEncoder(w.Header())
+		// Encode "Location" header.
+		{
+			cfg := uri.HeaderParameterEncodingConfig{
+				Name:    "Location",
+				Explode: false,
+			}
+			if err := h.EncodeParam(cfg, func(e uri.Encoder) error {
+				if val, ok := response.Location.Get(); ok {
+					return e.EncodeValue(conv.StringToString(val))
+				}
+				return nil
+			}); err != nil {
+				return errors.Wrap(err, "encode Location header")
+			}
+		}
+	}
+	w.WriteHeader(302)
+	span.SetStatus(codes.Ok, http.StatusText(302))
+
+	return nil
+}
+
 func encodeV1CheckCurrentSessionResponse(response *SuccessResponse, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(200)

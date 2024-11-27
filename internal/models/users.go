@@ -35,6 +35,7 @@ type User struct {
 	Role         UserRole
 	VkID         string
 	MailRuID     string
+	YandexID     string
 }
 
 type UserList struct {

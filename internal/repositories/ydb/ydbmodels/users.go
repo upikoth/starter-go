@@ -9,6 +9,7 @@ type User struct {
 	Role         string
 	VkID         string
 	MailRuID     string
+	YandexID     string
 }
 
 func NewYDBUserModel(user *models.User) *User {
@@ -19,6 +20,7 @@ func NewYDBUserModel(user *models.User) *User {
 		Role:         string(user.Role),
 		VkID:         user.VkID,
 		MailRuID:     user.MailRuID,
+		YandexID:     user.YandexID,
 	}
 }
 
@@ -30,5 +32,6 @@ func (u *User) FromYDBModel() *models.User {
 		Role:         models.UserRole(u.Role),
 		VkID:         u.VkID,
 		MailRuID:     u.MailRuID,
+		YandexID:     u.YandexID,
 	}
 }

@@ -80,6 +80,7 @@ func queryUsers(qCtx context.Context, tx query.Transaction, params *models.Users
 			role,
 			vk_id,
 			mailru_id,
+			yandex_id,
 		from users
 		limit $limit
 		offset $offset`,
@@ -111,6 +112,7 @@ func queryUsers(qCtx context.Context, tx query.Transaction, params *models.Users
 			query.Named("password_hash", &user.PasswordHash),
 			query.Named("vk_id", &user.VkID),
 			query.Named("mailru_id", &user.MailRuID),
+			query.Named("yandex_id", &user.YandexID),
 		)
 
 		if sErr != nil {

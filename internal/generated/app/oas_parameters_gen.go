@@ -133,6 +133,65 @@ func decodeV1AuthorizeUsingOauthHandleVkRedirectParams(args [0]string, argsEscap
 	return params, nil
 }
 
+// V1AuthorizeUsingOauthHandleYandexRedirectParams is parameters of V1AuthorizeUsingOauthHandleYandexRedirect operation.
+type V1AuthorizeUsingOauthHandleYandexRedirectParams struct {
+	// Код, по которому можно получить информацию о
+	// пользователе из yandex.
+	Code string
+}
+
+func unpackV1AuthorizeUsingOauthHandleYandexRedirectParams(packed middleware.Parameters) (params V1AuthorizeUsingOauthHandleYandexRedirectParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "code",
+			In:   "query",
+		}
+		params.Code = packed[key].(string)
+	}
+	return params
+}
+
+func decodeV1AuthorizeUsingOauthHandleYandexRedirectParams(args [0]string, argsEscaped bool, r *http.Request) (params V1AuthorizeUsingOauthHandleYandexRedirectParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
+	// Decode query: code.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "code",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Code = c
+				return nil
+			}); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "code",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
 // V1CheckCurrentSessionParams is parameters of V1CheckCurrentSession operation.
 type V1CheckCurrentSessionParams struct {
 	AuthorizationToken string

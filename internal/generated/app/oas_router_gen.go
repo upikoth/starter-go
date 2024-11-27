@@ -155,6 +155,27 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						}
 
 						elem = origElem
+					case 'y': // Prefix: "yandex"
+						origElem := elem
+						if l := len("yandex"); len(elem) >= l && elem[0:l] == "yandex" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "GET":
+								s.handleV1AuthorizeUsingOauthHandleYandexRedirectRequest([0]string{}, elemIsEscaped, w, r)
+							default:
+								s.notAllowed(w, r, "GET")
+							}
+
+							return
+						}
+
+						elem = origElem
 					}
 
 					elem = origElem
@@ -496,6 +517,31 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								r.summary = ""
 								r.operationID = "V1AuthorizeUsingOauthHandleVkRedirect"
 								r.pathPattern = "/api/v1/oauthRedirect/vk"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
+							}
+						}
+
+						elem = origElem
+					case 'y': // Prefix: "yandex"
+						origElem := elem
+						if l := len("yandex"); len(elem) >= l && elem[0:l] == "yandex" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch method {
+							case "GET":
+								r.name = "V1AuthorizeUsingOauthHandleYandexRedirect"
+								r.summary = ""
+								r.operationID = "V1AuthorizeUsingOauthHandleYandexRedirect"
+								r.pathPattern = "/api/v1/oauthRedirect/yandex"
 								r.args = args
 								r.count = 0
 								return r, true

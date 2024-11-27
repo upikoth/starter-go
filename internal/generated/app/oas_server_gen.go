@@ -26,6 +26,12 @@ type Handler interface {
 	//
 	// GET /api/v1/oauthRedirect/vk
 	V1AuthorizeUsingOauthHandleVkRedirect(ctx context.Context, params V1AuthorizeUsingOauthHandleVkRedirectParams) (*V1AuthorizeUsingOauthHandleVkRedirectFound, error)
+	// V1AuthorizeUsingOauthHandleYandexRedirect implements V1AuthorizeUsingOauthHandleYandexRedirect operation.
+	//
+	// Обработка редиректа после авторизации в yandex.
+	//
+	// GET /api/v1/oauthRedirect/yandex
+	V1AuthorizeUsingOauthHandleYandexRedirect(ctx context.Context, params V1AuthorizeUsingOauthHandleYandexRedirectParams) (*V1AuthorizeUsingOauthHandleYandexRedirectFound, error)
 	// V1CheckCurrentSession implements V1CheckCurrentSession operation.
 	//
 	// Получить информацию валидна ли текущая сессия.

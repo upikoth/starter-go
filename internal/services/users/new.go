@@ -41,3 +41,9 @@ func withMailRuID(mailRuID string) Option {
 		user.MailRuID = mailRuID
 	}
 }
+
+func withYandexID(yandexID string) Option {
+	return func(user *models.User) {
+		user.YandexID = yandexID
+	}
+}

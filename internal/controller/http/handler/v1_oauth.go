@@ -111,3 +111,33 @@ func (h *Handler) V1AuthorizeUsingOauthHandleMailRedirect(
 		),
 	}, nil
 }
+
+func (h *Handler) V1AuthorizeUsingOauthHandleYandexRedirect(
+	inputCtx context.Context,
+	params app.V1AuthorizeUsingOauthHandleYandexRedirectParams,
+) (*app.V1AuthorizeUsingOauthHandleYandexRedirectFound, error) {
+	tracer := otel.Tracer(tracing.GetHandlerTraceName())
+	ctx, span := tracer.Start(inputCtx, tracing.GetHandlerTraceName())
+	defer span.End()
+
+	session, err := h.services.Oauth.HandleYandexRedirect(ctx, params.Code)
+
+	if err != nil {
+		return nil, &models.Error{
+			Code:        models.ErrCodeInterval,
+			Description: err.Error(),
+		}
+	}
+
+	return &app.V1AuthorizeUsingOauthHandleYandexRedirectFound{
+		Location: app.NewOptString(
+			fmt.Sprintf(
+				"%s?id=%s&token=%s&userRole=%s",
+				h.cfg.FrontHandleAuthPageURL,
+				string(session.ID),
+				session.Token,
+				string(session.UserRole),
+			),
+		),
+	}, nil
+}

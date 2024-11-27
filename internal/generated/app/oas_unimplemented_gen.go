@@ -40,6 +40,15 @@ func (UnimplementedHandler) V1AuthorizeUsingOauthHandleVkRedirect(ctx context.Co
 	return r, ht.ErrNotImplemented
 }
 
+// V1AuthorizeUsingOauthHandleYandexRedirect implements V1AuthorizeUsingOauthHandleYandexRedirect operation.
+//
+// Обработка редиректа после авторизации в yandex.
+//
+// GET /api/v1/oauthRedirect/yandex
+func (UnimplementedHandler) V1AuthorizeUsingOauthHandleYandexRedirect(ctx context.Context, params V1AuthorizeUsingOauthHandleYandexRedirectParams) (r *V1AuthorizeUsingOauthHandleYandexRedirectFound, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // V1CheckCurrentSession implements V1CheckCurrentSession operation.
 //
 // Получить информацию валидна ли текущая сессия.

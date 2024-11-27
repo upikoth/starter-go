@@ -396,6 +396,21 @@ func (s *V1AuthorizeUsingOauthHandleVkRedirectFound) SetLocation(val OptString) 
 	s.Location = val
 }
 
+// V1AuthorizeUsingOauthHandleYandexRedirectFound is response for V1AuthorizeUsingOauthHandleYandexRedirect operation.
+type V1AuthorizeUsingOauthHandleYandexRedirectFound struct {
+	Location OptString
+}
+
+// GetLocation returns the value of Location.
+func (s *V1AuthorizeUsingOauthHandleYandexRedirectFound) GetLocation() OptString {
+	return s.Location
+}
+
+// SetLocation sets the value of Location.
+func (s *V1AuthorizeUsingOauthHandleYandexRedirectFound) SetLocation(val OptString) {
+	s.Location = val
+}
+
 // Ref: #/components/schemas/V1AuthorizeUsingOauthRequestBody
 type V1AuthorizeUsingOauthRequestBody struct {
 	OauthSource V1AuthorizeUsingOauthRequestBodyOauthSource `json:"oauthSource"`

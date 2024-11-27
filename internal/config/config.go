@@ -43,6 +43,10 @@ type Oauth struct {
 	MailClientID     string `envconfig:"OAUTH_MAIL_CLIENT_ID" required:"true"`
 	MailClientSecret string `envconfig:"OAUTH_MAIL_CLIENT_SECRET" required:"true"`
 	MailRedirectURL  string `envconfig:"OAUTH_MAIL_REDIRECT_URL" required:"true"`
+
+	YandexClientID     string `envconfig:"OAUTH_YANDEX_CLIENT_ID" required:"true"`
+	YandexClientSecret string `envconfig:"OAUTH_YANDEX_CLIENT_SECRET" required:"true"`
+	YandexRedirectURL  string `envconfig:"OAUTH_YANDEX_REDIRECT_URL" required:"true"`
 }
 
 type Repositories struct {

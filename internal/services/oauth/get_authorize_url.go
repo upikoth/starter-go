@@ -26,11 +26,11 @@ func (o *Oauth) GetAuthorizeURL(
 	case models.OauthSourceMail:
 		return o.mailConfig.AuthCodeURL(uuid.New().String()), nil
 	case models.OauthSourceYandex:
-		return "", nil
+		return o.yandexConfig.AuthCodeURL(uuid.New().String()), nil
 	default:
 		return "", &models.Error{
 			Code:        models.ErrCodeOauthSourceNotExist,
-			Description: "Incorrect email or password",
+			Description: "Incorrect oauth source",
 			StatusCode:  http.StatusBadRequest,
 		}
 	}

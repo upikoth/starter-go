@@ -9,6 +9,7 @@ import (
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/mailru"
 	"golang.org/x/oauth2/vk"
+	"golang.org/x/oauth2/yandex"
 )
 
 type oauthRepositories struct {
@@ -24,6 +25,7 @@ type Oauth struct {
 	logger       logger.Logger
 	vkConfig     *oauth2.Config
 	mailConfig   *oauth2.Config
+	yandexConfig *oauth2.Config
 	repositories *oauthRepositories
 	services     *oauthServices
 }
@@ -50,6 +52,12 @@ func New(
 			Endpoint:     mailru.Endpoint,
 			RedirectURL:  cfg.MailRedirectURL,
 			Scopes:       []string{"userinfo"},
+		},
+		yandexConfig: &oauth2.Config{
+			ClientID:     cfg.YandexClientID,
+			ClientSecret: cfg.YandexClientSecret,
+			Endpoint:     yandex.Endpoint,
+			RedirectURL:  cfg.YandexRedirectURL,
 		},
 		repositories: &oauthRepositories{
 			oauth: oauthRepo,

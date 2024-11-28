@@ -533,7 +533,6 @@ components:
           type: string
           enum:
             - vk
-            - ok
             - mail
             - yandex
 

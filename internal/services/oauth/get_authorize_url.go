@@ -21,8 +21,6 @@ func (o *Oauth) GetAuthorizeURL(
 	switch oauthSource {
 	case models.OauthSourceVk:
 		return o.vkConfig.AuthCodeURL(uuid.New().String()), nil
-	case models.OauthSourceOK:
-		return "", nil
 	case models.OauthSourceMail:
 		return o.mailConfig.AuthCodeURL(uuid.New().String()), nil
 	case models.OauthSourceYandex:

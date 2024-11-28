@@ -430,7 +430,6 @@ type V1AuthorizeUsingOauthRequestBodyOauthSource string
 
 const (
 	V1AuthorizeUsingOauthRequestBodyOauthSourceVk     V1AuthorizeUsingOauthRequestBodyOauthSource = "vk"
-	V1AuthorizeUsingOauthRequestBodyOauthSourceOk     V1AuthorizeUsingOauthRequestBodyOauthSource = "ok"
 	V1AuthorizeUsingOauthRequestBodyOauthSourceMail   V1AuthorizeUsingOauthRequestBodyOauthSource = "mail"
 	V1AuthorizeUsingOauthRequestBodyOauthSourceYandex V1AuthorizeUsingOauthRequestBodyOauthSource = "yandex"
 )
@@ -439,7 +438,6 @@ const (
 func (V1AuthorizeUsingOauthRequestBodyOauthSource) AllValues() []V1AuthorizeUsingOauthRequestBodyOauthSource {
 	return []V1AuthorizeUsingOauthRequestBodyOauthSource{
 		V1AuthorizeUsingOauthRequestBodyOauthSourceVk,
-		V1AuthorizeUsingOauthRequestBodyOauthSourceOk,
 		V1AuthorizeUsingOauthRequestBodyOauthSourceMail,
 		V1AuthorizeUsingOauthRequestBodyOauthSourceYandex,
 	}
@@ -449,8 +447,6 @@ func (V1AuthorizeUsingOauthRequestBodyOauthSource) AllValues() []V1AuthorizeUsin
 func (s V1AuthorizeUsingOauthRequestBodyOauthSource) MarshalText() ([]byte, error) {
 	switch s {
 	case V1AuthorizeUsingOauthRequestBodyOauthSourceVk:
-		return []byte(s), nil
-	case V1AuthorizeUsingOauthRequestBodyOauthSourceOk:
 		return []byte(s), nil
 	case V1AuthorizeUsingOauthRequestBodyOauthSourceMail:
 		return []byte(s), nil
@@ -466,9 +462,6 @@ func (s *V1AuthorizeUsingOauthRequestBodyOauthSource) UnmarshalText(data []byte)
 	switch V1AuthorizeUsingOauthRequestBodyOauthSource(data) {
 	case V1AuthorizeUsingOauthRequestBodyOauthSourceVk:
 		*s = V1AuthorizeUsingOauthRequestBodyOauthSourceVk
-		return nil
-	case V1AuthorizeUsingOauthRequestBodyOauthSourceOk:
-		*s = V1AuthorizeUsingOauthRequestBodyOauthSourceOk
 		return nil
 	case V1AuthorizeUsingOauthRequestBodyOauthSourceMail:
 		*s = V1AuthorizeUsingOauthRequestBodyOauthSourceMail

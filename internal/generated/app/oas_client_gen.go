@@ -184,7 +184,7 @@ func (c *Client) sendV1AuthorizeUsingOauth(ctx context.Context, request *V1Autho
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "V1AuthorizeUsingOauth",
+	ctx, span := c.cfg.Tracer.Start(ctx, V1AuthorizeUsingOauthOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -259,7 +259,7 @@ func (c *Client) sendV1AuthorizeUsingOauthHandleMailRedirect(ctx context.Context
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "V1AuthorizeUsingOauthHandleMailRedirect",
+	ctx, span := c.cfg.Tracer.Start(ctx, V1AuthorizeUsingOauthHandleMailRedirectOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -349,7 +349,7 @@ func (c *Client) sendV1AuthorizeUsingOauthHandleVkRedirect(ctx context.Context, 
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "V1AuthorizeUsingOauthHandleVkRedirect",
+	ctx, span := c.cfg.Tracer.Start(ctx, V1AuthorizeUsingOauthHandleVkRedirectOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -439,7 +439,7 @@ func (c *Client) sendV1AuthorizeUsingOauthHandleYandexRedirect(ctx context.Conte
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "V1AuthorizeUsingOauthHandleYandexRedirect",
+	ctx, span := c.cfg.Tracer.Start(ctx, V1AuthorizeUsingOauthHandleYandexRedirectOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -529,7 +529,7 @@ func (c *Client) sendV1CheckCurrentSession(ctx context.Context, params V1CheckCu
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "V1CheckCurrentSession",
+	ctx, span := c.cfg.Tracer.Start(ctx, V1CheckCurrentSessionOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -615,7 +615,7 @@ func (c *Client) sendV1CheckHealth(ctx context.Context) (res *SuccessResponse, e
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "V1CheckHealth",
+	ctx, span := c.cfg.Tracer.Start(ctx, V1CheckHealthOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -687,7 +687,7 @@ func (c *Client) sendV1ConfirmPasswordRecoveryRequest(ctx context.Context, reque
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "V1ConfirmPasswordRecoveryRequest",
+	ctx, span := c.cfg.Tracer.Start(ctx, V1ConfirmPasswordRecoveryRequestOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -762,7 +762,7 @@ func (c *Client) sendV1ConfirmRegistration(ctx context.Context, request *V1Regis
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "V1ConfirmRegistration",
+	ctx, span := c.cfg.Tracer.Start(ctx, V1ConfirmRegistrationOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -837,7 +837,7 @@ func (c *Client) sendV1CreatePasswordRecoveryRequest(ctx context.Context, reques
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "V1CreatePasswordRecoveryRequest",
+	ctx, span := c.cfg.Tracer.Start(ctx, V1CreatePasswordRecoveryRequestOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -912,7 +912,7 @@ func (c *Client) sendV1CreateRegistration(ctx context.Context, request *V1Regist
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "V1CreateRegistration",
+	ctx, span := c.cfg.Tracer.Start(ctx, V1CreateRegistrationOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -987,7 +987,7 @@ func (c *Client) sendV1CreateSession(ctx context.Context, request *V1SessionsCre
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "V1CreateSession",
+	ctx, span := c.cfg.Tracer.Start(ctx, V1CreateSessionOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -1062,7 +1062,7 @@ func (c *Client) sendV1DeleteSession(ctx context.Context, params V1DeleteSession
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "V1DeleteSession",
+	ctx, span := c.cfg.Tracer.Start(ctx, V1DeleteSessionOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -1152,7 +1152,7 @@ func (c *Client) sendV1GetUsers(ctx context.Context, params V1GetUsersParams) (r
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "V1GetUsers",
+	ctx, span := c.cfg.Tracer.Start(ctx, V1GetUsersOperation,
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)

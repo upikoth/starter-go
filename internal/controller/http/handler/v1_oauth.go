@@ -26,8 +26,6 @@ func (h *Handler) V1AuthorizeUsingOauth(
 		oauthSource = models.OauthSourceVk
 	case app.V1AuthorizeUsingOauthRequestBodyOauthSourceMail:
 		oauthSource = models.OauthSourceMail
-	case app.V1AuthorizeUsingOauthRequestBodyOauthSourceOk:
-		oauthSource = models.OauthSourceOK
 	case app.V1AuthorizeUsingOauthRequestBodyOauthSourceYandex:
 		oauthSource = models.OauthSourceYandex
 	default:

@@ -33,7 +33,7 @@ func (s *Server) handleV1AuthorizeUsingOauthRequest(args [0]string, argsEscaped 
 	}
 
 	// Start a span for this request.
-	ctx, span := s.cfg.Tracer.Start(r.Context(), "V1AuthorizeUsingOauth",
+	ctx, span := s.cfg.Tracer.Start(r.Context(), V1AuthorizeUsingOauthOperation,
 		trace.WithAttributes(otelAttrs...),
 		serverSpanKind,
 	)
@@ -64,7 +64,7 @@ func (s *Server) handleV1AuthorizeUsingOauthRequest(args [0]string, argsEscaped 
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "V1AuthorizeUsingOauth",
+			Name: V1AuthorizeUsingOauthOperation,
 			ID:   "V1AuthorizeUsingOauth",
 		}
 	)
@@ -88,7 +88,7 @@ func (s *Server) handleV1AuthorizeUsingOauthRequest(args [0]string, argsEscaped 
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "V1AuthorizeUsingOauth",
+			OperationName:    V1AuthorizeUsingOauthOperation,
 			OperationSummary: "",
 			OperationID:      "V1AuthorizeUsingOauth",
 			Body:             request,
@@ -156,7 +156,7 @@ func (s *Server) handleV1AuthorizeUsingOauthHandleMailRedirectRequest(args [0]st
 	}
 
 	// Start a span for this request.
-	ctx, span := s.cfg.Tracer.Start(r.Context(), "V1AuthorizeUsingOauthHandleMailRedirect",
+	ctx, span := s.cfg.Tracer.Start(r.Context(), V1AuthorizeUsingOauthHandleMailRedirectOperation,
 		trace.WithAttributes(otelAttrs...),
 		serverSpanKind,
 	)
@@ -187,7 +187,7 @@ func (s *Server) handleV1AuthorizeUsingOauthHandleMailRedirectRequest(args [0]st
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "V1AuthorizeUsingOauthHandleMailRedirect",
+			Name: V1AuthorizeUsingOauthHandleMailRedirectOperation,
 			ID:   "V1AuthorizeUsingOauthHandleMailRedirect",
 		}
 	)
@@ -206,7 +206,7 @@ func (s *Server) handleV1AuthorizeUsingOauthHandleMailRedirectRequest(args [0]st
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "V1AuthorizeUsingOauthHandleMailRedirect",
+			OperationName:    V1AuthorizeUsingOauthHandleMailRedirectOperation,
 			OperationSummary: "",
 			OperationID:      "V1AuthorizeUsingOauthHandleMailRedirect",
 			Body:             nil,
@@ -279,7 +279,7 @@ func (s *Server) handleV1AuthorizeUsingOauthHandleVkRedirectRequest(args [0]stri
 	}
 
 	// Start a span for this request.
-	ctx, span := s.cfg.Tracer.Start(r.Context(), "V1AuthorizeUsingOauthHandleVkRedirect",
+	ctx, span := s.cfg.Tracer.Start(r.Context(), V1AuthorizeUsingOauthHandleVkRedirectOperation,
 		trace.WithAttributes(otelAttrs...),
 		serverSpanKind,
 	)
@@ -310,7 +310,7 @@ func (s *Server) handleV1AuthorizeUsingOauthHandleVkRedirectRequest(args [0]stri
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "V1AuthorizeUsingOauthHandleVkRedirect",
+			Name: V1AuthorizeUsingOauthHandleVkRedirectOperation,
 			ID:   "V1AuthorizeUsingOauthHandleVkRedirect",
 		}
 	)
@@ -329,7 +329,7 @@ func (s *Server) handleV1AuthorizeUsingOauthHandleVkRedirectRequest(args [0]stri
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "V1AuthorizeUsingOauthHandleVkRedirect",
+			OperationName:    V1AuthorizeUsingOauthHandleVkRedirectOperation,
 			OperationSummary: "",
 			OperationID:      "V1AuthorizeUsingOauthHandleVkRedirect",
 			Body:             nil,
@@ -402,7 +402,7 @@ func (s *Server) handleV1AuthorizeUsingOauthHandleYandexRedirectRequest(args [0]
 	}
 
 	// Start a span for this request.
-	ctx, span := s.cfg.Tracer.Start(r.Context(), "V1AuthorizeUsingOauthHandleYandexRedirect",
+	ctx, span := s.cfg.Tracer.Start(r.Context(), V1AuthorizeUsingOauthHandleYandexRedirectOperation,
 		trace.WithAttributes(otelAttrs...),
 		serverSpanKind,
 	)
@@ -433,7 +433,7 @@ func (s *Server) handleV1AuthorizeUsingOauthHandleYandexRedirectRequest(args [0]
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "V1AuthorizeUsingOauthHandleYandexRedirect",
+			Name: V1AuthorizeUsingOauthHandleYandexRedirectOperation,
 			ID:   "V1AuthorizeUsingOauthHandleYandexRedirect",
 		}
 	)
@@ -452,7 +452,7 @@ func (s *Server) handleV1AuthorizeUsingOauthHandleYandexRedirectRequest(args [0]
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "V1AuthorizeUsingOauthHandleYandexRedirect",
+			OperationName:    V1AuthorizeUsingOauthHandleYandexRedirectOperation,
 			OperationSummary: "",
 			OperationID:      "V1AuthorizeUsingOauthHandleYandexRedirect",
 			Body:             nil,
@@ -525,7 +525,7 @@ func (s *Server) handleV1CheckCurrentSessionRequest(args [0]string, argsEscaped 
 	}
 
 	// Start a span for this request.
-	ctx, span := s.cfg.Tracer.Start(r.Context(), "V1CheckCurrentSession",
+	ctx, span := s.cfg.Tracer.Start(r.Context(), V1CheckCurrentSessionOperation,
 		trace.WithAttributes(otelAttrs...),
 		serverSpanKind,
 	)
@@ -556,7 +556,7 @@ func (s *Server) handleV1CheckCurrentSessionRequest(args [0]string, argsEscaped 
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "V1CheckCurrentSession",
+			Name: V1CheckCurrentSessionOperation,
 			ID:   "V1CheckCurrentSession",
 		}
 	)
@@ -575,7 +575,7 @@ func (s *Server) handleV1CheckCurrentSessionRequest(args [0]string, argsEscaped 
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "V1CheckCurrentSession",
+			OperationName:    V1CheckCurrentSessionOperation,
 			OperationSummary: "",
 			OperationID:      "V1CheckCurrentSession",
 			Body:             nil,
@@ -648,7 +648,7 @@ func (s *Server) handleV1CheckHealthRequest(args [0]string, argsEscaped bool, w 
 	}
 
 	// Start a span for this request.
-	ctx, span := s.cfg.Tracer.Start(r.Context(), "V1CheckHealth",
+	ctx, span := s.cfg.Tracer.Start(r.Context(), V1CheckHealthOperation,
 		trace.WithAttributes(otelAttrs...),
 		serverSpanKind,
 	)
@@ -684,7 +684,7 @@ func (s *Server) handleV1CheckHealthRequest(args [0]string, argsEscaped bool, w 
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "V1CheckHealth",
+			OperationName:    V1CheckHealthOperation,
 			OperationSummary: "",
 			OperationID:      "V1CheckHealth",
 			Body:             nil,
@@ -752,7 +752,7 @@ func (s *Server) handleV1ConfirmPasswordRecoveryRequestRequest(args [0]string, a
 	}
 
 	// Start a span for this request.
-	ctx, span := s.cfg.Tracer.Start(r.Context(), "V1ConfirmPasswordRecoveryRequest",
+	ctx, span := s.cfg.Tracer.Start(r.Context(), V1ConfirmPasswordRecoveryRequestOperation,
 		trace.WithAttributes(otelAttrs...),
 		serverSpanKind,
 	)
@@ -783,7 +783,7 @@ func (s *Server) handleV1ConfirmPasswordRecoveryRequestRequest(args [0]string, a
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "V1ConfirmPasswordRecoveryRequest",
+			Name: V1ConfirmPasswordRecoveryRequestOperation,
 			ID:   "V1ConfirmPasswordRecoveryRequest",
 		}
 	)
@@ -807,7 +807,7 @@ func (s *Server) handleV1ConfirmPasswordRecoveryRequestRequest(args [0]string, a
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "V1ConfirmPasswordRecoveryRequest",
+			OperationName:    V1ConfirmPasswordRecoveryRequestOperation,
 			OperationSummary: "",
 			OperationID:      "V1ConfirmPasswordRecoveryRequest",
 			Body:             request,
@@ -875,7 +875,7 @@ func (s *Server) handleV1ConfirmRegistrationRequest(args [0]string, argsEscaped 
 	}
 
 	// Start a span for this request.
-	ctx, span := s.cfg.Tracer.Start(r.Context(), "V1ConfirmRegistration",
+	ctx, span := s.cfg.Tracer.Start(r.Context(), V1ConfirmRegistrationOperation,
 		trace.WithAttributes(otelAttrs...),
 		serverSpanKind,
 	)
@@ -906,7 +906,7 @@ func (s *Server) handleV1ConfirmRegistrationRequest(args [0]string, argsEscaped 
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "V1ConfirmRegistration",
+			Name: V1ConfirmRegistrationOperation,
 			ID:   "V1ConfirmRegistration",
 		}
 	)
@@ -930,7 +930,7 @@ func (s *Server) handleV1ConfirmRegistrationRequest(args [0]string, argsEscaped 
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "V1ConfirmRegistration",
+			OperationName:    V1ConfirmRegistrationOperation,
 			OperationSummary: "",
 			OperationID:      "V1ConfirmRegistration",
 			Body:             request,
@@ -998,7 +998,7 @@ func (s *Server) handleV1CreatePasswordRecoveryRequestRequest(args [0]string, ar
 	}
 
 	// Start a span for this request.
-	ctx, span := s.cfg.Tracer.Start(r.Context(), "V1CreatePasswordRecoveryRequest",
+	ctx, span := s.cfg.Tracer.Start(r.Context(), V1CreatePasswordRecoveryRequestOperation,
 		trace.WithAttributes(otelAttrs...),
 		serverSpanKind,
 	)
@@ -1029,7 +1029,7 @@ func (s *Server) handleV1CreatePasswordRecoveryRequestRequest(args [0]string, ar
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "V1CreatePasswordRecoveryRequest",
+			Name: V1CreatePasswordRecoveryRequestOperation,
 			ID:   "V1CreatePasswordRecoveryRequest",
 		}
 	)
@@ -1053,7 +1053,7 @@ func (s *Server) handleV1CreatePasswordRecoveryRequestRequest(args [0]string, ar
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "V1CreatePasswordRecoveryRequest",
+			OperationName:    V1CreatePasswordRecoveryRequestOperation,
 			OperationSummary: "",
 			OperationID:      "V1CreatePasswordRecoveryRequest",
 			Body:             request,
@@ -1121,7 +1121,7 @@ func (s *Server) handleV1CreateRegistrationRequest(args [0]string, argsEscaped b
 	}
 
 	// Start a span for this request.
-	ctx, span := s.cfg.Tracer.Start(r.Context(), "V1CreateRegistration",
+	ctx, span := s.cfg.Tracer.Start(r.Context(), V1CreateRegistrationOperation,
 		trace.WithAttributes(otelAttrs...),
 		serverSpanKind,
 	)
@@ -1152,7 +1152,7 @@ func (s *Server) handleV1CreateRegistrationRequest(args [0]string, argsEscaped b
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "V1CreateRegistration",
+			Name: V1CreateRegistrationOperation,
 			ID:   "V1CreateRegistration",
 		}
 	)
@@ -1176,7 +1176,7 @@ func (s *Server) handleV1CreateRegistrationRequest(args [0]string, argsEscaped b
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "V1CreateRegistration",
+			OperationName:    V1CreateRegistrationOperation,
 			OperationSummary: "",
 			OperationID:      "V1CreateRegistration",
 			Body:             request,
@@ -1244,7 +1244,7 @@ func (s *Server) handleV1CreateSessionRequest(args [0]string, argsEscaped bool, 
 	}
 
 	// Start a span for this request.
-	ctx, span := s.cfg.Tracer.Start(r.Context(), "V1CreateSession",
+	ctx, span := s.cfg.Tracer.Start(r.Context(), V1CreateSessionOperation,
 		trace.WithAttributes(otelAttrs...),
 		serverSpanKind,
 	)
@@ -1275,7 +1275,7 @@ func (s *Server) handleV1CreateSessionRequest(args [0]string, argsEscaped bool, 
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "V1CreateSession",
+			Name: V1CreateSessionOperation,
 			ID:   "V1CreateSession",
 		}
 	)
@@ -1299,7 +1299,7 @@ func (s *Server) handleV1CreateSessionRequest(args [0]string, argsEscaped bool, 
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "V1CreateSession",
+			OperationName:    V1CreateSessionOperation,
 			OperationSummary: "",
 			OperationID:      "V1CreateSession",
 			Body:             request,
@@ -1367,7 +1367,7 @@ func (s *Server) handleV1DeleteSessionRequest(args [1]string, argsEscaped bool, 
 	}
 
 	// Start a span for this request.
-	ctx, span := s.cfg.Tracer.Start(r.Context(), "V1DeleteSession",
+	ctx, span := s.cfg.Tracer.Start(r.Context(), V1DeleteSessionOperation,
 		trace.WithAttributes(otelAttrs...),
 		serverSpanKind,
 	)
@@ -1398,7 +1398,7 @@ func (s *Server) handleV1DeleteSessionRequest(args [1]string, argsEscaped bool, 
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "V1DeleteSession",
+			Name: V1DeleteSessionOperation,
 			ID:   "V1DeleteSession",
 		}
 	)
@@ -1417,7 +1417,7 @@ func (s *Server) handleV1DeleteSessionRequest(args [1]string, argsEscaped bool, 
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "V1DeleteSession",
+			OperationName:    V1DeleteSessionOperation,
 			OperationSummary: "",
 			OperationID:      "V1DeleteSession",
 			Body:             nil,
@@ -1490,7 +1490,7 @@ func (s *Server) handleV1GetUsersRequest(args [0]string, argsEscaped bool, w htt
 	}
 
 	// Start a span for this request.
-	ctx, span := s.cfg.Tracer.Start(r.Context(), "V1GetUsers",
+	ctx, span := s.cfg.Tracer.Start(r.Context(), V1GetUsersOperation,
 		trace.WithAttributes(otelAttrs...),
 		serverSpanKind,
 	)
@@ -1521,7 +1521,7 @@ func (s *Server) handleV1GetUsersRequest(args [0]string, argsEscaped bool, w htt
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "V1GetUsers",
+			Name: V1GetUsersOperation,
 			ID:   "V1GetUsers",
 		}
 	)
@@ -1540,7 +1540,7 @@ func (s *Server) handleV1GetUsersRequest(args [0]string, argsEscaped bool, w htt
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "V1GetUsers",
+			OperationName:    V1GetUsersOperation,
 			OperationSummary: "",
 			OperationID:      "V1GetUsers",
 			Body:             nil,

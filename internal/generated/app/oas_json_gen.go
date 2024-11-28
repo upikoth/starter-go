@@ -958,8 +958,6 @@ func (s *V1AuthorizeUsingOauthRequestBodyOauthSource) Decode(d *jx.Decoder) erro
 	switch V1AuthorizeUsingOauthRequestBodyOauthSource(v) {
 	case V1AuthorizeUsingOauthRequestBodyOauthSourceVk:
 		*s = V1AuthorizeUsingOauthRequestBodyOauthSourceVk
-	case V1AuthorizeUsingOauthRequestBodyOauthSourceOk:
-		*s = V1AuthorizeUsingOauthRequestBodyOauthSourceOk
 	case V1AuthorizeUsingOauthRequestBodyOauthSourceMail:
 		*s = V1AuthorizeUsingOauthRequestBodyOauthSourceMail
 	case V1AuthorizeUsingOauthRequestBodyOauthSourceYandex:

@@ -216,8 +216,6 @@ func (s V1AuthorizeUsingOauthRequestBodyOauthSource) Validate() error {
 	switch s {
 	case "vk":
 		return nil
-	case "ok":
-		return nil
 	case "mail":
 		return nil
 	case "yandex":

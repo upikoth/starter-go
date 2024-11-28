@@ -428,7 +428,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					// Leaf node.
 					switch method {
 					case "GET":
-						r.name = "V1CheckHealth"
+						r.name = V1CheckHealthOperation
 						r.summary = ""
 						r.operationID = "V1CheckHealth"
 						r.pathPattern = "/api/v1/health"
@@ -452,7 +452,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				if len(elem) == 0 {
 					switch method {
 					case "POST":
-						r.name = "V1AuthorizeUsingOauth"
+						r.name = V1AuthorizeUsingOauthOperation
 						r.summary = ""
 						r.operationID = "V1AuthorizeUsingOauth"
 						r.pathPattern = "/api/v1/oauth"
@@ -488,7 +488,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf node.
 							switch method {
 							case "GET":
-								r.name = "V1AuthorizeUsingOauthHandleMailRedirect"
+								r.name = V1AuthorizeUsingOauthHandleMailRedirectOperation
 								r.summary = ""
 								r.operationID = "V1AuthorizeUsingOauthHandleMailRedirect"
 								r.pathPattern = "/api/v1/oauthRedirect/mail"
@@ -513,7 +513,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf node.
 							switch method {
 							case "GET":
-								r.name = "V1AuthorizeUsingOauthHandleVkRedirect"
+								r.name = V1AuthorizeUsingOauthHandleVkRedirectOperation
 								r.summary = ""
 								r.operationID = "V1AuthorizeUsingOauthHandleVkRedirect"
 								r.pathPattern = "/api/v1/oauthRedirect/vk"
@@ -538,7 +538,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf node.
 							switch method {
 							case "GET":
-								r.name = "V1AuthorizeUsingOauthHandleYandexRedirect"
+								r.name = V1AuthorizeUsingOauthHandleYandexRedirectOperation
 								r.summary = ""
 								r.operationID = "V1AuthorizeUsingOauthHandleYandexRedirect"
 								r.pathPattern = "/api/v1/oauthRedirect/yandex"
@@ -569,7 +569,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					// Leaf node.
 					switch method {
 					case "PATCH":
-						r.name = "V1ConfirmPasswordRecoveryRequest"
+						r.name = V1ConfirmPasswordRecoveryRequestOperation
 						r.summary = ""
 						r.operationID = "V1ConfirmPasswordRecoveryRequest"
 						r.pathPattern = "/api/v1/passwordRecoveryRequests"
@@ -577,7 +577,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						r.count = 0
 						return r, true
 					case "POST":
-						r.name = "V1CreatePasswordRecoveryRequest"
+						r.name = V1CreatePasswordRecoveryRequestOperation
 						r.summary = ""
 						r.operationID = "V1CreatePasswordRecoveryRequest"
 						r.pathPattern = "/api/v1/passwordRecoveryRequests"
@@ -602,7 +602,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					// Leaf node.
 					switch method {
 					case "PATCH":
-						r.name = "V1ConfirmRegistration"
+						r.name = V1ConfirmRegistrationOperation
 						r.summary = ""
 						r.operationID = "V1ConfirmRegistration"
 						r.pathPattern = "/api/v1/registrations"
@@ -610,7 +610,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						r.count = 0
 						return r, true
 					case "POST":
-						r.name = "V1CreateRegistration"
+						r.name = V1CreateRegistrationOperation
 						r.summary = ""
 						r.operationID = "V1CreateRegistration"
 						r.pathPattern = "/api/v1/registrations"
@@ -634,7 +634,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				if len(elem) == 0 {
 					switch method {
 					case "GET":
-						r.name = "V1CheckCurrentSession"
+						r.name = V1CheckCurrentSessionOperation
 						r.summary = ""
 						r.operationID = "V1CheckCurrentSession"
 						r.pathPattern = "/api/v1/session"
@@ -657,7 +657,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					if len(elem) == 0 {
 						switch method {
 						case "POST":
-							r.name = "V1CreateSession"
+							r.name = V1CreateSessionOperation
 							r.summary = ""
 							r.operationID = "V1CreateSession"
 							r.pathPattern = "/api/v1/sessions"
@@ -686,7 +686,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf node.
 							switch method {
 							case "DELETE":
-								r.name = "V1DeleteSession"
+								r.name = V1DeleteSessionOperation
 								r.summary = ""
 								r.operationID = "V1DeleteSession"
 								r.pathPattern = "/api/v1/sessions/{id}"
@@ -717,7 +717,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					// Leaf node.
 					switch method {
 					case "GET":
-						r.name = "V1GetUsers"
+						r.name = V1GetUsersOperation
 						r.summary = ""
 						r.operationID = "V1GetUsers"
 						r.pathPattern = "/api/v1/users"

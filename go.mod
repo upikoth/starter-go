@@ -3,7 +3,7 @@ module github.com/upikoth/starter-go
 go 1.23
 
 require (
-	github.com/getsentry/sentry-go v0.29.1
+	github.com/getsentry/sentry-go v0.30.0
 	github.com/getsentry/sentry-go/otel v0.29.1
 	github.com/go-faster/errors v0.7.1
 	github.com/go-faster/jx v1.1.0

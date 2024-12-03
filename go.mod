@@ -1,6 +1,6 @@
 module github.com/upikoth/starter-go
 
-go 1.23
+go 1.23.4
 
 require (
 	github.com/getsentry/sentry-go v0.30.0

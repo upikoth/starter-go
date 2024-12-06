@@ -17,7 +17,7 @@ RUN make build
 
 # Stage 2.
 
-FROM alpine:3.20
+FROM alpine:3.21
 
 COPY --from=build /workdir/app ./
 COPY --from=build /workdir/docs ./docs

@@ -14,7 +14,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/pressly/goose/v3 v3.23.0
 	github.com/rs/zerolog v1.33.0
-	github.com/ydb-platform/ydb-go-sdk-otel v0.8.1
+	github.com/ydb-platform/ydb-go-sdk-otel v0.10.1
 	github.com/ydb-platform/ydb-go-sdk/v3 v3.92.6
 	github.com/ydb-platform/ydb-go-yc v0.12.3
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.57.0

@@ -313,6 +313,61 @@ func decodeV1DeleteSessionParams(args [1]string, argsEscaped bool, r *http.Reque
 	return params, nil
 }
 
+// V1GetCurrentUserParams is parameters of V1GetCurrentUser operation.
+type V1GetCurrentUserParams struct {
+	AuthorizationToken string
+}
+
+func unpackV1GetCurrentUserParams(packed middleware.Parameters) (params V1GetCurrentUserParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "Authorization-Token",
+			In:   "header",
+		}
+		params.AuthorizationToken = packed[key].(string)
+	}
+	return params
+}
+
+func decodeV1GetCurrentUserParams(args [0]string, argsEscaped bool, r *http.Request) (params V1GetCurrentUserParams, _ error) {
+	h := uri.NewHeaderDecoder(r.Header)
+	// Decode header: Authorization-Token.
+	if err := func() error {
+		cfg := uri.HeaderParameterDecodingConfig{
+			Name:    "Authorization-Token",
+			Explode: false,
+		}
+		if err := h.HasParam(cfg); err == nil {
+			if err := h.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.AuthorizationToken = c
+				return nil
+			}); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "Authorization-Token",
+			In:   "header",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
 // V1GetUsersParams is parameters of V1GetUsers operation.
 type V1GetUsersParams struct {
 	AuthorizationToken string

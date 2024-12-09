@@ -21,6 +21,7 @@ import (
 type fieldNameGetBy string
 
 var (
+	fieldNameGetByID       fieldNameGetBy = "id"
 	fieldNameGetByEmail    fieldNameGetBy = "email"
 	fieldNameGetByVkID     fieldNameGetBy = "vk_id"
 	fieldNameGetByMailRuID fieldNameGetBy = "mailru_id"

@@ -922,6 +922,59 @@ func (V1SessionsCreateSessionResponseSuccess) AllValues() []V1SessionsCreateSess
 	}
 }
 
+// Ref: #/components/schemas/V1UsersGetUserResponse
+type V1UsersGetUserResponse struct {
+	Success V1UsersGetUserResponseSuccess `json:"success"`
+	Data    V1UsersGetUserResponseData    `json:"data"`
+}
+
+// GetSuccess returns the value of Success.
+func (s *V1UsersGetUserResponse) GetSuccess() V1UsersGetUserResponseSuccess {
+	return s.Success
+}
+
+// GetData returns the value of Data.
+func (s *V1UsersGetUserResponse) GetData() V1UsersGetUserResponseData {
+	return s.Data
+}
+
+// SetSuccess sets the value of Success.
+func (s *V1UsersGetUserResponse) SetSuccess(val V1UsersGetUserResponseSuccess) {
+	s.Success = val
+}
+
+// SetData sets the value of Data.
+func (s *V1UsersGetUserResponse) SetData(val V1UsersGetUserResponseData) {
+	s.Data = val
+}
+
+type V1UsersGetUserResponseData struct {
+	User User `json:"user"`
+}
+
+// GetUser returns the value of User.
+func (s *V1UsersGetUserResponseData) GetUser() User {
+	return s.User
+}
+
+// SetUser sets the value of User.
+func (s *V1UsersGetUserResponseData) SetUser(val User) {
+	s.User = val
+}
+
+type V1UsersGetUserResponseSuccess bool
+
+const (
+	V1UsersGetUserResponseSuccessTrue V1UsersGetUserResponseSuccess = true
+)
+
+// AllValues returns all V1UsersGetUserResponseSuccess values.
+func (V1UsersGetUserResponseSuccess) AllValues() []V1UsersGetUserResponseSuccess {
+	return []V1UsersGetUserResponseSuccess{
+		V1UsersGetUserResponseSuccessTrue,
+	}
+}
+
 // Ref: #/components/schemas/V1UsersGetUsersResponse
 type V1UsersGetUsersResponse struct {
 	Success V1UsersGetUsersResponseSuccess `json:"success"`

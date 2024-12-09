@@ -80,3 +80,51 @@ func (h *Handler) V1GetUsers(
 		},
 	}, nil
 }
+
+func (h *Handler) V1GetCurrentUser(
+	inputCtx context.Context,
+	params app.V1GetCurrentUserParams,
+) (*app.V1UsersGetUserResponse, error) {
+	tracer := otel.Tracer(tracing.GetHandlerTraceName())
+	ctx, span := tracer.Start(inputCtx, tracing.GetHandlerTraceName())
+	defer span.End()
+
+	session, err := h.services.Sessions.CheckToken(ctx, params.AuthorizationToken)
+
+	if errors.Is(err, constants.ErrSessionNotFound) {
+		return nil, &models.Error{
+			Code:        models.ErrCodeUserUnauthorized,
+			Description: "User session is invalid",
+			StatusCode:  http.StatusUnauthorized,
+		}
+	}
+
+	if err != nil {
+		tracing.HandleError(span, err)
+		return nil, &models.Error{
+			Code:        models.ErrCodeInterval,
+			Description: err.Error(),
+		}
+	}
+
+	user, err := h.services.Users.GetByID(ctx, session.UserID)
+
+	if err != nil {
+		tracing.HandleError(span, err)
+		return nil, &models.Error{
+			Code:        models.ErrCodeInterval,
+			Description: err.Error(),
+		}
+	}
+
+	return &app.V1UsersGetUserResponse{
+		Success: true,
+		Data: app.V1UsersGetUserResponseData{
+			User: app.User{
+				ID:    string(user.ID),
+				Email: user.Email,
+				Role:  app.UserRole(user.Role),
+			},
+		},
+	}, nil
+}

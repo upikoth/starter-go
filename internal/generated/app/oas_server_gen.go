@@ -80,6 +80,12 @@ type Handler interface {
 	//
 	// DELETE /api/v1/sessions/{id}
 	V1DeleteSession(ctx context.Context, params V1DeleteSessionParams) (*SuccessResponse, error)
+	// V1GetCurrentUser implements V1GetCurrentUser operation.
+	//
+	// Получение информации о текущем пользователе.
+	//
+	// GET /api/v1/user
+	V1GetCurrentUser(ctx context.Context, params V1GetCurrentUserParams) (*V1UsersGetUserResponse, error)
 	// V1GetUsers implements V1GetUsers operation.
 	//
 	// Получение информации обо всех пользователях.

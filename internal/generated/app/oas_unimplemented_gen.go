@@ -121,6 +121,15 @@ func (UnimplementedHandler) V1DeleteSession(ctx context.Context, params V1Delete
 	return r, ht.ErrNotImplemented
 }
 
+// V1GetCurrentUser implements V1GetCurrentUser operation.
+//
+// Получение информации о текущем пользователе.
+//
+// GET /api/v1/user
+func (UnimplementedHandler) V1GetCurrentUser(ctx context.Context, params V1GetCurrentUserParams) (r *V1UsersGetUserResponse, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // V1GetUsers implements V1GetUsers operation.
 //
 // Получение информации обо всех пользователях.

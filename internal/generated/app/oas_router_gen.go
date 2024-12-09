@@ -300,24 +300,46 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 
 				elem = origElem
-			case 'u': // Prefix: "users"
+			case 'u': // Prefix: "user"
 				origElem := elem
-				if l := len("users"); len(elem) >= l && elem[0:l] == "users" {
+				if l := len("user"); len(elem) >= l && elem[0:l] == "user" {
 					elem = elem[l:]
 				} else {
 					break
 				}
 
 				if len(elem) == 0 {
-					// Leaf node.
 					switch r.Method {
 					case "GET":
-						s.handleV1GetUsersRequest([0]string{}, elemIsEscaped, w, r)
+						s.handleV1GetCurrentUserRequest([0]string{}, elemIsEscaped, w, r)
 					default:
 						s.notAllowed(w, r, "GET")
 					}
 
 					return
+				}
+				switch elem[0] {
+				case 's': // Prefix: "s"
+					origElem := elem
+					if l := len("s"); len(elem) >= l && elem[0:l] == "s" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch r.Method {
+						case "GET":
+							s.handleV1GetUsersRequest([0]string{}, elemIsEscaped, w, r)
+						default:
+							s.notAllowed(w, r, "GET")
+						}
+
+						return
+					}
+
+					elem = origElem
 				}
 
 				elem = origElem
@@ -705,28 +727,54 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				}
 
 				elem = origElem
-			case 'u': // Prefix: "users"
+			case 'u': // Prefix: "user"
 				origElem := elem
-				if l := len("users"); len(elem) >= l && elem[0:l] == "users" {
+				if l := len("user"); len(elem) >= l && elem[0:l] == "user" {
 					elem = elem[l:]
 				} else {
 					break
 				}
 
 				if len(elem) == 0 {
-					// Leaf node.
 					switch method {
 					case "GET":
-						r.name = V1GetUsersOperation
+						r.name = V1GetCurrentUserOperation
 						r.summary = ""
-						r.operationID = "V1GetUsers"
-						r.pathPattern = "/api/v1/users"
+						r.operationID = "V1GetCurrentUser"
+						r.pathPattern = "/api/v1/user"
 						r.args = args
 						r.count = 0
 						return r, true
 					default:
 						return
 					}
+				}
+				switch elem[0] {
+				case 's': // Prefix: "s"
+					origElem := elem
+					if l := len("s"); len(elem) >= l && elem[0:l] == "s" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch method {
+						case "GET":
+							r.name = V1GetUsersOperation
+							r.summary = ""
+							r.operationID = "V1GetUsers"
+							r.pathPattern = "/api/v1/users"
+							r.args = args
+							r.count = 0
+							return r, true
+						default:
+							return
+						}
+					}
+
+					elem = origElem
 				}
 
 				elem = origElem

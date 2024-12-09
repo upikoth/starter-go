@@ -18,5 +18,6 @@ const (
 	V1CreateRegistrationOperation                      OperationName = "V1CreateRegistration"
 	V1CreateSessionOperation                           OperationName = "V1CreateSession"
 	V1DeleteSessionOperation                           OperationName = "V1DeleteSession"
+	V1GetCurrentUserOperation                          OperationName = "V1GetCurrentUser"
 	V1GetUsersOperation                                OperationName = "V1GetUsers"
 )

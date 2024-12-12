@@ -12,7 +12,7 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/ogen-go/ogen v1.8.1
 	github.com/pkg/errors v0.9.1
-	github.com/pressly/goose/v3 v3.23.0
+	github.com/pressly/goose/v3 v3.23.1
 	github.com/rs/zerolog v1.33.0
 	github.com/ydb-platform/ydb-go-sdk-otel v0.10.1
 	github.com/ydb-platform/ydb-go-sdk/v3 v3.94.0
@@ -23,7 +23,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.32.0
 	go.opentelemetry.io/otel/trace v1.32.0
 	go.uber.org/multierr v1.11.0
-	golang.org/x/crypto v0.30.0
+	golang.org/x/crypto v0.31.0
 	golang.org/x/oauth2 v0.24.0
 )
 

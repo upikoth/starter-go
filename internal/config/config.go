@@ -50,8 +50,9 @@ type Oauth struct {
 }
 
 type Repositories struct {
-	Ycp Ycp
-	Ydb Ydb
+	Ycp  Ycp
+	Ydb  Ydb
+	HTTP HTTP
 }
 
 type Ycp struct {
@@ -69,6 +70,19 @@ type Ydb struct {
 	AuthFileName        string `envconfig:"YDB_AUTH_FILE_NAME" required:"true"`
 	YcSaJSONCredentials []byte `envconfig:"YC_SA_JSON_CREDENTIALS"`
 	Environment         string `envconfig:"ENVIRONMENT" required:"true"`
+}
+
+type HTTP struct {
+	OauthMailRu OauthMailRu
+	OauthYandex OauthYandex
+}
+
+type OauthMailRu struct {
+	APIURL string `envconfig:"OAUTH_MAIL_API_URL" required:"true"`
+}
+
+type OauthYandex struct {
+	APIURL string `envconfig:"OAUTH_YANDEX_API_URL" required:"true"`
 }
 
 func New() (*Config, error) {

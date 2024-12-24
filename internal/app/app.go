@@ -25,7 +25,7 @@ func New(
 	log logger.Logger,
 	tp trace.TracerProvider,
 ) (*App, error) {
-	repositoriesInstance, err := repositories.New(log, &cfg.Repositories)
+	repositoriesInstance, err := repositories.New(log, &cfg.Repositories, tp)
 
 	if err != nil {
 		log.Error(fmt.Sprintf("Ошибка при инициализации repositories: %s", err))

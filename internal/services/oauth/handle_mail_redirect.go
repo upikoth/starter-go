@@ -27,7 +27,7 @@ func (o *Oauth) HandleMailRuRedirect(
 		return nil, err
 	}
 
-	userInfoMailRu, err := o.repositories.oauth.GetMailRuUserInfo(ctx, token.AccessToken)
+	userInfoMailRu, err := o.repositories.oauthMailRu.GetUserInfo(ctx, token.AccessToken)
 
 	if err != nil {
 		tracing.HandleError(span, err)

@@ -68,7 +68,8 @@ func New(
 	srvs.Oauth = oauth.New(
 		log,
 		cfg.Services.Oauth,
-		repo.HTTP.Oauth,
+		repo.HTTP.OauthMailRu,
+		repo.HTTP.OauthYandex,
 		srvs.Users,
 		srvs.Sessions,
 	)

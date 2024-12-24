@@ -60,6 +60,12 @@ func New(
 	appInstance := http.FileServer(http.Dir("docs/app"))
 	mux.Handle("/api/docs/app/", http.StripPrefix("/api/docs/app/", appInstance))
 
+	oauthMailRuInstance := http.FileServer(http.Dir("docs/oauthmailru"))
+	mux.Handle("/api/docs/oauthmailru/", http.StripPrefix("/api/docs/oauthmailru/", oauthMailRuInstance))
+
+	oauthYandexInstance := http.FileServer(http.Dir("docs/oauthyandex"))
+	mux.Handle("/api/docs/oauthyandex/", http.StripPrefix("/api/docs/oauthyandex/", oauthYandexInstance))
+
 	swaggerUI := http.FileServer(http.Dir("docs/swagger-ui"))
 	mux.Handle("/api/docs/swagger-ui/", http.StripPrefix("/api/docs/swagger-ui/", swaggerUI))
 

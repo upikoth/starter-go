@@ -3,7 +3,8 @@ package oauth
 import (
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
-	"github.com/upikoth/starter-go/internal/repositories/http/oauth"
+	"github.com/upikoth/starter-go/internal/repositories/http/oauthmailru"
+	"github.com/upikoth/starter-go/internal/repositories/http/oauthyandex"
 	"github.com/upikoth/starter-go/internal/services/sessions"
 	"github.com/upikoth/starter-go/internal/services/users"
 	"golang.org/x/oauth2"
@@ -13,7 +14,8 @@ import (
 )
 
 type oauthRepositories struct {
-	oauth *oauth.Oauth
+	oauthMailRu *oauthmailru.OauthMailRu
+	oauthYandex *oauthyandex.OauthYandex
 }
 
 type oauthServices struct {
@@ -33,7 +35,8 @@ type Oauth struct {
 func New(
 	log logger.Logger,
 	cfg config.Oauth,
-	oauthRepo *oauth.Oauth,
+	oauthMailRuRepo *oauthmailru.OauthMailRu,
+	oauthYandexRepo *oauthyandex.OauthYandex,
 	usersSrv *users.Users,
 	sessionsSrv *sessions.Sessions,
 ) *Oauth {
@@ -60,7 +63,8 @@ func New(
 			RedirectURL:  cfg.YandexRedirectURL,
 		},
 		repositories: &oauthRepositories{
-			oauth: oauthRepo,
+			oauthMailRu: oauthMailRuRepo,
+			oauthYandex: oauthYandexRepo,
 		},
 		services: &oauthServices{
 			users:    usersSrv,

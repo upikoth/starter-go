@@ -8,6 +8,7 @@ import (
 	"github.com/upikoth/starter-go/internal/repositories/http"
 	"github.com/upikoth/starter-go/internal/repositories/ycp"
 	"github.com/upikoth/starter-go/internal/repositories/ydb"
+	"go.opentelemetry.io/otel/trace"
 )
 
 type Repository struct {
@@ -19,6 +20,7 @@ type Repository struct {
 func New(
 	log logger.Logger,
 	cfg *config.Repositories,
+	tp trace.TracerProvider,
 ) (*Repository, error) {
 	ycpInstance, err := ycp.New(log, &cfg.Ycp)
 
@@ -32,7 +34,7 @@ func New(
 		return nil, err
 	}
 
-	httpInstance, err := http.New(log)
+	httpInstance, err := http.New(log, &cfg.HTTP, tp)
 
 	if err != nil {
 		return nil, err

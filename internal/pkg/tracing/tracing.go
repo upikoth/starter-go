@@ -29,6 +29,13 @@ func GetRepositoryTraceName() string {
 	return fmt.Sprintf("repository.%s.%s", packageName, functionName)
 }
 
+func GetRepositoryHTTPTraceName() string {
+	functionName := functions.GetFunctionName(functions.WithSkip(1))
+	packageName := functions.GetPackageName(functions.WithSkip(1))
+
+	return fmt.Sprintf("repository.http.%s.%s", packageName, functionName)
+}
+
 func GetRepositoryYDBTraceName() string {
 	functionName := functions.GetFunctionName(functions.WithSkip(1))
 	packageName := functions.GetPackageName(functions.WithSkip(1))

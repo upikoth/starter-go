@@ -27,7 +27,7 @@ func (o *Oauth) HandleYandexRedirect(
 		return nil, err
 	}
 
-	userInfoYandex, err := o.repositories.oauth.GetYandexUserInfo(ctx, token.AccessToken)
+	userInfoYandex, err := o.repositories.oauthYandex.GetUserInfo(ctx, token.AccessToken)
 
 	if err != nil {
 		tracing.HandleError(span, err)

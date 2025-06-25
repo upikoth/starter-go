@@ -13,7 +13,7 @@ require (
 	github.com/ogen-go/ogen v1.8.1
 	github.com/pkg/errors v0.9.1
 	github.com/pressly/goose/v3 v3.23.0
-	github.com/rs/zerolog v1.33.0
+	github.com/rs/zerolog v1.34.0
 	github.com/ydb-platform/ydb-go-sdk-otel v0.10.1
 	github.com/ydb-platform/ydb-go-sdk/v3 v3.94.0
 	github.com/ydb-platform/ydb-go-yc v0.12.3

@@ -10,7 +10,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/ogen-go/ogen v1.8.1
+	github.com/ogen-go/ogen v1.18.0
 	github.com/pkg/errors v0.9.1
 	github.com/pressly/goose/v3 v3.23.0
 	github.com/rs/zerolog v1.33.0

@@ -2,13 +2,12 @@ package ycp
 
 import (
 	"context"
+	"net/mail"
 
 	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/pkg/tracing"
 	"go.opentelemetry.io/otel"
-
-	"net/mail"
 )
 
 func (y *Ycp) SendEmail(
@@ -29,7 +28,6 @@ func (y *Ycp) SendEmail(
 	}()
 
 	err = y.client.Connect()
-
 	if err != nil {
 		return errors.WithStack(err)
 	}

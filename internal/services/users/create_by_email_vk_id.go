@@ -24,7 +24,6 @@ func (u *Users) CreateByEmailVkID(
 			withVkID(vkID),
 		),
 	)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err

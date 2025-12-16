@@ -17,7 +17,6 @@ func (s *Sessions) CreateByUserID(
 	defer span.End()
 
 	session, err := s.repositories.sessions.Create(ctx, newSession(userID))
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err

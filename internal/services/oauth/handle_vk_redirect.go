@@ -23,21 +23,18 @@ func (o *Oauth) HandleVkRedirect(
 	defer span.End()
 
 	token, err := o.vkConfig.Exchange(ctx, code)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err
 	}
 
 	email, err := getEmailFromVk(token)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err
 	}
 
 	userVkID, err := getUserVkID(token)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err

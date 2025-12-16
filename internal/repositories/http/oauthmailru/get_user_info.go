@@ -21,7 +21,6 @@ func (o *OauthMailRu) GetUserInfo(
 	res, err := o.client.UserInfo(ctx, oauthmailru.UserInfoParams{
 		AccessToken: accessToken,
 	})
-
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}

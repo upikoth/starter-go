@@ -59,7 +59,6 @@ func (r *Registrations) Transaction(
 ) error {
 	return r.repositories.dbDriver.Query().Do(ctx, func(ctx context.Context, s query.Session) error {
 		tx, err := s.Begin(ctx, query.TxSettings(opts...))
-
 		if err != nil {
 			return errors.WithStack(err)
 		}

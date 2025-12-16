@@ -54,7 +54,6 @@ func (u *Users) GetList(
 
 		return nil
 	})
-
 	if err != nil {
 		return nil, err
 	}

@@ -90,7 +90,6 @@ func (p *PasswordRecoveryRequests) getBy(
 
 		return nil
 	})
-
 	if err != nil {
 		return nil, err
 	}

@@ -119,7 +119,6 @@ func (u *Users) Update(
 
 		return nil
 	})
-
 	if err != nil {
 		return nil, err
 	}

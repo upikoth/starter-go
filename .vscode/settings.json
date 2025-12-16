@@ -1,0 +1,29 @@
+{
+	"yaml.format.singleQuote": true,
+	"go.lintTool": "golangci-lint-v2",
+	"go.lintOnSave": "package",
+	"go.useLanguageServer": true,
+	"gopls": {
+		"ui.documentation.hoverKind": "FullDocumentation",
+		"ui.completion.usePlaceholders": true
+	},
+	"go.toolsManagement.checkForUpdates": "local",
+	"cSpell.words": [
+		"токену",
+		"APIURL",
+		"Confrimation",
+		"dupl",
+		"getsentry",
+		"loggerzerolog",
+		"mailru",
+		"oauthmailru",
+		"oauthyandex",
+		"otelhttp",
+		"passwordrecoveryrequests",
+		"sentryotel",
+		"smtpclient",
+		"splitted",
+		"srvs",
+		"ydbmodels"
+	],
+}

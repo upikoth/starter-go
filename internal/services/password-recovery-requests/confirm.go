@@ -57,14 +57,12 @@ func (p *PasswordRecoveryRequests) Confirm(
 		},
 		query.WithSerializableReadWrite(),
 	)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err
 	}
 
 	createdSession, err := p.services.sessions.CreateByUserID(ctx, updatedUser.ID)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, constants.ErrPasswordRecoveryRequestCreatingSession

@@ -66,7 +66,6 @@ func (s *Sessions) DeleteByID(
 
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}

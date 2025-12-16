@@ -22,7 +22,6 @@ func (o *OauthYandex) GetUserInfo(
 		OAuthToken: accessToken,
 		Format:     oauthyandex.FormatJSON,
 	})
-
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}

@@ -21,14 +21,12 @@ func (o *Oauth) HandleYandexRedirect(
 	defer span.End()
 
 	token, err := o.yandexConfig.Exchange(ctx, code)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err
 	}
 
 	userInfoYandex, err := o.repositories.oauthYandex.GetUserInfo(ctx, token.AccessToken)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err

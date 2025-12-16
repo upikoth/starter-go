@@ -46,7 +46,6 @@ func New(
 			getHTTPLoggingMiddleware(loggerInstance),
 		),
 	)
-
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}

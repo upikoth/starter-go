@@ -51,7 +51,6 @@ func (s *Sessions) Transaction(
 ) error {
 	return s.repositories.dbDriver.Query().Do(ctx, func(ctx context.Context, qs query.Session) error {
 		tx, err := qs.Begin(ctx, query.TxSettings(opts...))
-
 		if err != nil {
 			return errors.WithStack(err)
 		}

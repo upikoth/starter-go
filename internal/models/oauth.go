@@ -2,9 +2,11 @@ package models
 
 type OauthSource string
 
-const OauthSourceVk OauthSource = "vk"
-const OauthSourceMail OauthSource = "mail"
-const OauthSourceYandex OauthSource = "yandex"
+const (
+	OauthSourceVk     OauthSource = "vk"
+	OauthSourceMail   OauthSource = "mail"
+	OauthSourceYandex OauthSource = "yandex"
+)
 
 type OauthUserInfo struct {
 	ID    string

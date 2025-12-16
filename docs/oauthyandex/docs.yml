@@ -18,7 +18,7 @@ paths:
           $ref: '#/components/responses/UserInfo'
         default:
           description: Ошибка при выполнении запроса
-          $ref: "#/components/responses/ErrorResponse"
+          $ref: '#/components/responses/ErrorResponse'
 
 components:
   parameters:

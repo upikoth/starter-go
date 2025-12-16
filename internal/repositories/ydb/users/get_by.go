@@ -101,7 +101,6 @@ func (u *Users) getBy(
 
 		return nil
 	})
-
 	if err != nil {
 		return nil, err
 	}

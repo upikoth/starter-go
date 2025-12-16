@@ -66,7 +66,6 @@ func (r *Registrations) DeleteByID(
 
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}

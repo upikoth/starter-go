@@ -66,7 +66,6 @@ func (p *PasswordRecoveryRequests) DeleteByID(
 
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}

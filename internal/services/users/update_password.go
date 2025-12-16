@@ -21,7 +21,6 @@ func (u *Users) UpdatePassword(
 	defer span.End()
 
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err
@@ -41,7 +40,6 @@ func (u *Users) UpdatePassword(
 	user.PasswordHash = string(passwordHash)
 
 	updatedUser, err := u.repositories.users.Update(ctx, user)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err

@@ -43,14 +43,12 @@ func New(
 
 func (s *SMTPClient) Connect() error {
 	client, err := smtp.Dial(s.host + ":" + s.port)
-
 	if err != nil {
 		return err
 	}
 
 	s.client = client
 	err = s.client.StartTLS(s.tlsConfig)
-
 	if err != nil {
 		return err
 	}
@@ -86,25 +84,21 @@ func (s *SMTPClient) SendEmail(
 	message []byte,
 ) error {
 	err := s.client.Mail(from.Address)
-
 	if err != nil {
 		return err
 	}
 
 	err = s.client.Rcpt(to.Address)
-
 	if err != nil {
 		return err
 	}
 
 	writer, err := s.client.Data()
-
 	if err != nil {
 		return err
 	}
 
 	_, err = writer.Write(message)
-
 	if err != nil {
 		return err
 	}

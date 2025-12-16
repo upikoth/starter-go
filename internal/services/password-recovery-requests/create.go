@@ -32,8 +32,7 @@ func (p *PasswordRecoveryRequests) Create(
 		return nil, err
 	}
 
-	existingPasswordRecoveryRequest, err :=
-		p.repositories.passwordRecoveryRequests.GetByEmail(ctx, passwordRecoveryRequest.Email)
+	existingPasswordRecoveryRequest, err := p.repositories.passwordRecoveryRequests.GetByEmail(ctx, passwordRecoveryRequest.Email)
 
 	if err != nil && !errors.Is(err, constants.ErrDBEntityNotFound) {
 		tracing.HandleError(span, err)
@@ -56,7 +55,6 @@ func (p *PasswordRecoveryRequests) Create(
 		passwordRecoveryRequest.Email,
 		passwordRecoveryRequest.ConfirmationToken,
 	)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err

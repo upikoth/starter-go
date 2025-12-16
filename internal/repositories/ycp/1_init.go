@@ -23,7 +23,6 @@ func New(
 		config.Username,
 		config.Password,
 	)
-
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}

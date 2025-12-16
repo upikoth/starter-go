@@ -43,7 +43,6 @@ func (e *Emails) SendRegistrationEmail(
 		FrontConfirmationRegistrationURL: e.config.FrontConfirmationRegistrationURL,
 		Token:                            token,
 	})
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return errors.WithStack(err)
@@ -55,7 +54,6 @@ func (e *Emails) SendRegistrationEmail(
 		fmt.Sprintf("Регистрация на %s", e.config.FrontURL),
 		message.String(),
 	)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return err

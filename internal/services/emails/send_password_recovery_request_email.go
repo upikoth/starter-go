@@ -43,7 +43,6 @@ func (e *Emails) SendPasswordRecoveryRequestEmail(
 		FrontConfirmationPasswordRecoveryRequestURL: e.config.FrontConfirmationPasswordRecoveryRequestURL,
 		Token: token,
 	})
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return errors.WithStack(err)
@@ -55,7 +54,6 @@ func (e *Emails) SendPasswordRecoveryRequestEmail(
 		fmt.Sprintf("Восстановление пароля на %s", e.config.FrontURL),
 		message.String(),
 	)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return err

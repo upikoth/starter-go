@@ -57,7 +57,6 @@ func (r *Registrations) Create(
 		registration.Email,
 		registration.ConfirmationToken,
 	)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err

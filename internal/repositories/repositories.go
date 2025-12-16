@@ -23,19 +23,16 @@ func New(
 	tp trace.TracerProvider,
 ) (*Repository, error) {
 	ycpInstance, err := ycp.New(log, &cfg.Ycp)
-
 	if err != nil {
 		return nil, err
 	}
 
 	ydbInstance, err := ydb.New(log, &cfg.Ydb)
-
 	if err != nil {
 		return nil, err
 	}
 
 	httpInstance, err := http.New(log, &cfg.HTTP, tp)
-
 	if err != nil {
 		return nil, err
 	}

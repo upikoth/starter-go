@@ -17,7 +17,6 @@ func (u *Users) UpdateUser(
 	defer span.End()
 
 	updatedUser, err := u.repositories.users.Update(ctx, user)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err

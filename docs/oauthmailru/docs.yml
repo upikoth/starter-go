@@ -17,7 +17,7 @@ paths:
           $ref: '#/components/responses/UserInfo'
         default:
           description: Ошибка
-          $ref: "#/components/responses/ErrorResponse"
+          $ref: '#/components/responses/ErrorResponse'
 
 components:
   parameters:

@@ -38,7 +38,6 @@ func New(
 ) (*YDB, error) {
 	filePath := fmt.Sprintf("%s/%s", cfg.AuthFileDirName, cfg.AuthFileName)
 	err := writeCredentialsToFile(cfg.AuthFileDirName, cfg.AuthFileName, cfg.YcSaJSONCredentials)
-
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +54,6 @@ func New(
 			ydbOtel.WithDetails(trace.DetailsAll),
 		),
 	)
-
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
@@ -114,17 +112,15 @@ func writeCredentialsToFile(dirName string, fileName string, credentials []byte)
 
 	if len(credentials) > 0 {
 		_, err := os.Stat(dirName)
-
 		if err != nil {
-			mkdirErr := os.Mkdir(dirName, 0777)
+			mkdirErr := os.Mkdir(dirName, 0o777)
 
 			if mkdirErr != nil {
 				return errors.WithStack(mkdirErr)
 			}
 		}
 
-		err = os.WriteFile(filePath, credentials, 0600)
-
+		err = os.WriteFile(filePath, credentials, 0o600)
 		if err != nil {
 			return errors.WithStack(err)
 		}

@@ -91,7 +91,6 @@ func (p *PasswordRecoveryRequests) Create(
 
 		return nil
 	})
-
 	if err != nil {
 		return nil, err
 	}

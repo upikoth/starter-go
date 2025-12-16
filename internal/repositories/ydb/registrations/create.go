@@ -91,7 +91,6 @@ func (r *Registrations) Create(
 
 		return nil
 	})
-
 	if err != nil {
 		return nil, err
 	}

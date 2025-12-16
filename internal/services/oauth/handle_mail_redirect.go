@@ -21,14 +21,12 @@ func (o *Oauth) HandleMailRuRedirect(
 	defer span.End()
 
 	token, err := o.mailConfig.Exchange(ctx, code)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err
 	}
 
 	userInfoMailRu, err := o.repositories.oauthMailRu.GetUserInfo(ctx, token.AccessToken)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err

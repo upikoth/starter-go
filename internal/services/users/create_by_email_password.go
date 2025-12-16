@@ -19,7 +19,6 @@ func (u *Users) CreateByEmailPassword(
 	defer span.End()
 
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err
@@ -32,7 +31,6 @@ func (u *Users) CreateByEmailPassword(
 			withPasswordHash(string(passwordHash)),
 		),
 	)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err

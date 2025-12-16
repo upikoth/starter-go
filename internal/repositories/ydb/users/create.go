@@ -109,7 +109,6 @@ func (u *Users) Create(
 
 		return nil
 	})
-
 	if err != nil {
 		return nil, err
 	}

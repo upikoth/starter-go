@@ -52,7 +52,6 @@ func (h *Handler) V1GetUsers(
 	}
 
 	userList, err := h.services.Users.GetList(ctx, usersGetListParams)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, &models.Error{
@@ -108,7 +107,6 @@ func (h *Handler) V1GetCurrentUser(
 	}
 
 	user, err := h.services.Users.GetByID(ctx, session.UserID)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, &models.Error{

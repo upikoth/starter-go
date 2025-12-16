@@ -92,7 +92,6 @@ func (s *Sessions) getBy(
 
 		return nil
 	})
-
 	if err != nil {
 		return nil, err
 	}

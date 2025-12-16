@@ -23,7 +23,6 @@ func New(
 	tp trace.TracerProvider,
 ) (*Controller, error) {
 	httpInstance, err := http.New(&cfg.Controller.HTTP, log, srvs, tp)
-
 	if err != nil {
 		return nil, err
 	}

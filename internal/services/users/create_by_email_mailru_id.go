@@ -24,7 +24,6 @@ func (u *Users) CreateByEmailMailRuID(
 			withMailRuID(mailRuID),
 		),
 	)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err

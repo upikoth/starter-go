@@ -37,7 +37,6 @@ func (h *Handler) V1AuthorizeUsingOauth(
 	}
 
 	url, err := h.services.Oauth.GetAuthorizeURL(ctx, oauthSource)
-
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +58,6 @@ func (h *Handler) V1AuthorizeUsingOauthHandleVkRedirect(
 	defer span.End()
 
 	session, err := h.services.Oauth.HandleVkRedirect(ctx, params.Code)
-
 	if err != nil {
 		return nil, &models.Error{
 			Code:        models.ErrCodeInterval,
@@ -89,7 +87,6 @@ func (h *Handler) V1AuthorizeUsingOauthHandleMailRedirect(
 	defer span.End()
 
 	session, err := h.services.Oauth.HandleMailRuRedirect(ctx, params.Code)
-
 	if err != nil {
 		return nil, &models.Error{
 			Code:        models.ErrCodeInterval,
@@ -119,7 +116,6 @@ func (h *Handler) V1AuthorizeUsingOauthHandleYandexRedirect(
 	defer span.End()
 
 	session, err := h.services.Oauth.HandleYandexRedirect(ctx, params.Code)
-
 	if err != nil {
 		return nil, &models.Error{
 			Code:        models.ErrCodeInterval,

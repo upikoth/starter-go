@@ -22,7 +22,6 @@ func New(
 		cfg.APIURL,
 		oauthyandex.WithTracerProvider(tp),
 	)
-
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}

@@ -32,13 +32,11 @@ func (s *Sessions) CreateByEmailPassword(
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
-
 	if err != nil {
 		return nil, constants.ErrSessionCreateInvalidCredentials
 	}
 
 	session, err := s.repositories.sessions.Create(ctx, newSession(user.ID))
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err

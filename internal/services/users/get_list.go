@@ -17,7 +17,6 @@ func (u *Users) GetList(
 	defer span.End()
 
 	res, err := u.repositories.users.GetList(ctx, params)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err

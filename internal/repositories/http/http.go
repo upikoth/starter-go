@@ -19,13 +19,11 @@ func New(
 	tp trace.TracerProvider,
 ) (*HTTP, error) {
 	oauthMailRu, err := oauthmailru.New(log, &cfg.OauthMailRu, tp)
-
 	if err != nil {
 		return nil, err
 	}
 
 	oauthYandex, err := oauthyandex.New(log, &cfg.OauthYandex, tp)
-
 	if err != nil {
 		return nil, err
 	}

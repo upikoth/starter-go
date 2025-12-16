@@ -55,7 +55,6 @@ func (r *Registrations) Confirm(
 		},
 		query.WithSerializableReadWrite(),
 	)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err
@@ -65,7 +64,6 @@ func (r *Registrations) Confirm(
 		ctx,
 		createdUser.ID,
 	)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, constants.ErrRegistrationCreatingSession

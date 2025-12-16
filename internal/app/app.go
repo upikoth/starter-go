@@ -26,21 +26,18 @@ func New(
 	tp trace.TracerProvider,
 ) (*App, error) {
 	repositoriesInstance, err := repositories.New(log, &cfg.Repositories, tp)
-
 	if err != nil {
 		log.Error(fmt.Sprintf("Ошибка при инициализации repositories: %s", err))
 		return nil, err
 	}
 
 	servicesInstance, err := services.New(log, cfg, repositoriesInstance)
-
 	if err != nil {
 		log.Error(fmt.Sprintf("Ошибка при инициализации services: %s", err))
 		return nil, err
 	}
 
 	controllerInstance, err := controller.New(cfg, log, servicesInstance, tp)
-
 	if err != nil {
 		log.Error(fmt.Sprintf("Ошибка при инициализации controller: %s", err))
 		return nil, err
@@ -57,7 +54,6 @@ func New(
 
 func (s *App) Start(ctx context.Context) error {
 	err := s.repositories.Connect(ctx)
-
 	if err != nil {
 		return err
 	}
@@ -69,7 +65,6 @@ func (s *App) Start(ctx context.Context) error {
 
 func (s *App) Stop(ctx context.Context) error {
 	err := s.repositories.Disconnect(ctx)
-
 	if err != nil {
 		return err
 	}

@@ -24,7 +24,6 @@ func (u *Users) CreateByEmailYandexID(
 			withYandexID(yandexID),
 		),
 	)
-
 	if err != nil {
 		tracing.HandleError(span, err)
 		return nil, err

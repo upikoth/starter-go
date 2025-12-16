@@ -27,7 +27,6 @@ func (h *Handler) V1CreatePasswordRecoveryRequest(
 	}
 
 	passwordRecoveryRequest, err := h.services.PasswordRecoveryRequests.Create(ctx, passwordRecoveryRequestCreateParams)
-
 	if err != nil {
 		return nil, &models.Error{
 			Code:        models.ErrCodeInterval,

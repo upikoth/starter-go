@@ -113,7 +113,7 @@ func writeCredentialsToFile(dirName string, fileName string, credentials []byte)
 	if len(credentials) > 0 {
 		_, err := os.Stat(dirName)
 		if err != nil {
-			mkdirErr := os.Mkdir(dirName, 0o777)
+			mkdirErr := os.Mkdir(dirName, 0o750)
 
 			if mkdirErr != nil {
 				return errors.WithStack(mkdirErr)

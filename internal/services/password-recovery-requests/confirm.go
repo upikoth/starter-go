@@ -37,7 +37,8 @@ func (p *PasswordRecoveryRequests) Confirm(
 	err = p.Transaction(
 		ctx,
 		func(ctxTx context.Context, pTx *PasswordRecoveryRequests) error {
-			user, updateErr := pTx.services.users.UpdatePassword(ctxTx, passwordRecoveryRequest.Email, params.NewPassword)
+			user, updateErr := pTx.services.users.
+				UpdatePassword(ctxTx, passwordRecoveryRequest.Email, params.NewPassword)
 			updatedUser = user
 
 			if updateErr != nil {

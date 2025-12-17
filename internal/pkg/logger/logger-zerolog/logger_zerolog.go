@@ -34,5 +34,6 @@ func (l *LoggerZeroLog) Fatal(msg string) {
 }
 
 func (l *LoggerZeroLog) SetPrettyOutputToConsole() {
+	//nolint:reassign // Решил оставить так.
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 }

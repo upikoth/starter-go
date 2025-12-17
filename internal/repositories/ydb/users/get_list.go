@@ -67,6 +67,17 @@ func (u *Users) GetList(
 func queryUsers(qCtx context.Context, tx query.Transaction, params *models.UsersGetListParams) ([]*models.User, error) {
 	var resUsers []*models.User
 
+	limit := uint64(0)
+	offset := uint64(0)
+
+	if params.Limit > 0 {
+		limit = uint64(params.Limit)
+	}
+
+	if params.Offset > 0 {
+		offset = uint64(params.Offset)
+	}
+
 	qRes, qErr := tx.QueryResultSet(
 		qCtx,
 		`declare $limit as Uint64;
@@ -85,8 +96,8 @@ func queryUsers(qCtx context.Context, tx query.Transaction, params *models.Users
 		offset $offset`,
 		query.WithParameters(
 			ydb.ParamsBuilder().
-				Param("$limit").Uint64(uint64(params.Limit)).
-				Param("$offset").Uint64(uint64(params.Offset)).
+				Param("$limit").Uint64(limit).
+				Param("$offset").Uint64(offset).
 				Build(),
 		),
 	)

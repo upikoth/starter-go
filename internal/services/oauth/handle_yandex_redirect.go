@@ -1,3 +1,4 @@
+//nolint:dupl // Пока решил оставить.
 package oauth
 
 import (

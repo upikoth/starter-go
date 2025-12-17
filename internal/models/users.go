@@ -13,6 +13,7 @@ const (
 	UserActionGetAnyUserInfo UserAction = "get-any-user-info"
 )
 
+//nolint:gochecknoglobals // Решил оставить так.
 var userRoleActionMap = map[UserRole]map[UserAction]bool{
 	UserRoleUser: {
 		UserActionGetAnyUserInfo: false,

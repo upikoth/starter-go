@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/mail"
 	"net/smtp"
+	"strings"
 )
 
 type SMTPClient struct {
@@ -69,11 +70,15 @@ func (s *SMTPClient) CreateMessage(
 	headers["Subject"] = title
 	headers["Content-Type"] = "text/html"
 
-	message := ""
+	var builder strings.Builder
+
 	for k, v := range headers {
-		message += fmt.Sprintf("%s: %s\r\n", k, v)
+		builder.WriteString(fmt.Sprintf("%s: %s\r\n", k, v))
 	}
-	message += "\r\n" + body
+
+	builder.WriteString("\r\n")
+	builder.WriteString(body)
+	message := builder.String()
 
 	return []byte(message)
 }

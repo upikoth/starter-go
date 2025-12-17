@@ -1,3 +1,4 @@
+//nolint:golines // Не знаю как по-другому сделать конфиг.
 package config
 
 import (

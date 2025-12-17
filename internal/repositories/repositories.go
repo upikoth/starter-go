@@ -5,42 +5,24 @@ import (
 
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
-	"github.com/upikoth/starter-go/internal/repositories/http"
-	"github.com/upikoth/starter-go/internal/repositories/ycp"
 	"github.com/upikoth/starter-go/internal/repositories/ydb"
-	"go.opentelemetry.io/otel/trace"
 )
 
 type Repository struct {
-	YCP  *ycp.Ycp
-	YDB  *ydb.YDB
-	HTTP *http.HTTP
+	YDB *ydb.YDB
 }
 
 func New(
 	log logger.Logger,
 	cfg *config.Repositories,
-	tp trace.TracerProvider,
 ) (*Repository, error) {
-	ycpInstance, err := ycp.New(log, &cfg.Ycp)
-	if err != nil {
-		return nil, err
-	}
-
 	ydbInstance, err := ydb.New(log, &cfg.Ydb)
 	if err != nil {
 		return nil, err
 	}
 
-	httpInstance, err := http.New(log, &cfg.HTTP, tp)
-	if err != nil {
-		return nil, err
-	}
-
 	return &Repository{
-		YCP:  ycpInstance,
-		YDB:  ydbInstance,
-		HTTP: httpInstance,
+		YDB: ydbInstance,
 	}, nil
 }
 

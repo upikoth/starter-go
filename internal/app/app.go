@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/upikoth/starter-go/internal/clients"
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/controller"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
@@ -16,6 +17,7 @@ type App struct {
 	config       *config.Config
 	logger       logger.Logger
 	repositories *repositories.Repository
+	clients      *clients.Clients
 	services     *services.Services
 	controller   *controller.Controller
 }
@@ -25,13 +27,19 @@ func New(
 	log logger.Logger,
 	tp trace.TracerProvider,
 ) (*App, error) {
-	repositoriesInstance, err := repositories.New(log, &cfg.Repositories, tp)
+	repositoriesInstance, err := repositories.New(log, &cfg.Repositories)
 	if err != nil {
 		log.Error(fmt.Sprintf("Ошибка при инициализации repositories: %s", err))
 		return nil, err
 	}
 
-	servicesInstance, err := services.New(log, cfg, repositoriesInstance)
+	clientsInstance, err := clients.New(log, &cfg.Clients, tp)
+	if err != nil {
+		log.Error(fmt.Sprintf("Ошибка при инициализации clients: %s", err))
+		return nil, err
+	}
+
+	servicesInstance, err := services.New(log, cfg, repositoriesInstance, clientsInstance)
 	if err != nil {
 		log.Error(fmt.Sprintf("Ошибка при инициализации services: %s", err))
 		return nil, err
@@ -47,6 +55,7 @@ func New(
 		config:       cfg,
 		logger:       log,
 		repositories: repositoriesInstance,
+		clients:      clientsInstance,
 		services:     servicesInstance,
 		controller:   controllerInstance,
 	}, nil

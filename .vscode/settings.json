@@ -16,6 +16,8 @@
 		"Confrimation",
 		"dupl",
 		"getsentry",
+		"httpclient",
+		"httpcontroller",
 		"loggerzerolog",
 		"mailru",
 		"oauthmailru",
@@ -26,6 +28,7 @@
 		"smtpclient",
 		"splitted",
 		"srvs",
+		"ycpclient",
 		"ydbmodels"
 	],
 }

@@ -1,10 +1,10 @@
-package http
+package httpclient
 
 import (
+	"github.com/upikoth/starter-go/internal/clients/http-client/oauthmailru"
+	"github.com/upikoth/starter-go/internal/clients/http-client/oauthyandex"
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
-	"github.com/upikoth/starter-go/internal/repositories/http/oauthmailru"
-	"github.com/upikoth/starter-go/internal/repositories/http/oauthyandex"
 	"go.opentelemetry.io/otel/trace"
 )
 

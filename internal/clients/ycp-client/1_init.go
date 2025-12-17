@@ -1,4 +1,4 @@
-package ycp
+package ycpclient
 
 import (
 	"github.com/pkg/errors"

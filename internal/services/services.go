@@ -1,6 +1,7 @@
 package services
 
 import (
+	"github.com/upikoth/starter-go/internal/clients"
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 	"github.com/upikoth/starter-go/internal/repositories"
@@ -25,13 +26,14 @@ func New(
 	log logger.Logger,
 	cfg *config.Config,
 	repo *repositories.Repository,
+	clients *clients.Clients,
 ) (*Services, error) {
 	srvs := &Services{}
 
 	srvs.Emails = emails.New(
 		log,
 		&cfg.Services.Emails,
-		repo.YCP,
+		clients.YCP,
 	)
 
 	srvs.Users = users.New(
@@ -68,8 +70,8 @@ func New(
 	srvs.Oauth = oauth.New(
 		log,
 		cfg.Services.Oauth,
-		repo.HTTP.OauthMailRu,
-		repo.HTTP.OauthYandex,
+		clients.HTTP.OauthMailRu,
+		clients.HTTP.OauthYandex,
 		srvs.Users,
 		srvs.Sessions,
 	)

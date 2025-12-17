@@ -1,31 +1,31 @@
 package emails
 
 import (
+	ycpclient "github.com/upikoth/starter-go/internal/clients/ycp-client"
 	"github.com/upikoth/starter-go/internal/config"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
-	"github.com/upikoth/starter-go/internal/repositories/ycp"
 )
 
-type emailsRepositories struct {
-	ycp *ycp.Ycp
+type emailsClients struct {
+	ycp *ycpclient.Ycp
 }
 
 type Emails struct {
 	logger       logger.Logger
 	config       *config.Emails
-	repositories *emailsRepositories
+	repositories *emailsClients
 }
 
 func New(
 	logger logger.Logger,
 	cfg *config.Emails,
-	ycpRepo *ycp.Ycp,
+	ycp *ycpclient.Ycp,
 ) *Emails {
 	return &Emails{
 		logger: logger,
 		config: cfg,
-		repositories: &emailsRepositories{
-			ycp: ycpRepo,
+		repositories: &emailsClients{
+			ycp: ycp,
 		},
 	}
 }

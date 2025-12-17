@@ -11,6 +11,7 @@ type Config struct {
 	Controller   Controller
 	Services     Services
 	Repositories Repositories
+	Clients      Clients
 }
 
 type Controller struct {
@@ -51,9 +52,12 @@ type Oauth struct {
 }
 
 type Repositories struct {
-	Ycp  Ycp
-	Ydb  Ydb
+	Ydb Ydb
+}
+
+type Clients struct {
 	HTTP HTTP
+	Ycp  Ycp
 }
 
 type Ycp struct {

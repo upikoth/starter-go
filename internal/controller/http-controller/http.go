@@ -1,4 +1,4 @@
-package http
+package httpcontroller
 
 import (
 	"context"
@@ -11,7 +11,7 @@ import (
 	"github.com/ogen-go/ogen/middleware"
 	"github.com/pkg/errors"
 	"github.com/upikoth/starter-go/internal/config"
-	"github.com/upikoth/starter-go/internal/controller/http/handler"
+	"github.com/upikoth/starter-go/internal/controller/http-controller/handler"
 	app "github.com/upikoth/starter-go/internal/generated/app"
 	"github.com/upikoth/starter-go/internal/pkg/logger"
 	"github.com/upikoth/starter-go/internal/services"

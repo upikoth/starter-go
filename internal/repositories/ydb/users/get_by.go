@@ -20,7 +20,7 @@ import (
 
 type fieldNameGetBy string
 
-var (
+const (
 	fieldNameGetByID       fieldNameGetBy = "id"
 	fieldNameGetByEmail    fieldNameGetBy = "email"
 	fieldNameGetByVkID     fieldNameGetBy = "vk_id"

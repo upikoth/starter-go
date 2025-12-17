@@ -11,7 +11,7 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-// nolint:funlen,gocognit,nolintlint //пока решил заигнорить.
+//nolint:funlen,gocognit,nolintlint //пока решил заигнорить.
 func (o *Oauth) HandleYandexRedirect(
 	inputCtx context.Context,
 	code string,

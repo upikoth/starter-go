@@ -1,6 +1,6 @@
 {
 	"yaml.format.singleQuote": true,
-	"go.lintTool": "golangci-lint-v2",
+	"go.lintTool": "golangci-lint",
 	"go.lintOnSave": "package",
 	"go.useLanguageServer": true,
 	"gopls": {
@@ -8,6 +8,8 @@
 		"ui.completion.usePlaceholders": true
 	},
 	"go.toolsManagement.checkForUpdates": "local",
+	"go.toolsManagement.go": "/Users/idemin/.gvm/gos/go1.25.5/bin/go",
+	"go.goroot": "/Users/idemin/.gvm/gos/go1.25.5",
 	"cSpell.words": [
 		"токену",
 		"APIURL",

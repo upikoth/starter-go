@@ -10,5 +10,6 @@ type Session struct {
 
 type SessionWithUserRole struct {
 	Session
+
 	UserRole UserRole
 }

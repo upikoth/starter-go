@@ -31,7 +31,7 @@ type Services struct {
 type Emails struct {
 	FrontURL                         string `envconfig:"FRONT_URL" required:"true"`
 	FrontConfirmationRegistrationURL string `envconfig:"FRONT_CONFIRMATION_REGISTRATION_URL" required:"true"`
-	//nolint:lll
+	//nolint:lll // По-другому не сделать.
 	FrontConfirmationPasswordRecoveryRequestURL string `envconfig:"FRONT_CONFIRMATION_PASSWORD_RECOVERY_REQUEST_URL" required:"true"`
 }
 

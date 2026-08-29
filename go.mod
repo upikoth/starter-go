@@ -5,7 +5,7 @@ go 1.25.5
 require (
 	github.com/getsentry/sentry-go v0.30.0
 	github.com/getsentry/sentry-go/otel v0.30.0
-	github.com/go-faster/errors v0.7.1
+	github.com/go-faster/errors v0.8.0
 	github.com/go-faster/jx v1.1.0
 	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1

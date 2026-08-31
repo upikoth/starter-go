@@ -16,7 +16,7 @@ require (
 	github.com/rs/zerolog v1.33.0
 	github.com/ydb-platform/ydb-go-sdk-otel v0.10.1
 	github.com/ydb-platform/ydb-go-sdk/v3 v3.94.0
-	github.com/ydb-platform/ydb-go-yc v0.12.3
+	github.com/ydb-platform/ydb-go-yc v0.12.4
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.57.0
 	go.opentelemetry.io/otel v1.32.0
 	go.opentelemetry.io/otel/metric v1.32.0
